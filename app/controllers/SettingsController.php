@@ -52,6 +52,20 @@ class SettingsController extends BaseController {
             $api_key_verification_code->save();
         }
 
+        if (Input::has('systems'))
+        {
+            $systems = Setting::where('key', 'systems')->firstOrFail();
+            $systems->value = Input::get('systems');
+            $systems->save();
+        }
+
+        if (Input::has('alliances'))
+        {
+            $alliances = Setting::where('key', 'alliances')->firstOrFail();
+            $alliances->value = Input::get('alliances');
+            $alliances->save();
+        }
+
         return Redirect::to('settings');
 
     }
