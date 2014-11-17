@@ -4,7 +4,9 @@
 
     <h2>Item details</h2>
 
-    <img style="float: left;" src="/eve/items/{{ $icon }}.png">
+    @if ($icon)
+        <img style="float: left;" src="/eve/items/{{ $icon }}.png">
+    @endif
 
     <p>{{ $type->typeName }}</p>
 

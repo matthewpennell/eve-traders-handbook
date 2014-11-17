@@ -26,8 +26,12 @@ class DetailsController extends BaseController {
 		$type = Type::where('typeID', $id)->firstOrFail();
 
 		// Load the 64x64 icon to display.
-		$icon = str_replace('_', '_64_', $type->Group->Icon->iconFile);
-		$icon = preg_replace('/^0/', '', $icon);
+		$icon = '';
+		if ($type->Group->Icon)
+		{
+			$icon = str_replace('_', '_64_', $type->Group->Icon->iconFile);
+			$icon = preg_replace('/^0/', '', $icon);
+		}
 
 		// Retrieve the current price ranges this item sells for.
 		$url = 'http://api.eve-central.com/api/marketstat'
