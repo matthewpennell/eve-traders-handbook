@@ -17,11 +17,22 @@
                 <th>Price</th>
             </tr>
         </thead>
+        <tfoot>
+            <tr>
+                <td>Total Price</td>
+                <td class="numeric">{{ number_format($total_price) }}</td>
+            </tr>
+        </tfoot>
         <tbody>
             @foreach($manufacturing as $item)
                 <tr>
-                    <td>{{ $item->typeName }} &times; {{ $item->qty }}</td>
-                    <td>{{ $item->price }}</td>
+                    <td>{{ $item->typeName }} &times; {{ number_format($item->qty) }}</td>
+                    <td class="numeric">
+                        @if ($item->jita)
+                            <small>Jita price:</small>
+                        @endif
+                        {{ number_format($item->price) }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -38,7 +49,7 @@
             @foreach($prices as $price)
                 <tr>
                     <td>{{ $price->solarSystemName }}</td>
-                    <td>{{ $price->median }}</td>
+                    <td class="numeric">{{ number_format(round($price->median)) }}</td>
                 </tr>
             @endforeach
         </tbody>

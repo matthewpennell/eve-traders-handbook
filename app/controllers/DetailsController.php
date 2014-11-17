@@ -31,7 +31,46 @@ class DetailsController extends BaseController {
 
 		// Get a list of what is needed to manufacture the item.
 		$manufacturing = array();
-		
+		$total_price = 0;
+		$type_materials = DB::table('invTypeMaterials')->where('typeID', $id)->get();
+		foreach ($type_materials as $material)
+		{
+			// For each manufacturing item, make an API call to get the local price of materials.
+			// TODO: Change this to use stored home region ID and to cache the result.
+			$url = 'http://api.eve-central.com/api/marketstat'
+				. '?'
+				. 'typeid=' . $material->materialTypeID
+				. '&'
+				. 'regionlimit=10000014';
+
+			$response = Request::get($url)->send();
+			$xml = simplexml_load_string($response->body);
+			$price_per_unit = $xml->marketstat->type->sell->median;
+			$jita_price = FALSE;
+
+			// If the price returned is zero for the selected region, do another check at Jita prices.
+			if ($price_per_unit == 0)
+			{
+				$url = 'http://api.eve-central.com/api/marketstat'
+					. '?'
+					. 'typeid=' . $material->materialTypeID
+					. '&'
+					. 'usesystem=30000142';
+
+				$response = Request::get($url)->send();
+				$jita = simplexml_load_string($response->body);
+				$price_per_unit = $jita->marketstat->type->sell->median;
+				$jita_price = TRUE;
+			}
+
+			$manufacturing[] = (object) array(
+				"typeName"	=> Type::find($material->materialTypeID)->typeName,
+				"qty"		=> $material->quantity,
+				"price"		=> $material->quantity * $price_per_unit,
+				"jita"		=> $jita_price,
+			);
+			$total_price += $material->quantity * $price_per_unit;
+		}
 
 		// Make an API call to eve-central for the price at Jita.
 		$url = 'http://api.eve-central.com/api/marketstat'
@@ -65,7 +104,12 @@ class DetailsController extends BaseController {
 			"median"			=> $amarr->marketstat->type->sell->median,
 		);
 
-		return View::make('item')->with('type', $type)->with('icon', $icon)->with('prices', $prices)->with('manufacturing', $manufacturing);
+		return View::make('item')
+			->with('type', $type)
+			->with('icon', $icon)
+			->with('prices', $prices)
+			->with('manufacturing', $manufacturing)
+			->with('total_price', $total_price);
 
 	}
 

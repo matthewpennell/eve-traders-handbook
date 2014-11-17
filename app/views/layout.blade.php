@@ -45,6 +45,12 @@
             .items-lost tr:nth-child(even) td {
                 background: #ddd;
             }
+            .numeric {
+                text-align: right;
+            }
+            small {
+                font-size: 10px;
+            }
             .filter {
                 float: left;
                 padding: 10px 10px 10px 0;
