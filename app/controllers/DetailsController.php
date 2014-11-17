@@ -29,6 +29,23 @@ class DetailsController extends BaseController {
 		$icon = str_replace('_', '_64_', $type->Group->Icon->iconFile);
 		$icon = preg_replace('/^0/', '', $icon);
 
+		// Retrieve the current price ranges this item sells for.
+		$url = 'http://api.eve-central.com/api/marketstat'
+			. '?'
+			. 'typeid=' . $id
+			. '&'
+			. 'regionlimit=10000014';
+
+		$response = Request::get($url)->send();
+		$xml = simplexml_load_string($response->body);
+		$local_price = (object) array(
+			"volume"	=> $xml->marketstat->type->sell->volume,
+			"avg"		=> $xml->marketstat->type->sell->avg,
+			"max"		=> $xml->marketstat->type->sell->max,
+			"min"		=> $xml->marketstat->type->sell->min,
+			"median"	=> $xml->marketstat->type->sell->median,
+		);
+
 		// Get a list of what is needed to manufacture the item.
 		$manufacturing = array();
 		$total_price = 0;
@@ -107,6 +124,7 @@ class DetailsController extends BaseController {
 		return View::make('item')
 			->with('type', $type)
 			->with('icon', $icon)
+			->with('local_price', $local_price)
 			->with('prices', $prices)
 			->with('manufacturing', $manufacturing)
 			->with('total_price', $total_price);

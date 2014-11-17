@@ -10,6 +10,14 @@
 
     <p>{{ $type->description }}</p>
 
+    <p>Local prices:<br>
+        Volume = {{ number_format(round($local_price->volume)) }}<br>
+        Average = {{ number_format(round($local_price->avg)) }}<br>
+        Min Price = {{ number_format(round($local_price->min)) }}<br>
+        Max Price = {{ number_format(round($local_price->max)) }}<br>
+        Median Price = {{ number_format(round($local_price->median)) }}
+    </p>
+
     <table class="manufacturing">
         <thead>
             <tr>
@@ -29,14 +37,18 @@
                     <td>{{ $item->typeName }} &times; {{ number_format($item->qty) }}</td>
                     <td class="numeric">
                         @if ($item->jita)
-                            <small>Jita price:</small>
+                            <span style="color: #c00;">
                         @endif
                         {{ number_format($item->price) }}
+                        @if ($item->jita)
+                            </span>
+                        @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    <p>Prices shown in <span style="color: #c00;">red</span> are Jita prices, and indicate items that cannot be purchased locally.</p>
 
     <table class="prices">
         <thead>
