@@ -2,8 +2,6 @@
 
 @section('content')
 
-    <h1>EVE Traders Handbook</h1>
-
     <p>Welcome. These are the items that have been lost in your selected systems/alliances:</p>
 
     <form method="get" action="" class="filters">
@@ -38,14 +36,14 @@
         </thead>
         <tbody>
 
-    @foreach($items as $item)
-        <tr>
-            <td>{{ number_format($item->qty) }}</td>
-            <td>{{ $item->typeName }}</td>
-            <td>{{ $item->category }}</td>
-            <td>{{ $item->meta }}</td>
-        </tr>
-    @endforeach
+            @foreach($items as $item)
+                <tr>
+                    <td>{{ number_format($item->qty) }}</td>
+                    <td><a href="/details/{{ $item->typeID }}">{{ $item->typeName }}</a></td>
+                    <td>{{ $item->category }}</td>
+                    <td>{{ $item->meta }}</td>
+                </tr>
+            @endforeach
 
         </tbody>
     </table>

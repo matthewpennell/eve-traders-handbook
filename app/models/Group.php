@@ -10,6 +10,11 @@ class Group extends Eloquent {
         return $this->belongsTo('Category', 'categoryID');
     }
 
+    public function icon()
+    {
+        return $this->belongsTo('Icon', 'iconID');
+    }
+
     public function type()
     {
         return $this->hasMany('Type');

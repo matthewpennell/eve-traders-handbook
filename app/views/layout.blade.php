@@ -17,6 +17,10 @@
             h1 {
                 font-size: 30px;
             }
+            h2 {
+                font-weight: bold;
+                font-size: 20px;
+            }
             .form-field {
                 margin: 0 0 20px;
             }
@@ -50,6 +54,8 @@
     </head>
 
     <body>
+
+        <h1>EVE Traders Handbook</h1>
 
         @yield('content')
 

@@ -49,6 +49,7 @@ class MasterController extends BaseController {
 			{
 				$table[$item->typeID] = (object) array(
 					"qty"		=> $item->qty,
+					"typeID"	=> $item->typeID,
 					"typeName"	=> $item->typeName,
 					"category"	=> $item->categoryName,
 					"meta"		=> $item->metaGroupName,
