@@ -48,11 +48,13 @@ class MasterController extends BaseController {
 			else
 			{
 				$table[$item->typeID] = (object) array(
-					"qty"		=> $item->qty,
-					"typeID"	=> $item->typeID,
-					"typeName"	=> $item->typeName,
-					"category"	=> $item->categoryName,
-					"meta"		=> $item->metaGroupName,
+					"qty"				=> $item->qty,
+					"typeID"			=> $item->typeID,
+					"typeName"			=> $item->typeName,
+					"category"			=> $item->categoryName,
+					"meta"				=> $item->metaGroupName,
+					"profitIndustry"	=> $item->type->profit['profitIndustry'],
+					"profitImport"		=> $item->type->profit['profitImport'],
 				);
 				$simple_array[] = $item->typeID;
 			}

@@ -39,7 +39,12 @@
             @foreach($items as $item)
                 <tr>
                     <td>{{ number_format($item->qty) }}</td>
-                    <td><a href="/details/{{ $item->typeID }}">{{ $item->typeName }}</a></td>
+                    <td>
+                        <a href="/details/{{ $item->typeID }}">{{ $item->typeName }}</a>
+                        @if ($item->profitIndustry)
+                            <span style="float: right; font-size: 11px; color: #090;">{{ number_format(round($item->profitIndustry)) }}</span>
+                        @endif
+                    </td>
                     <td>{{ $item->category }}</td>
                     <td>{{ $item->meta }}</td>
                 </tr>

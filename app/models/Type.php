@@ -4,6 +4,7 @@ class Type extends Eloquent {
 
     protected $table = 'invTypes';
     protected $primaryKey = 'typeID';
+    public $timestamps = false;
 
     public function item()
     {
@@ -23,6 +24,11 @@ class Type extends Eloquent {
     public function metaType()
     {
         return $this->belongsTo('MetaType', 'typeID');
+    }
+
+    public function profit()
+    {
+        return $this->hasOne('Profit', 'typeID');
     }
 
 }

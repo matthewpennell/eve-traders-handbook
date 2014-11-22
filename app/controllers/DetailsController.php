@@ -125,6 +125,19 @@ class DetailsController extends BaseController {
 			"median"			=> $amarr->marketstat->type->sell->median,
 		);
 
+		// Cache the industry and import potential profits for the item.
+		$profit = $type->profit;
+		if (!isset($profit))
+		{
+			$profit = new Profit;
+			$profit->typeID = $id;
+		}
+		$profit->profitIndustry = $local_price->median - $total_price;
+		$profit->profitImport = $local_price->median - $jita->marketstat->type->sell->median;
+
+		// Save the cached potential profit figure.
+		$type->profit()->save($profit);
+
 		return View::make('item')
 			->with('type', $type)
 			->with('icon', $icon)
