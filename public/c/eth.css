@@ -1,0 +1,152 @@
+/**
+ * Layout and style for EVE Traders Handbook.
+ */
+
+body {
+    background: #fff;
+    color: #333;
+    font: 14px/20px "Open Sans", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #1270d3;
+}
+
+.container {
+    max-width: 980px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* HEADER */
+
+header {
+    height: 100px;
+}
+
+h1 a {
+    color: #333;
+    font-size: 48px;
+    line-height: 100px;
+    font-weight: 100;
+    text-decoration: none;
+}
+
+.header-nav {
+    position: absolute;
+    right: 0;
+    top: 39px;
+}
+
+.header-nav li {
+    float: left;
+    list-style: none;
+    margin-left: 20px;
+}
+
+/* PAGE CONTENTS */
+
+.content {
+    background: #192425;
+}
+
+.background {
+    background: #eee;
+    padding: 20px;
+    position: relative;
+    top: 20px;
+}
+
+h2 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    background: #1270d3;
+    height: 60px;
+    line-height: 60px;
+    padding: 0 20px;
+    width: 620px;
+    margin: 0;
+}
+
+.losses {
+    background: #fff;
+    width: 660px;
+    line-height: 30px;
+}
+
+.losses tr {
+    height: 30px;
+}
+
+.losses tr:hover td {
+    background: #d0e2f6;
+    cursor: pointer;
+}
+
+.losses tbody tr:nth-child(even) {
+    background: #f4f4f4;
+}
+
+.losses th, .losses td {
+    padding: 0 10px;
+}
+
+.losses th {
+    background: #0a396b;
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+}
+
+.losses .num {
+    text-align: right;
+}
+
+.losses a {
+    color: #333;
+    text-decoration: none;
+}
+
+.losses tfoot td {
+    text-align: center;
+    font-weight: 600;
+    background: #c0cad4;
+}
+
+.profit, .loss {
+    font-size: 10px;
+    color: #090;
+    float: right;
+}
+
+.loss {
+    color: #c00;
+}
+
+/* FILTERS */
+
+.filters {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #fff;
+    width: 280px;
+    border-left: 1px solid #ccc;
+}
+
+h3 {
+    font-size: 20px;
+    line-height: 60px;
+    height: 60px;
+    background: #eee;
+    margin: 0;
+    font-weight: 300;
+    padding: 0 20px;
+}
+
+.filter {
+    margin: 20px;
+}

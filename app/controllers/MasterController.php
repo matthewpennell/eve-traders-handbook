@@ -55,6 +55,7 @@ class MasterController extends BaseController {
 					"meta"				=> $item->metaGroupName,
 					"profitIndustry"	=> $item->type->profit['profitIndustry'],
 					"profitImport"		=> $item->type->profit['profitImport'],
+					"profitOrLoss"		=> ($item->type->profit['profitIndustry'] > 0) ? 'profit' : 'loss',
 				);
 				$simple_array[] = $item->typeID;
 			}
