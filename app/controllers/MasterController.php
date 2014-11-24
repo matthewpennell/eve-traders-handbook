@@ -23,6 +23,7 @@ class MasterController extends BaseController {
 
 		// Check whether any filters are active.
 		$filters = Input::get('filter');
+		$filter_url = '';
 
 		if (count($filters))
 		{
@@ -35,6 +36,9 @@ class MasterController extends BaseController {
 
 			// Retrieve the list of selected items.
 			$items = Item::whereRaw(implode(' or ', $whereraw))->get();
+
+			// Make a URL to use in links.
+			$filter_url = 'filter[]=' . implode('&filter[]=', $filters);
 		}
 		else
 		{
@@ -78,7 +82,12 @@ class MasterController extends BaseController {
 		});
 
 		// Load the template to display all the items.
-		return View::make('home')->with('items', array_slice($table, ($page - 1) * 20, 20))->with('filters', $filters)->with('page', $page)->with('pages', count($table) / 20);
+		return View::make('home')
+			->with('items', array_slice($table, ($page - 1) * 20, 20))
+			->with('filters', $filters)
+			->with('page', $page)
+			->with('filter_url', $filter_url)
+			->with('pages', count($table) / 20);
 
 	}
 

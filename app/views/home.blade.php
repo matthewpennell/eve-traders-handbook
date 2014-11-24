@@ -19,17 +19,17 @@
                 <tr>
                     <td colspan="4">
                         @if ($page > 2)
-                            <a href="/?filter[]={{ implode('&filter[]=', $filters) }}">&laquo;</a>
+                            <a href="/?{{ $filter_url }}">&laquo;</a>
                         @endif
                         @if ($page > 1)
-                            <a href="/?page={{ $page - 1 }}&filter[]={{ implode('&filter[]=', $filters) }}"><</a>
+                            <a href="/?page={{ $page - 1 }}&{{ $filter_url }}"><</a>
                         @endif
                         Page {{ $page }} of {{ ceil($pages) }}
                         @if ($page <= ceil($pages) - 1)
-                            <a href="/?page={{ $page + 1 }}&filter[]={{ implode('&filter[]=', $filters) }}">></a>
+                            <a href="/?page={{ $page + 1 }}&{{ $filter_url }}">></a>
                         @endif
                         @if ($page <= ceil($pages) - 2)
-                            <a href="/?page={{ ceil($pages) }}&filter[]={{ implode('&filter[]=', $filters) }}">&raquo;</a>
+                            <a href="/?page={{ ceil($pages) }}&{{ $filter_url }}">&raquo;</a>
                         @endif
                     </td>
                 </tr>
