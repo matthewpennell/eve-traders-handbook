@@ -14,6 +14,13 @@ class MasterController extends BaseController {
 	public function home()
 	{
 
+		// Get the page requested.
+		$page = Input::get('page');
+		if (!isset($page))
+		{
+			$page = 1;
+		}
+
 		// Check whether any filters are active.
 		$filters = Input::get('filter');
 
@@ -71,7 +78,7 @@ class MasterController extends BaseController {
 		});
 
 		// Load the template to display all the items.
-		return View::make('home')->with('items', $table)->with('filters', $filters);
+		return View::make('home')->with('items', array_slice($table, ($page - 1) * 20, 20))->with('filters', $filters)->with('page', $page)->with('pages', count($table) / 20);
 
 	}
 
