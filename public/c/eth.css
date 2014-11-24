@@ -3,7 +3,7 @@
  */
 
 body {
-    background: #fff;
+    background: #192425;
     color: #333;
     font: 14px/20px "Open Sans", Helvetica, Arial, sans-serif;
     margin: 0;
@@ -24,6 +24,7 @@ a {
 
 header {
     height: 100px;
+    background: #fff;
 }
 
 h1 {
@@ -51,10 +52,6 @@ h1 a {
 }
 
 /* PAGE CONTENTS */
-
-.content {
-    background: #192425;
-}
 
 .background {
     background: #eee;
