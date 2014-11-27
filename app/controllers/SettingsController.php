@@ -22,11 +22,16 @@ class SettingsController extends BaseController {
     public function getIndex()
     {
 
-        // retrieve all of the stored settings from the database.
+        // Retrieve all of the stored settings from the database.
         $settings = Setting::all();
 
+        // Retrieve the category filters.
+        $filters = Filter::all();
+
         // Load the template containing the form to update settings.
-        return View::make('settings')->with('settings', $settings);
+        return View::make('settings')
+            ->with('settings', $settings)
+            ->with('filters', $filters);
 
     }
 
@@ -64,6 +69,19 @@ class SettingsController extends BaseController {
             $alliances = Setting::where('key', 'alliances')->firstOrFail();
             $alliances->value = Input::get('alliances');
             $alliances->save();
+        }
+
+        // Process default filters.
+        DB::table('filters')->update(array('is_default' => 0));
+        $filters = Filter::all();
+        foreach ($filters as $filter)
+        {
+            if (Input::has($filter->categoryName))
+            {
+                $category = Filter::find($filter->categoryID);
+                $category->is_default = 1;
+                $category->save();
+            }
         }
 
         return Redirect::to('settings');
