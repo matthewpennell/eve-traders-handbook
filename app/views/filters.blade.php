@@ -13,18 +13,14 @@
 
     <h3>Tech/Meta level</h3>
 
-    <div class="filter">
-        <label>
-            {{ Form::checkbox('meta[]', 'Tech I', $active_meta_filters && in_array('Tech I', $active_meta_filters)) }}
-            Tech I
-        </label>
-    </div>
-    <div class="filter">
-        <label>
-            {{ Form::checkbox('meta[]', 'Tech II', $active_meta_filters && in_array('Tech II', $active_meta_filters)) }}
-            Tech II
-        </label>
-    </div>
+    @foreach ($meta_filters as $meta_filter)
+        <div class="filter">
+            <label>
+                {{ Form::checkbox('meta[]', $meta_filter, $active_meta_filters && in_array($meta_filter, $active_meta_filters)) }}
+                {{ $meta_filter }}
+            </label>
+        </div>
+    @endforeach
 
 <!--
     <h3>Ship</h3>

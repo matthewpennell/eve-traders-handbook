@@ -123,6 +123,7 @@ class MasterController extends BaseController {
 			->with('pages', count($table) / 20)
 			->nest('sidebar', 'filters', array(
 				'filters'				=> Filter::all()->sortBy('categoryName'),
+				'meta_filters'			=> array('Meta 1', 'Meta 2', 'Meta 3', 'Meta 4', 'Meta 5', 'Tech II'),
 				'ships'					=> Ship::all()->sortBy('shipName'),
 				'active_filters'		=> $active_filters,
 				'active_meta_filters'	=> $active_meta_filters,
