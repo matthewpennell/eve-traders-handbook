@@ -2,24 +2,28 @@
 
 @section('content')
 
+<div class="background">
+
     <h1>Settings</h1>
 
     {{ Form::open() }}
 
     @foreach($settings as $setting)
 
-        <div class="form-field">
+    <div class="form-field">
 
-            {{ Form::label($setting->key, $setting->label, array('class' => 'form-label')) }}
+        {{ Form::label($setting->key, $setting->label, array('class' => 'form-label')) }}
 
-            {{ Form::text($setting->key, $setting->value, array('class' => 'form-input')) }}
+        {{ Form::text($setting->key, $setting->value, array('class' => 'form-input')) }}
 
-        </div>
+    </div>
 
     @endforeach
 
-    {{ Form::submit('Save and Update') }}
+    {{ Form::submit('Save and Update', array('class' => 'form-button')) }}
 
     {{ Form::close() }}
+
+</div>
 
 @stop

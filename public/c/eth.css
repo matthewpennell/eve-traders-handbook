@@ -60,6 +60,12 @@ h1 a {
     top: 20px;
 }
 
+.background h1 {
+    font-size: 48px;
+    line-height: 100px;
+    font-weight: 100;
+}
+
 h2 {
     color: #fff;
     font-size: 14px;
@@ -129,6 +135,40 @@ h2 {
 
 .loss {
     color: #c00;
+}
+
+/* FORMS */
+
+.form-field {
+    margin: 0 0 40px;
+}
+
+.form-label, .form-input {
+    display: block;
+    width: 660px;
+}
+
+.form-label {
+    margin-bottom: 10px;
+}
+
+.form-input {
+    width: 620px;
+    padding: 20px;
+    font-size: 20px;
+}
+
+.form-button {
+    border: 0;
+    background: #1270d3;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.form-button:hover {
+    opacity: 0.8;
 }
 
 /* FILTERS */
