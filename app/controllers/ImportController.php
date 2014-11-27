@@ -127,7 +127,7 @@ class ImportController extends BaseController {
                     // Insert the ship loss into the items database as well.
                     $type = Type::find($kill->shipTypeID);
                     $item = new Item;
-                    $item->killID = $kill->killID;
+                    $item->killID = $row['killID'];
                     $item->typeID = $kill->shipTypeID;
                     $item->typeName = $type->typeName;
                     $item->categoryName = $type->group->category['categoryName'];
@@ -155,11 +155,21 @@ class ImportController extends BaseController {
                             // Create the new item.
                             $type = Type::find($loss['typeID']);
                             $item = new Item;
-                            $item->killID = $kill->killID;
+                            $item->killID = $row['killID'];
                             $item->typeID = $loss['typeID'];
                             $item->typeName = $type->typeName;
                             $item->categoryName = $type->group->category['categoryName'];
-                            $item->metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
+                            $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
+                            if ($metaGroupName == 'Tech I')
+                            {
+                                $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $loss['typeID'])->where('attributeID', 633)->first();
+                                if (isset($metaLevel))
+                                {
+                                    $metaGroupName = 'Meta ';
+                                    $metaGroupName .= (isset($metaLevel->valueInt)) ? $metaLevel->valueInt : $metaLevel->valueFloat;
+                                }
+                            }
+                            $item->metaGroupName = $metaGroupName;
                             $item->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
                             $item->save();
                         }
