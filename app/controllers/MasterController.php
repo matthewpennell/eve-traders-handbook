@@ -25,6 +25,17 @@ class MasterController extends BaseController {
 		$active_filters = Input::get('filter');
 		$filter_url = '';
 
+		// If no filters are set, apply the default ones.
+		if (!isset($active_filters))
+		{
+			$active_filters = array();
+			$default_filters = Filter::where('is_default', 1)->get();
+			foreach ($default_filters as $default_filter)
+			{
+				array_push($active_filters, $default_filter->categoryName);
+			}
+		}
+
 		if (count($active_filters))
 		{
 			// Loop through all active filters and construct the aggregate query.
