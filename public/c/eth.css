@@ -117,6 +117,10 @@ h2 {
     background: #c0cad4;
 }
 
+.ffwd {
+    letter-spacing: -0.25em;
+}
+
 .profit, .loss {
     font-size: 10px;
     color: #090;

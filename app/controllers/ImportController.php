@@ -135,6 +135,18 @@ class ImportController extends BaseController {
                     $item->qty = 1;
                     $item->save();
 
+                    // Add the category to the list of filters available on the site.
+                    $filter = Filter::find($type->group->category['categoryID']);
+
+                    if ( ! isset($filter->categoryID))
+                    {
+                        $filter = new Filter;
+                        $filter->categoryID = $type->group->category['categoryID'];
+                        $filter->categoryName = $type->group->category['categoryName'];
+                        $filter->iconID = $type->group->category['iconID'];
+                        $filter->save();
+                    }
+
                     // Loop through the items lost in the kill. Insert each one into the items table.
                     if (isset($row->rowset->row))
                     {
@@ -150,6 +162,18 @@ class ImportController extends BaseController {
                             $item->metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
                             $item->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
                             $item->save();
+                        }
+
+                        // Add the category to the list of filters available on the site.
+                        $filter = Filter::find($type->group->category['categoryID']);
+
+                        if ( ! isset($filter->categoryID))
+                        {
+                            $filter = new Filter;
+                            $filter->categoryID = $type->group->category['categoryID'];
+                            $filter->categoryName = $type->group->category['categoryName'];
+                            $filter->iconID = $type->group->category['iconID'];
+                            $filter->save();
                         }
                     }
 

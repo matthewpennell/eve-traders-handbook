@@ -19,17 +19,17 @@
                 <tr>
                     <td colspan="4">
                         @if ($page > 2)
-                            <a href="/?{{ $filter_url }}">&laquo;</a>
+                            <a href="/?{{ $filter_url }}" class="ffwd">&#9666;&#9666;</a>
                         @endif
                         @if ($page > 1)
-                            <a href="/?page={{ $page - 1 }}&{{ $filter_url }}"><</a>
+                            <a href="/?page={{ $page - 1 }}&{{ $filter_url }}">&#9666;</a>
                         @endif
                         Page {{ $page }} of {{ ceil($pages) }}
                         @if ($page <= ceil($pages) - 1)
-                            <a href="/?page={{ $page + 1 }}&{{ $filter_url }}">></a>
+                            <a href="/?page={{ $page + 1 }}&{{ $filter_url }}">&#9656;</a>
                         @endif
                         @if ($page <= ceil($pages) - 2)
-                            <a href="/?page={{ ceil($pages) }}&{{ $filter_url }}">&raquo;</a>
+                            <a href="/?page={{ ceil($pages) }}&{{ $filter_url }}" class="ffwd">&#9656;&#9656;</a>
                         @endif
                     </td>
                 </tr>
@@ -51,27 +51,7 @@
             </tbody>
         </table>
 
-        <form method="get" action="" class="filters">
-            <h3>Filters</h3>
-            <div class="filter">
-                <label>
-                    {{ Form::checkbox('filter[]', 'drone', $filters && in_array('drone', $filters)) }}
-                    Drone
-                </label>
-            </div>
-            <div class="filter">
-                <label>
-                    {{ Form::checkbox('filter[]', 'module', $filters && in_array('module', $filters)) }}
-                    Module
-                </label>
-            </div>
-            <div class="filter">
-                <label>
-                    {{ Form::checkbox('filter[]', 'ship', $filters && in_array('ship', $filters)) }}
-                    Ship
-                </label>
-            </div>
-        </form>
+        <?php echo $sidebar; ?>
 
     </div>
 
