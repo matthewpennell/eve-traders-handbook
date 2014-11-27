@@ -90,7 +90,7 @@ class MasterController extends BaseController {
 				// This item is already in the table.
 				$table[$item->typeID]->qty += $item->qty;
 				// Temporary hack to populate the meta information.
-				$table[$item->typeID]->meta += $item->metaGroupName;
+				$table[$item->typeID]->meta = $item->metaGroupName;
 			}
 			else
 			{
