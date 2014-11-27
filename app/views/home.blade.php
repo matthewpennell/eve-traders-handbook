@@ -39,7 +39,7 @@
                     <tr>
                         <td class="num">
                             @if ($item->allowManufacture)
-                                <span class="industry">&#937;</span>
+                                <img src="/eve/items/BPO.png" class="industry">
                             @endif
                             {{ number_format($item->qty) }}</td>
                         <td>

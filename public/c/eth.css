@@ -117,6 +117,9 @@ h2 {
     float: left;
     color: #D34231;
     font-weight: bold;
+    width: 16px;
+    height: 16px;
+    margin-top: 7px;
 }
 
 .losses a {
