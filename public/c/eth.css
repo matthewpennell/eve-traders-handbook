@@ -204,3 +204,20 @@ h3 {
 .filter {
     margin: 20px;
 }
+
+/* FOOTER */
+
+footer {
+    clear: both;
+    color: #fff;
+    opacity: 0.3;
+    text-align: center;
+    font-size: 12px;
+    margin: 0 auto;
+    max-width: 660px;
+    padding: 60px 0 20px;
+}
+
+footer a {
+    color: #fff;
+}
