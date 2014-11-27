@@ -160,7 +160,7 @@ class ImportController extends BaseController {
                             $item->typeName = $type->typeName;
                             $item->categoryName = $type->group->category['categoryName'];
                             $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
-                            if ($metaGroupName == 'Tech I')
+                            if ($metaGroupName == 'Tech I' || $metaGroupName == '')
                             {
                                 $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $loss['typeID'])->where('attributeID', 633)->first();
                                 if (isset($metaLevel))
