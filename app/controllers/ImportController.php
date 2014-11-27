@@ -132,6 +132,7 @@ class ImportController extends BaseController {
                     $item->typeName = $type->typeName;
                     $item->categoryName = $type->group->category['categoryName'];
                     $item->metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
+                    $item->allowManufacture = (stristr($type->typeName, 'Capsule')) ? 0 : 1;
                     $item->qty = 1;
                     $item->save();
 
@@ -170,6 +171,11 @@ class ImportController extends BaseController {
                                 }
                             }
                             $item->metaGroupName = $metaGroupName;
+                            $blueprint = Type::where('typeName', $type->typeName . ' Blueprint')->count();
+                            if ($blueprint > 0)
+                            {
+                                $item->allowManufacture = 1;
+                            }
                             $item->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
                             $item->save();
                         }

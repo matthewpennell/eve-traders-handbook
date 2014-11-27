@@ -22,7 +22,22 @@
         </div>
     @endforeach
 
-<!--
+    <h3>Blueprint available</h3>
+
+    <div class="filter">
+        <label>
+            {{ Form::checkbox('blueprint[]', 'Yes', $active_blueprint_filters && in_array('Yes', $active_blueprint_filters)) }}
+            Yes
+        </label>
+    </div>
+    <div class="filter">
+            <label>
+            {{ Form::checkbox('blueprint[]', 'No', $active_blueprint_filters && in_array('No', $active_blueprint_filters)) }}
+            No
+        </label>
+    </div>
+
+    <!--
     <h3>Ship</h3>
 
     @foreach ($ships as $ship)

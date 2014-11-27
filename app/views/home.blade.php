@@ -37,7 +37,11 @@
             <tbody>
                 @foreach($items as $item)
                     <tr>
-                        <td class="num">{{ number_format($item->qty) }}</td>
+                        <td class="num">
+                            @if ($item->allowManufacture)
+                                <span class="industry">&#937;</span>
+                            @endif
+                            {{ number_format($item->qty) }}</td>
                         <td>
                             <a href="/details/{{ $item->typeID }}">{{ $item->typeName }}</a>
                             @if ($item->profitIndustry)

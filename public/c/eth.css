@@ -58,7 +58,7 @@ h1 a {
     padding: 20px;
     position: relative;
     top: 20px;
-    min-height: 720px; /* hack */
+    min-height: 840px; /* hack */
 }
 
 .background h1 {
@@ -111,6 +111,12 @@ h2 {
 
 .losses .num {
     text-align: right;
+}
+
+.industry {
+    float: left;
+    color: #D34231;
+    font-weight: bold;
 }
 
 .losses a {

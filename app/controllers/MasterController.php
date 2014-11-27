@@ -54,6 +54,25 @@ class MasterController extends BaseController {
 			$filter_url .= 'meta[]=' . implode('&meta[]=', $active_meta_filters);
 		}
 
+		// Check whether there are any filters on the existence of blueprints.
+		$active_blueprint_filters = Input::get('blueprint');
+
+		if (count($active_blueprint_filters))
+		{
+			// Loop through all active filters and construct the aggregate query.
+			foreach ($active_blueprint_filters as $active_blueprint_filter)
+			{
+				$value = ($active_blueprint_filter == 'Yes') ? 1 : 0;
+				$blueprint_filter_raw[] = 'allowManufacture = ' . $value;
+			}
+
+			// Bundle up all the filters.
+			$whereraw[] = implode(' or ', $blueprint_filter_raw);
+
+			// Make a URL to use in links.
+			$filter_url .= 'blueprint[]=' . implode('&blueprint[]=', $active_blueprint_filters);
+		}
+
 		if (count($active_filters))
 		{
 			// Loop through all active filters and construct the aggregate query.
@@ -91,6 +110,11 @@ class MasterController extends BaseController {
 				$table[$item->typeID]->qty += $item->qty;
 				// Temporary hack to populate the meta information.
 				$table[$item->typeID]->meta = $item->metaGroupName;
+				// Temporary hack to correctly populate the industry information.
+				if ($item->allowManufacture == 1)
+				{
+					$table[$item->typeID]->allowManufacture = $item->allowManufacture;
+				}
 			}
 			else
 			{
@@ -100,6 +124,7 @@ class MasterController extends BaseController {
 					"typeName"			=> $item->typeName,
 					"category"			=> $item->categoryName,
 					"meta"				=> $item->metaGroupName,
+					"allowManufacture"	=> $item->allowManufacture,
 					"profitIndustry"	=> $item->type->profit['profitIndustry'],
 					"profitImport"		=> $item->type->profit['profitImport'],
 					"profitOrLoss"		=> ($item->type->profit['profitIndustry'] > 0) ? 'profit' : 'loss',
@@ -124,11 +149,12 @@ class MasterController extends BaseController {
 			->with('filter_url', $filter_url)
 			->with('pages', count($table) / 20)
 			->nest('sidebar', 'filters', array(
-				'filters'				=> Filter::all()->sortBy('categoryName'),
-				'meta_filters'			=> array('Meta 0', 'Meta 1', 'Meta 2', 'Meta 3', 'Meta 4', 'Meta 5', 'Tech II'),
-				'ships'					=> Ship::all()->sortBy('shipName'),
-				'active_filters'		=> $active_filters,
-				'active_meta_filters'	=> $active_meta_filters,
+				'filters'					=> Filter::all()->sortBy('categoryName'),
+				'meta_filters'				=> array('Meta 0', 'Meta 1', 'Meta 2', 'Meta 3', 'Meta 4', 'Meta 5', 'Tech II'),
+				'ships'						=> Ship::all()->sortBy('shipName'),
+				'active_filters'			=> $active_filters,
+				'active_meta_filters'		=> $active_meta_filters,
+				'active_blueprint_filters' => $active_blueprint_filters,
 			));
 
 	}
