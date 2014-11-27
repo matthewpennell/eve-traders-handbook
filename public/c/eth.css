@@ -120,6 +120,11 @@ h2 {
     width: 16px;
     height: 16px;
     margin-top: 7px;
+    opacity: 0.5;
+}
+
+.losses tr:hover .industry {
+    opacity: 1;
 }
 
 .losses a {
