@@ -23,6 +23,7 @@ class MasterController extends BaseController {
 
 		// Check whether any filters are active.
 		$active_filters = Input::get('filter');
+		$whereraw = array();
 		$filter_url = '';
 
 		// If no filters are set, apply the default ones.
@@ -36,20 +37,42 @@ class MasterController extends BaseController {
 			}
 		}
 
+		// Check whether a filter on tech/meta level has been applied.
+		$active_meta_filters = Input::get('meta');
+		if (count($active_meta_filters))
+		{
+			// Loop through all active filters and construct the aggregate query.
+			foreach ($active_meta_filters as $active_meta_filter)
+			{
+				$meta_filter_raw[] = 'metaGroupName = "' . $active_meta_filter . '"';
+			}
+
+			// Bundle up all the filters.
+			$whereraw[] = implode(' or ', $meta_filter_raw);
+
+			// Make a URL to use in links.
+			$filter_url .= 'meta[]=' . implode('&meta[]=', $active_meta_filters);
+		}
+
 		if (count($active_filters))
 		{
 			// Loop through all active filters and construct the aggregate query.
-			$whereraw = array();
 			foreach ($active_filters as $active_filter)
 			{
-				$whereraw[] = 'categoryName = "' . $active_filter . '"';
+				$active_filter_raw[] = 'categoryName = "' . $active_filter . '"';
 			}
 
-			// Retrieve the list of selected items.
-			$items = Item::whereRaw(implode(' or ', $whereraw))->get();
+			// Bundle up all the filters.
+			$whereraw[] = implode(' or ', $active_filter_raw);
 
 			// Make a URL to use in links.
-			$filter_url = 'filter[]=' . implode('&filter[]=', $active_filters);
+			$filter_url .= 'filter[]=' . implode('&filter[]=', $active_filters);
+		}
+
+		// Query the database for the chosen items.
+		if (count($whereraw) > 0)
+		{
+			$items = Item::whereRaw('(' . implode(') and (', $whereraw) . ')')->get();
 		}
 		else
 		{
@@ -99,8 +122,10 @@ class MasterController extends BaseController {
 			->with('filter_url', $filter_url)
 			->with('pages', count($table) / 20)
 			->nest('sidebar', 'filters', array(
-				'filters'			=> Filter::all()->sortBy('categoryName'),
-				'active_filters'	=> $active_filters,
+				'filters'				=> Filter::all()->sortBy('categoryName'),
+				'ships'					=> Ship::all()->sortBy('shipName'),
+				'active_filters'		=> $active_filters,
+				'active_meta_filters'	=> $active_meta_filters,
 			));
 
 	}
