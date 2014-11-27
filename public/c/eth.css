@@ -58,6 +58,7 @@ h1 a {
     padding: 20px;
     position: relative;
     top: 20px;
+    min-height: 720px; /* hack */
 }
 
 .background h1 {
