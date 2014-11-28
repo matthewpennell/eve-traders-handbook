@@ -3,7 +3,7 @@
  */
 
 body {
-    background: #192425;
+    background: #00060a url(/i/background.jpg) no-repeat 50% 100px;
     color: #333;
     font: 14px/20px "Open Sans", Helvetica, Arial, sans-serif;
     margin: 0;
@@ -290,7 +290,7 @@ h3 {
 footer {
     clear: both;
     color: #fff;
-    opacity: 0.3;
+    opacity: 0.5;
     text-align: center;
     font-size: 12px;
     margin: 0 auto;
