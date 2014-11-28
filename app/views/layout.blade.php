@@ -46,17 +46,8 @@
             EVE Traders Handbook is licensed under the GNU General Public License (GPL-3.0). If you enjoy using this software, please consider making an in-game ISK donation to <a href="https://gate.eveonline.com/Profile/Shei%20Bushaava">Shei Bushaava</a>.
         </footer>
 
-        <script>
-
-            var filters = document.getElementsByTagName('input');
-
-            for (var i in filters) {
-                this.onchange = function (evt) {
-                    document.getElementsByClassName('filters')[0].submit();
-                };
-            }
-
-        </script>
+        <script src="/j/vendor/jquery-2.1.1.min.js"></script>
+        <script src="/j/eth.js"></script>
 
     </body>
 

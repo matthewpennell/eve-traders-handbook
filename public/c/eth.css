@@ -79,13 +79,13 @@ h2 {
     margin: 0;
 }
 
-.losses {
+table {
     background: #fff;
     width: 660px;
     line-height: 30px;
 }
 
-.losses tr {
+tr {
     height: 30px;
 }
 
@@ -98,18 +98,18 @@ h2 {
     background: #f4f4f4;
 }
 
-.losses th, .losses td {
+th, td {
     padding: 0 10px;
 }
 
-.losses th {
+th {
     background: #0a396b;
     color: #fff;
     font-weight: 600;
     text-align: left;
 }
 
-.losses .num {
+.num {
     text-align: right;
 }
 
@@ -193,6 +193,57 @@ h2 {
 
 .form-button:hover {
     opacity: 0.8;
+}
+
+/* ITEM DETAILS */
+
+.details {
+    margin: 20px 0 0;
+    background: #fff;
+    width: 660px;
+    overflow: hidden;
+}
+
+.loader {
+    display: block;
+    margin: 20px auto;
+}
+
+.icon {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.details h3 {
+    background: transparent;
+}
+
+.eve-central {
+    float: left;
+    clear: left;
+    width: 320px;
+    margin: 20px 0 0 20px;
+}
+
+.manufacturing, .prices {
+    float: right;
+    clear: right;
+    width: 280px;
+    margin: 20px 20px 20px 0;
+}
+
+.manufacturing tfoot {
+    font-weight: 600;
+}
+
+.warning {
+    font-size: 12px;
+    margin: 10px 0 0 20px;
+    width: 320px;
+}
+
+.jita-price {
+    color: #c00;
 }
 
 /* FILTERS */

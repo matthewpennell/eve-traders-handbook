@@ -55,6 +55,8 @@
             </tbody>
         </table>
 
+        <div class="details"></div>
+
         <?php echo $sidebar; ?>
 
     </div>

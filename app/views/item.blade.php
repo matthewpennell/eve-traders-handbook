@@ -1,73 +1,82 @@
-@extends('layout')
+<h2>Item details</h2>
 
-@section('content')
+@if ($icon)
+    <img class="icon" src="/eve/items/{{ $icon }}.png">
+@endif
 
-    <h2>Item details</h2>
+<h3>{{ $type->typeName }}</h3>
 
-    @if ($icon)
-        <img style="float: left;" src="/eve/items/{{ $icon }}.png">
-    @endif
+<table class="eve-central">
+    <thead>
+        <th colspan="2">Price history</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Volume</td>
+            <td class="num">{{ number_format(round($local_price->volume)) }}</td>
+        </tr>
+        <tr>
+            <td>Average</td>
+            <td class="num">{{ number_format(round($local_price->avg)) }}</td>
+        <tr>
+            <td>Min Price</td>
+            <td class="num">{{ number_format(round($local_price->min)) }}</td>
+        <tr>
+            <td>Max Price</td>
+            <td class="num">{{ number_format(round($local_price->max)) }}</td>
+        <tr>
+            <td>Median Price</td>
+            <td class="num">{{ number_format(round($local_price->median)) }}</td>
+        </tr>
+    </tbody>
+</table>
 
-    <p>{{ $type->typeName }}</p>
-
-    <p>{{ $type->description }}</p>
-
-    <p>Local prices:<br>
-        Volume = {{ number_format(round($local_price->volume)) }}<br>
-        Average = {{ number_format(round($local_price->avg)) }}<br>
-        Min Price = {{ number_format(round($local_price->min)) }}<br>
-        Max Price = {{ number_format(round($local_price->max)) }}<br>
-        Median Price = {{ number_format(round($local_price->median)) }}
-    </p>
-
-    <table class="manufacturing">
-        <thead>
+<table class="manufacturing">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th class="num">Price</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td>Total Price</td>
+            <td class="num">{{ number_format($total_price) }}</td>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach($manufacturing as $item)
             <tr>
-                <th>Item</th>
-                <th>Price</th>
+                <td>{{ $item->typeName }}&nbsp;&times;&nbsp;{{ number_format($item->qty) }}</td>
+                <td class="num">
+                    @if ($item->jita)
+                        <span class="jita-price">
+                    @endif
+                    {{ number_format($item->price) }}
+                    @if ($item->jita)
+                        </span>
+                    @endif
+                </td>
             </tr>
-        </thead>
-        <tfoot>
+        @endforeach
+    </tbody>
+</table>
+
+<p class="warning">Prices shown in <span class="jita-price">red</span> are Jita prices, and indicate items that cannot be purchased locally.</p>
+
+<table class="prices">
+    <thead>
+        <tr>
+            <th>Location</th>
+            <th class="num">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($prices as $price)
             <tr>
-                <td>Total Price</td>
-                <td class="numeric">{{ number_format($total_price) }}</td>
+                <td>{{ $price->solarSystemName }}</td>
+                <td class="num">{{ number_format(round($price->median)) }}</td>
             </tr>
-        </tfoot>
-        <tbody>
-            @foreach($manufacturing as $item)
-                <tr>
-                    <td>{{ $item->typeName }} &times; {{ number_format($item->qty) }}</td>
-                    <td class="numeric">
-                        @if ($item->jita)
-                            <span style="color: #c00;">
-                        @endif
-                        {{ number_format($item->price) }}
-                        @if ($item->jita)
-                            </span>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <p>Prices shown in <span style="color: #c00;">red</span> are Jita prices, and indicate items that cannot be purchased locally.</p>
-
-    <table class="prices">
-        <thead>
-            <tr>
-                <th>Location</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($prices as $price)
-                <tr>
-                    <td>{{ $price->solarSystemName }}</td>
-                    <td class="numeric">{{ number_format(round($price->median)) }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-
-@stop
+        @endforeach
+    </tbody>
+</table>
