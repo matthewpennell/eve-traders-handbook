@@ -30,7 +30,9 @@
                 <nav class="header-nav">
                     <ul role="navigation">
                         <li><a href="/settings">Settings</a></li>
+                        <!--
                         <li><a href="/logout">Log out</a></li>
+                        -->
                     </ul>
                 </nav>
             </div>
