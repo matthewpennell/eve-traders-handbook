@@ -121,20 +121,22 @@ class ImportController extends BaseController {
                         $ship = new Ship;
                         $ship->id = $kill->shipTypeID;
                         $ship->shipName = Type::find($kill->shipTypeID)->typeName;
-                        $ship->save();
+                        if (!stristr($ship->shipName, 'Capsule'))
+                        {
+                            $ship->save();
+                            // Insert the ship loss into the items database as well.
+                            $type = Type::find($kill->shipTypeID);
+                            $item = new Item;
+                            $item->killID = $row['killID'];
+                            $item->typeID = $kill->shipTypeID;
+                            $item->typeName = $type->typeName;
+                            $item->categoryName = $type->group->category['categoryName'];
+                            $item->metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
+                            $item->allowManufacture = (stristr($type->typeName, 'Capsule')) ? 0 : 1;
+                            $item->qty = 1;
+                            $item->save();
+                        }
                     }
-
-                    // Insert the ship loss into the items database as well.
-                    $type = Type::find($kill->shipTypeID);
-                    $item = new Item;
-                    $item->killID = $row['killID'];
-                    $item->typeID = $kill->shipTypeID;
-                    $item->typeName = $type->typeName;
-                    $item->categoryName = $type->group->category['categoryName'];
-                    $item->metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
-                    $item->allowManufacture = (stristr($type->typeName, 'Capsule')) ? 0 : 1;
-                    $item->qty = 1;
-                    $item->save();
 
                     // Add the category to the list of filters available on the site.
                     $filter = Filter::find($type->group->category['categoryID']);
