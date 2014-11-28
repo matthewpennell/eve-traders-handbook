@@ -18,8 +18,6 @@
         <link rel="stylesheet" href="/c/normalize.css">
         <link rel="stylesheet" href="/c/eth.css">
 
-        <script src="/j/vendor/modernizr-2.8.3.min.js"></script>
-
     </head>
 
     <body>
