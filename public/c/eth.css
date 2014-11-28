@@ -89,13 +89,13 @@ tr {
     height: 30px;
 }
 
-.losses tr:hover td {
-    background: #d0e2f6;
-    cursor: pointer;
-}
-
 .losses tbody tr:nth-child(even) {
     background: #f4f4f4;
+}
+
+.losses tbody tr:hover td {
+    background: #d0e2f6;
+    cursor: pointer;
 }
 
 th, td {
@@ -123,7 +123,7 @@ th {
     opacity: 0.5;
 }
 
-.losses tr:hover .industry {
+.losses tbody tr:hover .industry {
     opacity: 1;
 }
 
