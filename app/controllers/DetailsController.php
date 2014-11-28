@@ -139,6 +139,8 @@ class DetailsController extends BaseController {
 		// Save the cached potential profit figure.
 		$type->profit()->save($profit);
 
+		$profitToUse = ($profit->profitIndustry > $profit->profitImport) ? $profit->profitIndustry : $profit->profitImport;
+
 		return View::make('item')
 			->with('type', $type)
 			->with('icon', $icon)
@@ -146,7 +148,8 @@ class DetailsController extends BaseController {
 			->with('prices', $prices)
 			->with('manufacturing', $manufacturing)
 			->with('total_price', $total_price)
-			->with('profit', $profit);
+			->with('profit', $profit)
+			->with('profitToUse', $profitToUse);
 
 	}
 

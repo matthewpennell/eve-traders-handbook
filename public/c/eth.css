@@ -152,6 +152,19 @@ th {
     color: #c00;
 }
 
+.import {
+    background: #090;
+    border-radius: 2px;
+    color: #fff;
+    line-height: 1;
+    padding: 3px 5px;
+    margin-top: 7px;
+}
+
+.import.loss {
+    background: #c00;
+}
+
 /* FORMS */
 
 .form-field {

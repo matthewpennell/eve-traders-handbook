@@ -44,8 +44,8 @@
                             {{ number_format($item->qty) }}</td>
                         <td class="t{{ $item->typeID }}">
                             <a href="/details/{{ $item->typeID }}">{{ $item->typeName }}</a>
-                            @if ($item->profitIndustry)
-                                <span class="pandl {{ $item->profitOrLoss }}">{{ number_format(round($item->profitIndustry)) }}</span>
+                            @if ($item->profit)
+                                <span class="{{ $item->profitOrLoss }} {{ $item->profitType }}">{{ number_format(round($item->profit)) }}</span>
                             @endif
                         </td>
                         <td>{{ $item->category }}</td>

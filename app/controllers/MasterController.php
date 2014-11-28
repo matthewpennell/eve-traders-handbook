@@ -118,6 +118,12 @@ class MasterController extends BaseController {
 			}
 			else
 			{
+				// Figure out which profit figure to display.
+				$profitIndustry = $item->type->profit['profitIndustry'];
+				$profitImport = $item->type->profit['profitImport'];
+				$profit = ($profitIndustry > $profitImport) ? $profitIndustry : $profitImport;
+				$profitType = ($profitIndustry > $profitImport) ? 'local' : 'import';
+				$profitOrLoss = ($profit > 0) ? 'profit' : 'loss';
 				$table[$item->typeID] = (object) array(
 					"qty"				=> $item->qty,
 					"typeID"			=> $item->typeID,
@@ -125,9 +131,9 @@ class MasterController extends BaseController {
 					"category"			=> $item->categoryName,
 					"meta"				=> $item->metaGroupName,
 					"allowManufacture"	=> $item->allowManufacture,
-					"profitIndustry"	=> $item->type->profit['profitIndustry'],
-					"profitImport"		=> $item->type->profit['profitImport'],
-					"profitOrLoss"		=> ($item->type->profit['profitIndustry'] > 0) ? 'profit' : 'loss',
+					"profit"			=> $profit,
+					"profitType"		=> $profitType,
+					"profitOrLoss"		=> $profitOrLoss,
 				);
 				$simple_array[] = $item->typeID;
 			}

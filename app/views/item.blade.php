@@ -85,11 +85,14 @@
 
     // Update the display of potential profit for this item in the main table.
     $(document).ready(function () {
-        var profit = {{ $profit->profitIndustry }};
-        var span_class = (profit < 0) ? 'loss' : 'profit';
+        var profitIndustry = {{ $profit->profitIndustry }}
+            profitImport = {{ $profit->profitImport }};
+        var profit = (profitIndustry > profitImport) ? profitIndustry : profitImport,
+            profitType = (profitIndustry > profitImport) ? 'local' : 'import';
+        var profitOrLoss = (profit > 0) ? 'profit' : 'loss';
         var $target = $('td.t{{ $type->typeID }}');
         $target.find('span').remove();
-        $('<span class="' + span_class + '">{{ number_format($profit->profitIndustry) }}</span>').appendTo($target);
+        $('<span class="' + profitType + ' ' + profitOrLoss + '">{{ number_format($profitToUse) }}</span>').appendTo($target);
     });
 
 </script>
