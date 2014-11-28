@@ -115,12 +115,12 @@ class ImportController extends BaseController {
 
                     // Insert the ship type that was lost into the database unless it already exists.
                     $ship = Ship::find($kill->shipTypeID);
-
+                    $type = Type::find($kill->shipTypeID);
+                    
                     if ( ! isset($ship->id))
                     {
                         $ship = new Ship;
                         $ship->id = $kill->shipTypeID;
-                        $type = Type::find($kill->shipTypeID);
                         $ship->shipName = $type->typeName;
                         if (!stristr($ship->shipName, 'Capsule'))
                         {
