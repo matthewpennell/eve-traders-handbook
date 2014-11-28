@@ -1,7 +1,7 @@
 <h2>Item details</h2>
 
 @if ($icon)
-    <img class="icon" src="/eve/items/{{ $icon }}.png">
+    <img class="icon" src="{{ $icon }}">
 @endif
 
 <h3>{{ $type->typeName }}</h3>
@@ -62,8 +62,6 @@
     </tbody>
 </table>
 
-<p class="warning">Prices shown in <span class="jita-price">red</span> are Jita prices, and indicate items that cannot be purchased locally.</p>
-
 <table class="prices">
     <thead>
         <tr>
@@ -80,6 +78,8 @@
         @endforeach
     </tbody>
 </table>
+
+<p class="warning">Prices shown in <span class="jita-price">red</span> are Jita prices, and indicate items that cannot be purchased locally.</p>
 
 <script>
 

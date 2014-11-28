@@ -251,9 +251,11 @@ th {
 }
 
 .warning {
+    clear: both;
+    color: #808080;
+    text-align: center;
     font-size: 12px;
-    margin: 10px 0 0 20px;
-    width: 320px;
+    margin: 10px 0 20px;
 }
 
 .jita-price {

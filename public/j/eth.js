@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     // Clicking an item in the table loads the details via Ajax.
-    $('.losses a').click(function () {
+    $('.losses tbody a').click(function () {
         $('.details').html('<img src="/i/loader.gif" class="loader">');
         $.get(this.href, function (data) {
             $('.details').html(data);
