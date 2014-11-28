@@ -145,7 +145,8 @@ class DetailsController extends BaseController {
 			->with('local_price', $local_price)
 			->with('prices', $prices)
 			->with('manufacturing', $manufacturing)
-			->with('total_price', $total_price);
+			->with('total_price', $total_price)
+			->with('profit', $profit);
 
 	}
 

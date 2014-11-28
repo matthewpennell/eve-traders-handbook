@@ -42,10 +42,10 @@
                                 <img src="/eve/items/BPO.png" class="industry" title="This item can be manufactured by players" alt="Blueprint">
                             @endif
                             {{ number_format($item->qty) }}</td>
-                        <td>
+                        <td class="t{{ $item->typeID }}">
                             <a href="/details/{{ $item->typeID }}">{{ $item->typeName }}</a>
                             @if ($item->profitIndustry)
-                                <span class="{{ $item->profitOrLoss }}">{{ number_format(round($item->profitIndustry)) }}</span>
+                                <span class="pandl {{ $item->profitOrLoss }}">{{ number_format(round($item->profitIndustry)) }}</span>
                             @endif
                         </td>
                         <td>{{ $item->category }}</td>

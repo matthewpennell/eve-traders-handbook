@@ -80,3 +80,16 @@
         @endforeach
     </tbody>
 </table>
+
+<script>
+
+    // Update the display of potential profit for this item in the main table.
+    $(document).ready(function () {
+        var profit = {{ $profit->profitIndustry }};
+        var span_class = (profit < 0) ? 'loss' : 'profit';
+        var $target = $('td.t{{ $type->typeID }}');
+        $target.find('span').remove();
+        $('<span class="' + span_class + '">{{ number_format($profit->profitIndustry) }}</span>').appendTo($target);
+    });
+
+</script>

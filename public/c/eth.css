@@ -211,11 +211,12 @@ th {
 
 .icon {
     float: left;
-    margin: 0 10px 0 20px;
+    margin: 20px 10px 0 20px;
 }
 
 .details h3 {
     background: transparent;
+    margin-top: 20px;
 }
 
 .eve-central {
