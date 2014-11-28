@@ -10,4 +10,9 @@ class MarketGroup extends Eloquent {
         return $this->hasMany('Type');
     }
 
+    public function icon()
+    {
+        return $this->belongsTo('Icon', 'iconID');
+    }
+
 }

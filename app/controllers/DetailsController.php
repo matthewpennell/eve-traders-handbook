@@ -29,8 +29,9 @@ class DetailsController extends BaseController {
 		$icon = '';
 		if ($type->Group->Icon)
 		{
-			$icon = str_replace('_', '_64_', $type->Group->Icon->iconFile);
+			$icon = str_replace('_', '_64_', $type->MarketGroup->Icon->iconFile);
 			$icon = preg_replace('/^0/', '', $icon);
+			$icon = preg_replace('/0(.)$/', '$1', $icon);
 		}
 
 		// Retrieve the current price ranges this item sells for.
