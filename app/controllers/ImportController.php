@@ -120,12 +120,12 @@ class ImportController extends BaseController {
                     {
                         $ship = new Ship;
                         $ship->id = $kill->shipTypeID;
-                        $ship->shipName = Type::find($kill->shipTypeID)->typeName;
+                        $type = Type::find($kill->shipTypeID);
+                        $ship->shipName = $type->typeName;
                         if (!stristr($ship->shipName, 'Capsule'))
                         {
                             $ship->save();
                             // Insert the ship loss into the items database as well.
-                            $type = Type::find($kill->shipTypeID);
                             $item = new Item;
                             $item->killID = $row['killID'];
                             $item->typeID = $kill->shipTypeID;
