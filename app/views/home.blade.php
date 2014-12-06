@@ -44,12 +44,13 @@
                             {{ number_format($item->qty) }}</td>
                         <td class="t{{ $item->typeID }}">
                             <a href="/details/{{ $item->typeID }}">{{ $item->typeName }}</a>
-                            @if ($item->profit)
-                                <span class="{{ $item->profitOrLoss }} {{ $item->profitType }}">{{ number_format(round($item->profit)) }}</span>
+                            @if ($item->profitIndustry || $item->profitImport)
+                                <?php $profit = ($item->profitIndustry > $item->profitImport) ? $item->profitIndustry : $item->profitImport; ?>
+                                <span class="{{ ($profit > 0) ? 'profit' : 'loss' }} {{ ($item->profitIndustry > $item->profitImport) ? 'local' : 'import' }}">{{ number_format(round($profit)) }}</span>
                             @endif
                         </td>
-                        <td>{{ $item->category }}</td>
-                        <td>{{ $item->meta }}</td>
+                        <td>{{ $item->categoryName }}</td>
+                        <td>{{ $item->metaGroupName }}</td>
                     </tr>
                 @endforeach
             </tbody>
