@@ -27,21 +27,17 @@ class DetailsController extends BaseController {
 
 		// Load the 64x64 icon to display.
 		$icon = '';
-		if ($type->Group->Icon)
+		$ship = Ship::where('id', $id)->get();
+		if (count($ship))
+		{
+			$icon = 'https://image.eveonline.com/Render/' . $id . '_128.png';
+		}
+		elseif ($type->Group->Icon)
 		{
 			$icon = str_replace('_', '_64_', $type->MarketGroup->Icon->iconFile);
 			$icon = preg_replace('/^0/', '', $icon);
 			$icon = preg_replace('/0(.)$/', '$1', $icon);
 			$icon = '/eve/items/' . $icon . '.png';
-		}
-		else
-		{
-			// If it's a ship, use the EVE Online Image Server.
-			$ship = Ship::where('id', $id)->get();
-			if (isset($ship))
-			{
-				$icon = 'https://image.eveonline.com/Render/' . $id . '_128.png';
-			}
 		}
 
 		// Retrieve the current price ranges this item sells for.
