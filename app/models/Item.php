@@ -27,4 +27,10 @@ class Item extends Eloquent {
             ->get();
     }
 
+    public static function getRowCount($whereraw = NULL)
+    {
+        $query = DB::select(DB::raw('SELECT COUNT(*) AS count FROM (SELECT typeID, SUM(qty) FROM items WHERE (' . implode(') and (', $whereraw) . ') GROUP BY typeID) AS custom'));
+        return $query[0]->count;
+    }
+
 }

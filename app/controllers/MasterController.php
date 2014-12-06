@@ -96,7 +96,7 @@ class MasterController extends BaseController {
 			->with('items', $items)
 			->with('page', $page)
 			->with('filter_url', $filter_url)
-			->with('pages', count($items) / 20)
+			->with('pages', Item::getRowCount($whereraw) / 20)
 			->nest('sidebar', 'filters', array(
 				'filters'					=> Filter::all()->sortBy('categoryName'),
 				'meta_filters'				=> array('Meta 0', 'Meta 1', 'Meta 2', 'Meta 3', 'Meta 4', 'Meta 5', 'Tech II'),
