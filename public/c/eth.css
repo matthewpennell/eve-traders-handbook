@@ -25,6 +25,7 @@ a {
 header {
     height: 100px;
     background: #fff;
+    margin-bottom: 20px;
 }
 
 h1 {
@@ -55,10 +56,13 @@ h1 a {
 
 .background {
     background: #eee;
+    overflow: hidden;
+}
+
+.main {
+    float: left;
+    width: 660px;
     padding: 20px;
-    position: relative;
-    top: 20px;
-    min-height: 840px; /* hack */
 }
 
 .background h1 {
@@ -265,11 +269,9 @@ th {
 /* FILTERS */
 
 .filters {
-    position: absolute;
-    right: 0;
-    top: 0;
+    float: right;
     background: #fff;
-    width: 280px;
+    width: 279px;
     border-left: 1px solid #ccc;
 }
 
