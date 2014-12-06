@@ -4,31 +4,35 @@
 
 <div class="background">
 
-    <h1>Settings</h1>
+    <div class="main">
 
-    {{ Form::open() }}
+        <h1>Settings</h1>
 
-    @foreach($settings as $setting)
-        <div class="form-field">
-            {{ Form::label($setting->key, $setting->label, array('class' => 'form-label')) }}
-            {{ Form::text($setting->key, $setting->value, array('class' => 'form-input')) }}
-        </div>
-    @endforeach
+        {{ Form::open() }}
 
-    {{ Form::label('Filters', 'Default filters', array('class' => 'form-label')) }}
+            @foreach($settings as $setting)
+                <div class="form-field">
+                    {{ Form::label($setting->key, $setting->label, array('class' => 'form-label')) }}
+                    {{ Form::text($setting->key, $setting->value, array('class' => 'form-input')) }}
+                </div>
+            @endforeach
 
-    @foreach ($filters as $filter)
-        <label class="inline-checkbox">
-            {{ Form::checkbox($filter->categoryName, $filter->categoryName, $filter->is_default) }}
-            {{ $filter->categoryName }}
-        </label>
-    @endforeach
+            {{ Form::label('Filters', 'Default filters', array('class' => 'form-label')) }}
 
-    <div class="form-actions">
-        {{ Form::submit('Save and Update', array('class' => 'form-button')) }}
+            @foreach ($filters as $filter)
+                <label class="inline-checkbox">
+                    {{ Form::checkbox($filter->categoryName, $filter->categoryName, $filter->is_default) }}
+                    {{ $filter->categoryName }}
+                </label>
+            @endforeach
+
+            <div class="form-actions">
+                {{ Form::submit('Save and Update', array('class' => 'form-button')) }}
+            </div>
+
+        {{ Form::close() }}
+
     </div>
-
-    {{ Form::close() }}
 
 </div>
 
