@@ -51,7 +51,7 @@ class MasterController extends BaseController {
 			$whereraw[] = implode(' or ', $meta_filter_raw);
 
 			// Make a URL to use in links.
-			$filter_url .= 'meta[]=' . implode('&meta[]=', $active_meta_filters);
+			$filter_url .= '&meta[]=' . implode('&meta[]=', $active_meta_filters);
 		}
 
 		// Check whether there are any filters on the existence of blueprints.
@@ -70,7 +70,7 @@ class MasterController extends BaseController {
 			$whereraw[] = implode(' or ', $blueprint_filter_raw);
 
 			// Make a URL to use in links.
-			$filter_url .= 'blueprint[]=' . implode('&blueprint[]=', $active_blueprint_filters);
+			$filter_url .= '&blueprint[]=' . implode('&blueprint[]=', $active_blueprint_filters);
 		}
 
 		if (count($active_filters))
@@ -85,7 +85,7 @@ class MasterController extends BaseController {
 			$whereraw[] = implode(' or ', $active_filter_raw);
 
 			// Make a URL to use in links.
-			$filter_url .= 'filter[]=' . implode('&filter[]=', $active_filters);
+			$filter_url .= '&filter[]=' . implode('&filter[]=', $active_filters);
 		}
 
 		// Query the database for the chosen items.

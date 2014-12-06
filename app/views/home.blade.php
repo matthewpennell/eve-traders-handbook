@@ -22,14 +22,14 @@
                             <a href="/?{{ $filter_url }}" class="ffwd">&#9666;&#9666;</a>
                         @endif
                         @if ($page > 1)
-                            <a href="/?page={{ $page - 1 }}&{{ $filter_url }}">&#9666;</a>
+                            <a href="/?page={{ $page - 1 }}{{ $filter_url }}">&#9666;</a>
                         @endif
                         Page {{ $page }} of {{ ceil($pages) }}
                         @if ($page <= ceil($pages) - 1)
-                            <a href="/?page={{ $page + 1 }}&{{ $filter_url }}">&#9656;</a>
+                            <a href="/?page={{ $page + 1 }}{{ $filter_url }}">&#9656;</a>
                         @endif
                         @if ($page <= ceil($pages) - 2)
-                            <a href="/?page={{ ceil($pages) }}&{{ $filter_url }}" class="ffwd">&#9656;&#9656;</a>
+                            <a href="/?page={{ ceil($pages) }}{{ $filter_url }}" class="ffwd">&#9656;&#9656;</a>
                         @endif
                     </td>
                 </tr>
