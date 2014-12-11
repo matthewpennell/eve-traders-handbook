@@ -12,4 +12,21 @@ It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and t
 
 ### Installation
 
-TBC.
+Clone or download this repository to your local machine or live server.
+
+As the source data for all EVE Online assets is rather large, they are not provided with this repository. Download the individual .sql.bz2 tables listed below from [www.fuzzwork.co.uk/dump/latest](https://www.fuzzwork.co.uk/dump/latest/), unzip them, and import them into your database:
+
+* dgmTypeAttributes
+* eveIcons
+* industryActivityMaterials
+* industryActivitySkills
+* invCategories
+* invGroups
+* invMarketGroups
+* invMetaGroups
+* invMetaTypes
+* invTypeMaterials
+* invTypes
+* mapSolarSystems
+
+Now import the eth_database_setup.sql file into your database to create the custom tables used by the application.

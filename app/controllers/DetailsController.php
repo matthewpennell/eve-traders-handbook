@@ -1,6 +1,7 @@
 <?php
 
 use Httpful\Request;
+use ETH\TechII;
 
 class DetailsController extends BaseController {
 
@@ -9,7 +10,8 @@ class DetailsController extends BaseController {
 	| Details Controller
 	|--------------------------------------------------------------------------
 	|
-	| TODO: Write comments here.
+	| Displays information about a specific item (Type), including
+	| potential profit for importing or manufacturing.
 	|
 	*/
 
@@ -45,7 +47,7 @@ class DetailsController extends BaseController {
 			. '?'
 			. 'typeid=' . $id
 			. '&'
-			. 'regionlimit=10000014';
+			. 'regionlimit=10000014'; // TODO: Parameterise this
 
 		$response = Request::get($url)->send();
 		$xml = simplexml_load_string($response->body);
@@ -57,55 +59,103 @@ class DetailsController extends BaseController {
 			"median"	=> $xml->marketstat->type->sell->median,
 		);
 
-		// Get a list of what is needed to manufacture the item.
-		$manufacturing = array();
-		$total_price = 0;
-		$type_materials = DB::table('invTypeMaterials')->where('typeID', $id)->get();
-		foreach ($type_materials as $material)
+		// Tech II items need to be treated differently.
+		if ($type->metaType->metaGroup['metaGroupName'] == 'Tech II')
 		{
-			// For each manufacturing item, make an API call to get the local price of materials.
-			// TODO: Change this to use stored home region ID and to cache the result.
-			$url = 'http://api.eve-central.com/api/marketstat'
+
+			// Retrieve an array of different possibilities for decryptors.
+			$tech_two = TechII::getInventionFigures($type);
+
+			// For each decryptor, show the potential profit.
+			$potential_profits = array();
+			$total_price = -1000000000;
+
+			foreach ($tech_two as $decryptor)
+			{
+
+				$max_runs = 10;
+				if (isset($decryptor['max_run_modifier']))
+				{
+					$max_runs += $decryptor['max_run_modifier'];
+				}
+				$chance_of_success = $decryptor['chance_of_success'] / 100;
+				$invention_cost = $decryptor['invention_price'];
+				$manufacturing_cost_per_blueprint = $max_runs * $decryptor['t2_manufacture_price']; // TODO: use material efficiency modifier
+				$income_per_blueprint = $local_price->median * $max_runs;
+				$profit_per_blueprint = $income_per_blueprint - $manufacturing_cost_per_blueprint;
+				$overall_profit = ($profit_per_blueprint * $chance_of_success) - $invention_cost;
+
+				$potential_profits[] = array(
+					"typeName"	=> $decryptor['typeName'],
+					"profit"	=> $overall_profit,
+				);
+
+				if ($overall_profit > $total_price)
+				{
+					$total_price = $overall_profit;
+				}
+
+			}
+
+			$manufacturing = NULL;
+
+		}
+		else
+		{
+
+			// Get a list of what is needed to manufacture the item.
+			$manufacturing = array();
+			$total_price = 0;
+			$type_materials = DB::table('invTypeMaterials')->where('typeID', $id)->get();
+			foreach ($type_materials as $material)
+			{
+				// For each manufacturing item, make an API call to get the local price of materials.
+				// TODO: Change this to use stored home region ID and to cache the result.
+				$url = 'http://api.eve-central.com/api/marketstat'
 				. '?'
 				. 'typeid=' . $material->materialTypeID
 				. '&'
 				. 'regionlimit=10000014';
 
-			$response = Request::get($url)->send();
-			$xml = simplexml_load_string($response->body);
-			$price_per_unit = $xml->marketstat->type->sell->median;
-			$jita_price = FALSE;
+				$response = Request::get($url)->send();
+				$xml = simplexml_load_string($response->body);
+				$price_per_unit = $xml->marketstat->type->sell->median;
+				$jita_price = FALSE;
 
-			// If the price returned is zero for the selected region, do another check at Jita prices.
-			if ($price_per_unit == 0)
-			{
-				$url = 'http://api.eve-central.com/api/marketstat'
+				// If the price returned is zero for the selected region, do another check at Jita prices.
+				if ($price_per_unit == 0)
+				{
+					$url = 'http://api.eve-central.com/api/marketstat'
 					. '?'
 					. 'typeid=' . $material->materialTypeID
 					. '&'
 					. 'usesystem=30000142';
 
-				$response = Request::get($url)->send();
-				$jita = simplexml_load_string($response->body);
-				$price_per_unit = $jita->marketstat->type->sell->median;
-				$jita_price = TRUE;
+					$response = Request::get($url)->send();
+					$jita = simplexml_load_string($response->body);
+					$price_per_unit = $jita->marketstat->type->sell->median;
+					$jita_price = TRUE;
+				}
+
+				$manufacturing[] = (object) array(
+					"typeName"	=> Type::find($material->materialTypeID)->typeName,
+					"qty"		=> $material->quantity,
+					"price"		=> $material->quantity * $price_per_unit,
+					"jita"		=> $jita_price,
+				);
+				$total_price += $material->quantity * $price_per_unit;
 			}
 
-			$manufacturing[] = (object) array(
-				"typeName"	=> Type::find($material->materialTypeID)->typeName,
-				"qty"		=> $material->quantity,
-				"price"		=> $material->quantity * $price_per_unit,
-				"jita"		=> $jita_price,
-			);
-			$total_price += $material->quantity * $price_per_unit;
+			$potential_profits = NULL;
+
 		}
 
 		// Make an API call to eve-central for the price at Jita.
 		$url = 'http://api.eve-central.com/api/marketstat'
-			. '?'
-			. 'typeid=' . $id
-			. '&'
-			. 'usesystem=30000142';
+		. '?'
+		. 'typeid=' . $id
+		. '&'
+		. 'usesystem=30000142';
 
 		$response = Request::get($url)->send();
 
@@ -118,10 +168,10 @@ class DetailsController extends BaseController {
 
 		// Make an API call to eve-central for the price at Amarr.
 		$url = 'http://api.eve-central.com/api/marketstat'
-			. '?'
-			. 'typeid=' . $id
-			. '&'
-			. 'usesystem=30002187';
+		. '?'
+		. 'typeid=' . $id
+		. '&'
+		. 'usesystem=30002187';
 
 		$response = Request::get($url)->send();
 
@@ -153,6 +203,7 @@ class DetailsController extends BaseController {
 			->with('local_price', $local_price)
 			->with('prices', $prices)
 			->with('manufacturing', $manufacturing)
+			->with('t2_options', $potential_profits)
 			->with('total_price', $total_price)
 			->with('profit', $profit)
 			->with('profitToUse', $profitToUse);

@@ -31,36 +31,57 @@
     </tbody>
 </table>
 
-<table class="manufacturing">
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th class="num">Price</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <td>Total Price</td>
-            <td class="num">{{ number_format($total_price) }}</td>
-        </tr>
-    </tfoot>
-    <tbody>
-        @foreach($manufacturing as $item)
+@if ($manufacturing)
+    <table class="manufacturing">
+        <thead>
             <tr>
-                <td>{{ $item->typeName }}&nbsp;&times;&nbsp;{{ number_format($item->qty) }}</td>
-                <td class="num">
-                    @if ($item->jita)
-                        <span class="jita-price">
-                    @endif
-                    {{ number_format($item->price) }}
-                    @if ($item->jita)
-                        </span>
-                    @endif
-                </td>
+                <th>Item</th>
+                <th class="num">Price</th>
             </tr>
-        @endforeach
-    </tbody>
-</table>
+        </thead>
+        <tfoot>
+            <tr>
+                <td>Total Price</td>
+                <td class="num">{{ number_format($total_price) }}</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach($manufacturing as $item)
+                <tr>
+                    <td>{{ $item->typeName }}&nbsp;&times;&nbsp;{{ number_format($item->qty) }}</td>
+                    <td class="num">
+                        @if ($item->jita)
+                            <span class="jita-price">
+                        @endif
+                        {{ number_format($item->price) }}
+                        @if ($item->jita)
+                            </span>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
+
+@if ($t2_options)
+    <table class="manufacturing">
+        <thead>
+            <tr>
+                <th>Decryptor</th>
+                <th class="num">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($t2_options as $decryptor)
+                <tr>
+                    <td>{{ $decryptor['typeName'] }}</td>
+                    <td class="num">{{ number_format($decryptor['profit']) }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
 
 <table class="prices">
     <thead>
