@@ -9,8 +9,7 @@ class ImportController extends BaseController {
     | Import Controller
     |--------------------------------------------------------------------------
     |
-    | Initial test controller to try out various XML import options.
-    | TODO: Update this commment.
+    | Import most recent kill data from zKillboard API.
     |
     */
 
@@ -116,7 +115,7 @@ class ImportController extends BaseController {
                     // Insert the ship type that was lost into the database unless it already exists.
                     $ship = Ship::find($kill->shipTypeID);
                     $type = Type::find($kill->shipTypeID);
-                    
+
                     if ( ! isset($ship->id))
                     {
                         $ship = new Ship;
@@ -155,44 +154,71 @@ class ImportController extends BaseController {
                     {
                         foreach ($row->rowset->row as $loss)
                         {
-                            // Create the new item.
-                            $type = Type::find($loss['typeID']);
-                            $item = new Item;
-                            $item->killID = $row['killID'];
-                            $item->typeID = $loss['typeID'];
-                            $item->typeName = $type->typeName;
-                            $item->categoryName = $type->group->category['categoryName'];
-                            $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
-                            if ($metaGroupName == 'Tech I' || $metaGroupName == '')
+                            // If this item already exists in the items table, we don't need to re-query all the additional
+                            // information, we can just copy it from an existing row.
+                            $item = Item::firstOrNew(array('typeID' => $loss['typeID']));
+
+                            if ($item->exists())
                             {
-                                $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $loss['typeID'])->where('attributeID', 633)->first();
-                                if (isset($metaLevel))
+
+                                // This type has already been seen. Duplicate the record and save the new instance.
+                                $clone = new Item;
+                                $clone = $item->replicate();
+
+                                // Update the right killID and quantity, and unset the primary key and date columns.
+                                $clone->killID = $row['killID'];
+                                $clone->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
+                                unset($clone->id);
+                                unset($clone->created_at);
+                                unset($clone->updated_at);
+
+                                // Save the cloned row.
+                                $clone->save();
+
+                            }
+                            else
+                            {
+
+                                // This is a never-before-seen lost item. Create a new row and look up all the related details.
+                                $type = Type::find($loss['typeID']);
+                                $item->killID = $row['killID'];
+                                $item->typeID = $loss['typeID'];
+                                $item->typeName = $type->typeName;
+                                $item->categoryName = $type->group->category['categoryName'];
+                                $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
+                                if ($metaGroupName == 'Tech I' || $metaGroupName == '')
                                 {
-                                    $metaGroupName = 'Meta ';
-                                    $metaGroupName .= (isset($metaLevel->valueInt)) ? $metaLevel->valueInt : $metaLevel->valueFloat;
+                                    $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $loss['typeID'])->where('attributeID', 633)->first();
+                                    if (isset($metaLevel))
+                                    {
+                                        $metaGroupName = 'Meta ';
+                                        $metaGroupName .= (isset($metaLevel->valueInt)) ? $metaLevel->valueInt : $metaLevel->valueFloat;
+                                    }
                                 }
+                                $item->metaGroupName = $metaGroupName;
+                                $blueprint = Type::where('typeName', $type->typeName . ' Blueprint')->count();
+                                if ($blueprint > 0)
+                                {
+                                    $item->allowManufacture = 1;
+                                }
+                                $item->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
+                                $item->save();
+
+                                // Add the category to the list of filters available on the site.
+                                $filter = Filter::find($type->group->category['categoryID']);
+
+                                if ( ! isset($filter->categoryID))
+                                {
+                                    $filter = new Filter;
+                                    $filter->categoryID = $type->group->category['categoryID'];
+                                    $filter->categoryName = $type->group->category['categoryName'];
+                                    $filter->iconID = $type->group->category['iconID'];
+                                    $filter->save();
+                                }
+
                             }
-                            $item->metaGroupName = $metaGroupName;
-                            $blueprint = Type::where('typeName', $type->typeName . ' Blueprint')->count();
-                            if ($blueprint > 0)
-                            {
-                                $item->allowManufacture = 1;
-                            }
-                            $item->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
-                            $item->save();
                         }
 
-                        // Add the category to the list of filters available on the site.
-                        $filter = Filter::find($type->group->category['categoryID']);
-
-                        if ( ! isset($filter->categoryID))
-                        {
-                            $filter = new Filter;
-                            $filter->categoryID = $type->group->category['categoryID'];
-                            $filter->categoryName = $type->group->category['categoryName'];
-                            $filter->iconID = $type->group->category['iconID'];
-                            $filter->save();
-                        }
                     }
 
                 }
