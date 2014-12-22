@@ -1,6 +1,6 @@
 <?php
 
-use Httpful\Request;
+use ETH\API;
 use ETH\TechII;
 
 class DetailsController extends BaseController {
@@ -14,7 +14,6 @@ class DetailsController extends BaseController {
 	| potential profit for importing or manufacturing.
 	|
 	*/
-
 
 	/**
 	 * Display detailed information about a specific item, including the icon,
@@ -43,14 +42,7 @@ class DetailsController extends BaseController {
 		}
 
 		// Retrieve the current price ranges this item sells for.
-		$url = 'http://api.eve-central.com/api/marketstat'
-			. '?'
-			. 'typeid=' . $id
-			. '&'
-			. 'regionlimit=10000014'; // TODO: Parameterise this
-
-		$response = Request::get($url)->send();
-		$xml = simplexml_load_string($response->body);
+		$xml = API::eveCentral(array($id), 10000014);
 		$local_price = (object) array(
 			"volume"	=> $xml->marketstat->type->sell->volume,
 			"avg"		=> $xml->marketstat->type->sell->avg,
@@ -60,7 +52,7 @@ class DetailsController extends BaseController {
 		);
 
 		// Tech II items need to be treated differently.
-		if ($type->metaType->metaGroup['metaGroupName'] == 'Tech II')
+		if ($type->metaType && $type->metaType->metaGroup && $type->metaType->metaGroup['metaGroupName'] == 'Tech II')
 		{
 
 			// Retrieve an array of different possibilities for decryptors.
@@ -107,75 +99,66 @@ class DetailsController extends BaseController {
 			$manufacturing = array();
 			$total_price = 0;
 			$type_materials = DB::table('invTypeMaterials')->where('typeID', $id)->get();
+			$types = array();
+			$jita_types = array();
+
+			// Loop through all the materials. For each one, add it to an array we will use to show manufacturing details.
 			foreach ($type_materials as $material)
 			{
-				// For each manufacturing item, make an API call to get the local price of materials.
-				// TODO: Change this to use stored home region ID and to cache the result.
-				$url = 'http://api.eve-central.com/api/marketstat'
-				. '?'
-				. 'typeid=' . $material->materialTypeID
-				. '&'
-				. 'regionlimit=10000014';
-
-				$response = Request::get($url)->send();
-				$xml = simplexml_load_string($response->body);
-				$price_per_unit = $xml->marketstat->type->sell->median;
-				$jita_price = FALSE;
-
-				// If the price returned is zero for the selected region, do another check at Jita prices.
-				if ($price_per_unit == 0)
-				{
-					$url = 'http://api.eve-central.com/api/marketstat'
-					. '?'
-					. 'typeid=' . $material->materialTypeID
-					. '&'
-					. 'usesystem=30000142';
-
-					$response = Request::get($url)->send();
-					$jita = simplexml_load_string($response->body);
-					$price_per_unit = $jita->marketstat->type->sell->median;
-					$jita_price = TRUE;
-				}
-
-				$manufacturing[] = (object) array(
+				// Build an array for the eve-central API call.
+				$types[] = $material->materialTypeID;
+				// Build an array for the eventual output.
+				$manufacturing[$material->materialTypeID] = (object) array(
 					"typeName"	=> Type::find($material->materialTypeID)->typeName,
 					"qty"		=> $material->quantity,
-					"price"		=> $material->quantity * $price_per_unit,
-					"jita"		=> $jita_price,
+					"price"		=> 0,
+					"jita"		=> FALSE,
 				);
-				$total_price += $material->quantity * $price_per_unit;
+			}
+
+			// Make an API call to get the local price of materials.
+			$xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
+
+			// Loop through each returned price and update the data in the manufacturing array.
+			foreach($xml->marketstat->type as $api_result)
+			{
+				if ($api_result->sell->median != 0)
+				{
+					$manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
+					$total_price += $manufacturing[(string)$api_result['id']]->price;
+				}
+				else
+				{
+					// Build an array of types to check prices at Jita.
+					$jita_types[] = $api_result['id'];
+				}
+			}
+
+			// If we need to check prices at Jita, make another API call.
+			if (count($jita_types))
+			{
+				$xml = API::eveCentral($jita_types, NULL, 30000142);
+				// Loop through each returned price and update the data in the manufacturing array.
+				foreach($xml->marketstat->type as $api_result)
+				{
+					$manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
+					$manufacturing[(string)$api_result['id']]->jita = TRUE;
+					$total_price += $manufacturing[(string)$api_result['id']]->price;
+				}
 			}
 
 			$potential_profits = NULL;
 
 		}
 
-		// Make an API call to eve-central for the price at Jita.
-		$url = 'http://api.eve-central.com/api/marketstat'
-		. '?'
-		. 'typeid=' . $id
-		. '&'
-		. 'usesystem=30000142';
-
-		$response = Request::get($url)->send();
-
-		$jita = simplexml_load_string($response->body);
+		$jita = API::eveCentral($id, NULL, 30000142);
 
 		$prices[] = (object) array(
 			"solarSystemName"	=> "Jita",
 			"median"			=> $jita->marketstat->type->sell->median,
 		);
 
-		// Make an API call to eve-central for the price at Amarr.
-		$url = 'http://api.eve-central.com/api/marketstat'
-		. '?'
-		. 'typeid=' . $id
-		. '&'
-		. 'usesystem=30002187';
-
-		$response = Request::get($url)->send();
-
-		$amarr = simplexml_load_string($response->body);
+		$amarr = API::eveCentral($id, NULL, 30002187);
 
 		$prices[] = (object) array(
 			"solarSystemName"	=> "Amarr",
