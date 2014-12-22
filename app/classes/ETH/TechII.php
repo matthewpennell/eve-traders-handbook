@@ -68,17 +68,17 @@ class TechII {
         $xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
 
         // Loop through each returned price and update the data in the manufacturing array.
-        foreach($xml->marketstat->type as $api_result)
+        foreach($xml as $api_result)
         {
-            if ($api_result->sell->median != 0)
+            if ($api_result->median != 0)
             {
-                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
-                $total_price += $manufacturing[(string)$api_result['id']]->price;
+                $manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+                $total_price += $manufacturing[$api_result->id]->price;
             }
             else
             {
                 // Build an array of types to check prices at Jita.
-                $jita_types[] = $api_result['id'];
+                $jita_types[] = $api_result->id;
             }
         }
 
@@ -87,11 +87,11 @@ class TechII {
         {
             $xml = API::eveCentral($jita_types, NULL, 30000142);
             // Loop through each returned price and update the data in the manufacturing array.
-            foreach($xml->marketstat->type as $api_result)
+            foreach($xml as $api_result)
             {
-                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
-                $manufacturing[(string)$api_result['id']]->jita = TRUE;
-                $total_price += $manufacturing[(string)$api_result['id']]->price;
+                $manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+                $manufacturing[$api_result->id]->jita = TRUE;
+                $total_price += $manufacturing[$api_result->id]->price;
             }
         }
 
@@ -158,17 +158,17 @@ class TechII {
         $xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
 
         // Loop through each returned price and update the data in the manufacturing array.
-        foreach($xml->marketstat->type as $api_result)
+        foreach($xml as $api_result)
         {
-            if ($api_result->sell->median != 0)
+            if ($api_result->median != 0)
             {
-                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
-                $t2_manufacture_price += $manufacturing[(string)$api_result['id']]->price;
+                $manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+                $t2_manufacture_price += $manufacturing[$api_result->id]->price;
             }
             else
             {
                 // Build an array of types to check prices at Jita.
-                $jita_types[] = $api_result['id'];
+                $jita_types[] = $api_result->id;
             }
         }
 
@@ -177,11 +177,11 @@ class TechII {
         {
             $xml = API::eveCentral($jita_types, NULL, 30000142);
             // Loop through each returned price and update the data in the manufacturing array.
-            foreach($xml->marketstat->type as $api_result)
+            foreach($xml as $api_result)
             {
-                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
-                $manufacturing[(string)$api_result['id']]->jita = TRUE;
-                $t2_manufacture_price += $manufacturing[(string)$api_result['id']]->price;
+                $manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+                $manufacturing[$api_result->id]->jita = TRUE;
+                $t2_manufacture_price += $manufacturing[$api_result->id]->price;
             }
         }
 
@@ -210,14 +210,14 @@ class TechII {
             // Find the cost of the decryptor and add it to the total cost.
             // TODO: Change this to use stored home region ID and to cache the result.
             $xml = API::eveCentral($decryptor->typeID, 10000014);
-            $price_per_unit = $xml->marketstat->type->sell->median;
+            $price_per_unit = $xml[$decryptor->typeID]->median;
             $jita_price = FALSE;
 
             // If the price returned is zero for the selected region, do another check at Jita prices.
             if ($price_per_unit == 0)
             {
                 $jita = API::eveCentral($decryptor->typeID, 30000142);
-                $price_per_unit = $jita->marketstat->type->sell->median;
+                $price_per_unit = $jita[$decryptor->typeID]->median;
                 $jita_price = TRUE;
             }
 
