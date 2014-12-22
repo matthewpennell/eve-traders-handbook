@@ -42,7 +42,7 @@ class API {
         // If a cached price is found, remove that ID from the array and update the pricedata array.
         foreach ($types as $type)
         {
-            $price = Price::where('typeID', $type)->where('regions', implode(',', $regions))->where('system', $system)->first();
+            $price = Price::where('typeID', $type)->where('regions', implode(',', $regions))->where('system', $system)->whereRaw('updated_at > DATE_SUB(now(), INTERVAL 1 HOUR)')->first();
             if (isset($price))
             {
                 // Found a cached price - add this item to the response.
