@@ -42,14 +42,8 @@ class DetailsController extends BaseController {
 		}
 
 		// Retrieve the current price ranges this item sells for.
-		$xml = API::eveCentral(array($id), 10000014);
-		$local_price = (object) array(
-			"volume"	=> $xml->marketstat->type->sell->volume,
-			"avg"		=> $xml->marketstat->type->sell->avg,
-			"max"		=> $xml->marketstat->type->sell->max,
-			"min"		=> $xml->marketstat->type->sell->min,
-			"median"	=> $xml->marketstat->type->sell->median,
-		);
+		$response = API::eveCentral(array($id), 10000014);
+		$local_price = $response[$id];
 
 		// Tech II items need to be treated differently.
 		if ($type->metaType && $type->metaType->metaGroup && $type->metaType->metaGroup['metaGroupName'] == 'Tech II')
@@ -117,33 +111,33 @@ class DetailsController extends BaseController {
 			}
 
 			// Make an API call to get the local price of materials.
-			$xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
+			$api = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
 
 			// Loop through each returned price and update the data in the manufacturing array.
-			foreach($xml->marketstat->type as $api_result)
+			foreach($api as $api_result)
 			{
-				if ($api_result->sell->median != 0)
+				if ($api_result->median != 0)
 				{
-					$manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
-					$total_price += $manufacturing[(string)$api_result['id']]->price;
+					$manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+					$total_price += $manufacturing[$api_result->id]->price;
 				}
 				else
 				{
 					// Build an array of types to check prices at Jita.
-					$jita_types[] = $api_result['id'];
+					$jita_types[] = $api_result->id;
 				}
 			}
 
 			// If we need to check prices at Jita, make another API call.
 			if (count($jita_types))
 			{
-				$xml = API::eveCentral($jita_types, NULL, 30000142);
+				$api = API::eveCentral($jita_types, NULL, 30000142);
 				// Loop through each returned price and update the data in the manufacturing array.
-				foreach($xml->marketstat->type as $api_result)
+				foreach($api as $api_result)
 				{
-					$manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
-					$manufacturing[(string)$api_result['id']]->jita = TRUE;
-					$total_price += $manufacturing[(string)$api_result['id']]->price;
+					$manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+					$manufacturing[$api_result->id]->jita = TRUE;
+					$total_price += $manufacturing[$api_result->id]->price;
 				}
 			}
 
@@ -156,14 +150,14 @@ class DetailsController extends BaseController {
 
 		$prices[] = (object) array(
 			"solarSystemName"	=> "Jita",
-			"median"			=> $jita->marketstat->type->sell->median,
+			"median"			=> $jita[$id]->median,
 		);
 
 		$amarr = API::eveCentral($id, NULL, 30002187);
 
 		$prices[] = (object) array(
 			"solarSystemName"	=> "Amarr",
-			"median"			=> $amarr->marketstat->type->sell->median,
+			"median"			=> $amarr[$id]->median,
 		);
 
 		// Cache the industry and import potential profits for the item.
@@ -174,7 +168,7 @@ class DetailsController extends BaseController {
 			$profit->typeID = $id;
 		}
 		$profit->profitIndustry = $local_price->median - $total_price;
-		$profit->profitImport = $local_price->median - $jita->marketstat->type->sell->median;
+		$profit->profitImport = $local_price->median - $jita[$id]->median;
 
 		// Save the cached potential profit figure.
 		$type->profit()->save($profit);

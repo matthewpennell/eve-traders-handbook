@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'ActivityMaterial' => $baseDir . '/app/models/ActivityMaterial.php',
+    'ActivitySkill' => $baseDir . '/app/models/ActivitySkill.php',
     'AddFieldsToItemsTable' => $baseDir . '/app/database/migrations/2014_11_09_132020_add_fields_to_items_table.php',
     'AddLabelToSettingsTable' => $baseDir . '/app/database/migrations/2014_10_25_101924_add_label_to_settings_table.php',
     'Alliance' => $baseDir . '/app/models/Alliance.php',
@@ -34,6 +36,7 @@ return array(
     'ClassPreloader\\Parser\\NodeTraverser' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/NodeTraverser.php',
     'Corporation' => $baseDir . '/app/models/Corporation.php',
     'CreateFiltersTable' => $baseDir . '/app/database/migrations/2014_11_27_112308_create_filters_table.php',
+    'CreatePricesTable' => $baseDir . '/app/database/migrations/2014_12_22_115654_create_prices_table.php',
     'CreateProfitTable' => $baseDir . '/app/database/migrations/2014_11_22_162159_create_profit_table.php',
     'CreateSettingsTable' => $baseDir . '/app/database/migrations/2014_10_25_100107_create_settings_table.php',
     'CreateZkillboardTables' => $baseDir . '/app/database/migrations/2014_11_08_152533_create_zkillboard_tables.php',
