@@ -151,6 +151,7 @@ class DetailsController extends BaseController {
 
 		}
 
+		// Retrieve current prices of the module in notable trade hubs.
 		$jita = API::eveCentral($id, NULL, 30000142);
 
 		$prices[] = (object) array(

@@ -7,7 +7,7 @@ use Type;
 use ActivityMaterial;
 use ActivitySkill;
 use Setting;
-use Httpful\Request;
+use ETH\API;
 
 class TechII {
 
@@ -49,43 +49,50 @@ class TechII {
         // Retrieve the prices of the materials from eve-central.
         $manufacturing = array();
         $total_price = 0;
+        $types = array();
+        $jita_types = array();
         foreach ($materials as $material)
         {
-            // For each manufacturing item, make an API call to get the local price of materials.
-            // TODO: Change this to use stored home region ID and to cache the result.
-            $url = 'http://api.eve-central.com/api/marketstat'
-            . '?'
-            . 'typeid=' . $material->materialTypeID
-            . '&'
-            . 'regionlimit=10000014';
-
-            $response = Request::get($url)->send();
-            $xml = simplexml_load_string($response->body);
-            $price_per_unit = $xml->marketstat->type->sell->median;
-            $jita_price = FALSE;
-
-            // If the price returned is zero for the selected region, do another check at Jita prices.
-            if ($price_per_unit == 0)
-            {
-                $url = 'http://api.eve-central.com/api/marketstat'
-                . '?'
-                . 'typeid=' . $material->materialTypeID
-                . '&'
-                . 'usesystem=30000142';
-
-                $response = Request::get($url)->send();
-                $jita = simplexml_load_string($response->body);
-                $price_per_unit = $jita->marketstat->type->sell->median;
-                $jita_price = TRUE;
-            }
-
-            $manufacturing[] = (object) array(
+            // Create an array of types to send in API call.
+            $types[] = $material->materialTypeID;
+            // Create an array of the manufacturing information.
+            $manufacturing[$material->materialTypeID] = (object) array(
                 "typeName"	=> Type::find($material->materialTypeID)->typeName,
                 "qty"		=> $material->quantity,
-                "price"		=> $material->quantity * $price_per_unit,
-                "jita"		=> $jita_price,
+                "price"		=> 0,
+                "jita"		=> FALSE,
             );
-            $total_price += $material->quantity * $price_per_unit;
+        }
+
+        // Make an API call to get the local price of materials.
+        $xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
+
+        // Loop through each returned price and update the data in the manufacturing array.
+        foreach($xml->marketstat->type as $api_result)
+        {
+            if ($api_result->sell->median != 0)
+            {
+                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
+                $total_price += $manufacturing[(string)$api_result['id']]->price;
+            }
+            else
+            {
+                // Build an array of types to check prices at Jita.
+                $jita_types[] = $api_result['id'];
+            }
+        }
+
+        // If we need to check prices at Jita, make another API call.
+        if (count($jita_types))
+        {
+            $xml = API::eveCentral($jita_types, NULL, 30000142);
+            // Loop through each returned price and update the data in the manufacturing array.
+            foreach($xml->marketstat->type as $api_result)
+            {
+                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
+                $manufacturing[(string)$api_result['id']]->jita = TRUE;
+                $total_price += $manufacturing[(string)$api_result['id']]->price;
+            }
         }
 
         // Figure out which skills are needed to invent the T2 blueprint.
@@ -102,20 +109,12 @@ class TechII {
         $science_skill_level = 0;
 
         // Retrieve the character's character sheet with skill details.
-        $api_key_id = Setting::where('key', 'api_key_id')->firstOrFail();
-        $api_key_verification_code = Setting::where('key', 'api_key_verification_code')->firstOrFail();
-        $api_key_character_id = Setting::where('key', 'api_key_character_id')->firstOrFail();
-
-        $url = 'https://api.eveonline.com'
-        . '/char/CharacterSheet.xml.aspx'
-        . '?'
-        . 'keyID=' . $api_key_id->value
-        . '&'
-        . 'characterID=' . $api_key_character_id->value
-        . '&'
-        . 'vCode=' . $api_key_verification_code->value;
-
-        $response = Request::get($url)->send();
+        $response = API::eveOnline('char/CharacterSheet', array(
+            array(
+                'db_key'    => 'api_key_character_id',
+                'url_key'   => 'characterID',
+            )
+        ));
         foreach ($response->body->result->rowset as $rowset)
         {
             if ($rowset['name'] == 'skills')
@@ -140,49 +139,50 @@ class TechII {
         // Next, we need to retrieve the prices of the materials needed to manufacture the T2 item.
         $t2_manufacture_price = 0;
         $type_materials = DB::table('invTypeMaterials')->where('typeID', $type->typeID)->get();
-        foreach ($type_materials as $material)
+        $types = array();
+
+        foreach ($materials as $material)
         {
-            // For each manufacturing item, make an API call to get the local price of materials.
-            // TODO: Change this to use stored home region ID and to cache the result.
-            $url = 'http://api.eve-central.com/api/marketstat'
-            . '?'
-            . 'typeid=' . $material->materialTypeID
-            . '&'
-            . 'regionlimit=10000014';
-
-            $response = Request::get($url)->send();
-            if ($xml = simplexml_load_string($response->body))
-            {
-                $price_per_unit = $xml->marketstat->type->sell->median;
-                $jita_price = FALSE;
-            }
-            else
-            {
-                $price_per_unit = 0;
-            }
-
-            // If the price returned is zero for the selected region, do another check at Jita prices.
-            if ($price_per_unit == 0)
-            {
-                $url = 'http://api.eve-central.com/api/marketstat'
-                . '?'
-                . 'typeid=' . $material->materialTypeID
-                . '&'
-                . 'usesystem=30000142';
-
-                $response = Request::get($url)->send();
-                $jita = simplexml_load_string($response->body);
-                $price_per_unit = $jita->marketstat->type->sell->median;
-                $jita_price = TRUE;
-            }
-
+            // Create an array of types to send in API call.
+            $types[] = $material->materialTypeID;
+            // Create an array of the manufacturing information.
             $manufacturing[] = (object) array(
                 "typeName"	=> Type::find($material->materialTypeID)->typeName,
                 "qty"		=> $material->quantity,
-                "price"		=> $material->quantity * $price_per_unit,
-                "jita"		=> $jita_price,
+                "price"		=> 0,
+                "jita"		=> FALSE,
             );
-            $t2_manufacture_price += $material->quantity * $price_per_unit;
+        }
+
+        // Make an API call to get the local price of materials.
+        $xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
+
+        // Loop through each returned price and update the data in the manufacturing array.
+        foreach($xml->marketstat->type as $api_result)
+        {
+            if ($api_result->sell->median != 0)
+            {
+                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
+                $t2_manufacture_price += $manufacturing[(string)$api_result['id']]->price;
+            }
+            else
+            {
+                // Build an array of types to check prices at Jita.
+                $jita_types[] = $api_result['id'];
+            }
+        }
+
+        // If we need to check prices at Jita, make another API call.
+        if (count($jita_types))
+        {
+            $xml = API::eveCentral($jita_types, NULL, 30000142);
+            // Loop through each returned price and update the data in the manufacturing array.
+            foreach($xml->marketstat->type as $api_result)
+            {
+                $manufacturing[(string)$api_result['id']]->price = $manufacturing[(string)$api_result['id']]->qty * $api_result->sell->median;
+                $manufacturing[(string)$api_result['id']]->jita = TRUE;
+                $t2_manufacture_price += $manufacturing[(string)$api_result['id']]->price;
+            }
         }
 
         // For each decryptor, calculate the chance of blueprint creation and add the cost of the decryptor.
@@ -209,28 +209,14 @@ class TechII {
 
             // Find the cost of the decryptor and add it to the total cost.
             // TODO: Change this to use stored home region ID and to cache the result.
-            $url = 'http://api.eve-central.com/api/marketstat'
-            . '?'
-            . 'typeid=' . $decryptor->typeID
-            . '&'
-            . 'regionlimit=10000014';
-
-            $response = Request::get($url)->send();
-            $xml = simplexml_load_string($response->body);
+            $xml = API::eveCentral($decryptor->typeID, 10000014);
             $price_per_unit = $xml->marketstat->type->sell->median;
             $jita_price = FALSE;
 
             // If the price returned is zero for the selected region, do another check at Jita prices.
             if ($price_per_unit == 0)
             {
-                $url = 'http://api.eve-central.com/api/marketstat'
-                . '?'
-                . 'typeid=' . $decryptor->typeID
-                . '&'
-                . 'usesystem=30000142';
-
-                $response = Request::get($url)->send();
-                $jita = simplexml_load_string($response->body);
+                $jita = API::eveCentral($decryptor->typeID, 30000142);
                 $price_per_unit = $jita->marketstat->type->sell->median;
                 $jita_price = TRUE;
             }
@@ -260,7 +246,7 @@ class TechII {
 
         }
 
-        // Now, calculate the potential profit of each type of decryptor - taking into account the chance of failure, the max runs, and the Material Efficiency modifier.
+        // Return the T2 data for calculations of potential profit.
         return $t2_data;
 
     }
