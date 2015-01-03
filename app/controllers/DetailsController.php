@@ -175,6 +175,7 @@ class DetailsController extends BaseController {
 		$type->profit()->save($profit);
 
 		$profitToUse = ($profit->profitIndustry > $profit->profitImport) ? $profit->profitIndustry : $profit->profitImport;
+		$costToUse = ($profit->profitIndustry > $profit->profitImport) ? $total_price : $jita[$id]->median;
 
 		return View::make('item')
 			->with('type', $type)
@@ -185,7 +186,8 @@ class DetailsController extends BaseController {
 			->with('t2_options', $potential_profits)
 			->with('total_price', $total_price)
 			->with('profit', $profit)
-			->with('profitToUse', $profitToUse);
+			->with('profitToUse', $profitToUse)
+			->with('costToUse', $costToUse);
 
 	}
 
