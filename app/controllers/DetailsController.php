@@ -167,6 +167,7 @@ class DetailsController extends BaseController {
 			$profit = new Profit;
 			$profit->typeID = $id;
 		}
+		$profit->manufactureCost = $total_price;
 		$profit->profitIndustry = $local_price->median - $total_price;
 		$profit->profitImport = $local_price->median - $jita[$id]->median;
 

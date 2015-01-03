@@ -49,6 +49,9 @@
                                 @if ($item->profitIndustry || $item->profitImport)
                                     <?php $profit = ($item->profitIndustry > $item->profitImport) ? $item->profitIndustry : $item->profitImport; ?>
                                     <span class="{{ ($profit > 0) ? 'profit' : 'loss' }} {{ ($item->profitIndustry > $item->profitImport) ? 'local' : 'import' }}">{{ number_format(round($profit)) }}</span>
+                                    @if ($item->manufactureCost > 0)
+                                        <span class="percentage {{ ($profit > 0) ? 'profit' : 'loss' }}">{{ number_format(round($profit / $item->manufactureCost * 100)) }}%</span>
+                                    @endif
                                 @endif
                             </td>
                             <td>{{ $item->categoryName }}</td>

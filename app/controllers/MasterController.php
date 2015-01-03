@@ -14,6 +14,9 @@ class MasterController extends BaseController {
 	public function home()
 	{
 
+		// How many items to show per page.
+		$per_page = 30;
+
 		// Get the page requested.
 		$page = Input::get('page');
 		if (!isset($page))
@@ -89,14 +92,14 @@ class MasterController extends BaseController {
 		}
 
 		// Query the database for the chosen items.
-		$items = Item::selectedItems($page, $whereraw);
+		$items = Item::selectedItems($page, $whereraw, $per_page);
 
 		// Load the template to display all the items.
 		return View::make('home')
 			->with('items', $items)
 			->with('page', $page)
 			->with('filter_url', $filter_url)
-			->with('pages', Item::getRowCount($whereraw) / 20)
+			->with('pages', Item::getRowCount($whereraw) / $per_page)
 			->nest('sidebar', 'filters', array(
 				'filters'					=> Filter::all()->sortBy('categoryName'),
 				'meta_filters'				=> array('Meta 0', 'Meta 1', 'Meta 2', 'Meta 3', 'Meta 4', 'Meta 5', 'Tech II'),

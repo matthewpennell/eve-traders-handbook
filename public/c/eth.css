@@ -156,6 +156,12 @@ th {
     color: #c00;
 }
 
+.percentage {
+    font-size: 12px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
 .import {
     background: #090;
     border-radius: 2px;
