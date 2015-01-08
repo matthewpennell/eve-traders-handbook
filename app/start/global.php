@@ -52,7 +52,7 @@ App::error(function(Exception $exception, $code)
 	Log::error($exception);
 });
 
-//*/ DEBUG: Log all SQL queries to the log file:
+/*/ DEBUG: Log all SQL queries to the log file:
 Event::listen("illuminate.query", function($query, $bindings, $time, $name){
 	\Log::info($query."\n");
 	\Log::info(json_encode($bindings)."\n");
