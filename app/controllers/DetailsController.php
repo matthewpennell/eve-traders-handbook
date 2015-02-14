@@ -36,7 +36,7 @@ class DetailsController extends BaseController {
 			$material_efficiency->materialEfficiency = 0;
 		}
 
-		if (Input::get('me'))
+		if (Input::has('me'))
 		{
 			$material_efficiency->materialEfficiency = (int) Input::get('me');
 		}
