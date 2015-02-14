@@ -260,6 +260,12 @@ th {
     font-weight: 600;
 }
 
+.manufacturing .efficiency td {
+    text-align: center;
+    font-weight: normal;
+    font-size: 12px;
+}
+
 .warning {
     clear: both;
     color: #808080;

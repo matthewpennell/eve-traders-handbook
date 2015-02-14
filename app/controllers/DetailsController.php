@@ -26,6 +26,24 @@ class DetailsController extends BaseController {
 		// Retrieve the basic information about this item.
 		$type = Type::where('typeID', $id)->firstOrFail();
 
+		// If material efficiency was updated, save to the database and set a local variable.
+		$material_efficiency = $type->materialEfficiency;
+
+		if (!isset($material_efficiency))
+		{
+			$material_efficiency = new MaterialEfficiency;
+			$material_efficiency->typeID = $id;
+			$material_efficiency->materialEfficiency = 0;
+		}
+
+		if (Input::get('me'))
+		{
+			$material_efficiency->materialEfficiency = (int) Input::get('me');
+		}
+
+		// Save the updated material efficiency figure.
+		$type->materialEfficiency()->save($material_efficiency);
+
 		// Load the 64x64 icon to display.
 		$icon = '';
 		$ship = Ship::where('id', $id)->get();
@@ -104,7 +122,7 @@ class DetailsController extends BaseController {
 				// Build an array for the eventual output.
 				$manufacturing[$material->materialTypeID] = (object) array(
 					"typeName"	=> Type::find($material->materialTypeID)->typeName,
-					"qty"		=> $material->quantity,
+					"qty"		=> $material->quantity * (1 - ($material_efficiency->materialEfficiency / 100)),
 					"price"		=> 0,
 					"jita"		=> FALSE,
 				);
@@ -187,7 +205,8 @@ class DetailsController extends BaseController {
 			->with('total_price', $total_price)
 			->with('profit', $profit)
 			->with('profitToUse', $profitToUse)
-			->with('costToUse', $costToUse);
+			->with('costToUse', $costToUse)
+			->with('material_efficiency', $material_efficiency);
 
 	}
 

@@ -31,4 +31,9 @@ class Type extends Eloquent {
         return $this->hasOne('Profit', 'typeID');
     }
 
+    public function materialEfficiency()
+    {
+        return $this->hasOne('MaterialEfficiency', 'typeID');
+    }
+
 }

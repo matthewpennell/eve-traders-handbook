@@ -14,4 +14,15 @@ $(document).ready(function () {
         $('.filters')[0].submit();
     });
 
+    // Updating the Material Efficiency dropdown changes the amounts/costs and saves the value.
+    $('body').delegate('#material-efficiency', 'change', function () {
+        var typeID = $('.details h3').attr('id');
+        $('.details').html('<img src="/i/loader.gif" class="loader">');
+        $.get('details/' + typeID, {
+            me: this.value
+        }, function (data) {
+            $('.details').html(data);
+        });
+    });
+
 });

@@ -4,7 +4,7 @@
     <img class="icon" src="{{ $icon }}">
 @endif
 
-<h3>{{ $type->typeName }}</h3>
+<h3 id="{{ $type->typeID }}">{{ $type->typeName }}</h3>
 
 <table class="eve-central">
     <thead>
@@ -43,6 +43,68 @@
             <tr>
                 <td>Total Price</td>
                 <td class="num">{{ number_format($total_price) }}</td>
+            </tr>
+            <tr class="efficiency">
+                <td colspan="2">
+                    Material efficiency:
+                    <select id="material-efficiency">
+                        <option value="0"
+                            @if ($material_efficiency->materialEfficiency == 0)
+                                selected="selected"
+                            @endif
+                        >0</option>
+                        <option value="1"
+                        @if ($material_efficiency->materialEfficiency == 1)
+                        selected="selected"
+                        @endif
+                        >1%</option>
+                        <option value="2"
+                        @if ($material_efficiency->materialEfficiency == 2)
+                        selected="selected"
+                        @endif
+                        >2%</option>
+                        <option value="3"
+                        @if ($material_efficiency->materialEfficiency == 3)
+                        selected="selected"
+                        @endif
+                        >3%</option>
+                        <option value="4"
+                        @if ($material_efficiency->materialEfficiency == 4)
+                        selected="selected"
+                        @endif
+                        >4%</option>
+                        <option value="5"
+                        @if ($material_efficiency->materialEfficiency == 5)
+                        selected="selected"
+                        @endif
+                        >5%</option>
+                        <option value="6"
+                        @if ($material_efficiency->materialEfficiency == 6)
+                        selected="selected"
+                        @endif
+                        >6%</option>
+                        <option value="7"
+                        @if ($material_efficiency->materialEfficiency == 7)
+                        selected="selected"
+                        @endif
+                        >7%</option>
+                        <option value="8"
+                        @if ($material_efficiency->materialEfficiency == 8)
+                        selected="selected"
+                        @endif
+                        >8%</option>
+                        <option value="9"
+                        @if ($material_efficiency->materialEfficiency == 9)
+                        selected="selected"
+                        @endif
+                        >9%</option>
+                        <option value="10"
+                        @if ($material_efficiency->materialEfficiency == 10)
+                        selected="selected"
+                        @endif
+                        >10%</option>
+                    </select>
+                </td>
             </tr>
         </tfoot>
         <tbody>
