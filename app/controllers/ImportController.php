@@ -154,10 +154,11 @@ class ImportController extends BaseController {
                     {
                         foreach ($row->rowset->row as $loss)
                         {
+
+                            $item = Item::find(array('typeID' => $loss['typeID']))->first();
+
                             // If this item already exists in the items table, we don't need to re-query all the additional
                             // information, we can just copy it from an existing row.
-                            $item = Item::firstOrNew(array('typeID' => $loss['typeID']));
-
                             if ($item->exists())
                             {
 
