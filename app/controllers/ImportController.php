@@ -159,7 +159,7 @@ class ImportController extends BaseController {
 
                             // If this item already exists in the items table, we don't need to re-query all the additional
                             // information, we can just copy it from an existing row.
-                            if ($item->exists())
+                            if (isset($item))
                             {
 
                                 // This type has already been seen. Duplicate the record and save the new instance.
