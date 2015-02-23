@@ -181,6 +181,7 @@ class ImportController extends BaseController {
                             {
 
                                 // This is a never-before-seen lost item. Create a new row and look up all the related details.
+                                $item = new Item;
                                 $type = Type::find($loss['typeID']);
                                 $item->killID = $row['killID'];
                                 $item->typeID = $loss['typeID'];
