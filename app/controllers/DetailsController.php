@@ -60,7 +60,7 @@ class DetailsController extends BaseController {
 		}
 
 		// Retrieve the current price ranges this item sells for.
-		$response = API::eveCentral(array($id), 10000014);
+		$response = API::eveCentral(array($id), 10000054);
 		$local_price = $response[$id];
 
 		// Tech II items need to be treated differently.
@@ -129,7 +129,7 @@ class DetailsController extends BaseController {
 			}
 
 			// Make an API call to get the local price of materials.
-			$api = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
+			$api = API::eveCentral($types, 10000054); // TODO: this should be controlled in app settings
 
 			// Loop through each returned price and update the data in the manufacturing array.
 			foreach($api as $api_result)
