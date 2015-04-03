@@ -52,8 +52,8 @@ class ImportController extends BaseController {
 
         // Build the API URL.
         $url = 'https://zkillboard.com/api/xml/losses/no-attackers/'
-             . 'allianceID/' . $alliances->value . '/'
-             . 'solarSystemID/' . $systems->value . '/';
+             . 'allianceID/' . preg_replace('/\s+/', '', $alliances->value) . '/'
+             . 'solarSystemID/' . preg_replace('/\s+/', '', $systems->value) . '/';
 
         // Send the request.
         $response = Request::get($url)
