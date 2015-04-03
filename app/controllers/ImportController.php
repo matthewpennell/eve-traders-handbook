@@ -154,8 +154,8 @@ class ImportController extends BaseController {
                     {
                         foreach ($row->rowset->row as $loss)
                         {
-
-                            $item = Item::find(array('typeID' => $loss['typeID']))->first();
+                            $typeID = (int) $loss['typeID'];
+                            $item = Item::where('typeID', '=', $typeID)->first();
 
                             // If this item already exists in the items table, we don't need to re-query all the additional
                             // information, we can just copy it from an existing row.
@@ -182,15 +182,15 @@ class ImportController extends BaseController {
 
                                 // This is a never-before-seen lost item. Create a new row and look up all the related details.
                                 $item = new Item;
-                                $type = Type::find($loss['typeID']);
-                                $item->killID = $row['killID'];
-                                $item->typeID = $loss['typeID'];
+                                $type = Type::find($typeID);
+                                $item->killID = (int) $row['killID'];
+                                $item->typeID = $typeID;
                                 $item->typeName = $type->typeName;
                                 $item->categoryName = $type->group->category['categoryName'];
                                 $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
                                 if ($metaGroupName == 'Tech I' || $metaGroupName == '')
                                 {
-                                    $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $loss['typeID'])->where('attributeID', 633)->first();
+                                    $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $typeID)->where('attributeID', 633)->first();
                                     if (isset($metaLevel))
                                     {
                                         $metaGroupName = 'Meta ';
