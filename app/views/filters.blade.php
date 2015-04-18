@@ -11,6 +11,12 @@
         </div>
     @endforeach
 
+    <h3>Search</h3>
+
+    <div class="filter">
+        <input type="search" name="q" class="search" placeholder="Enter search term..." value="{{ $search_term }}">
+    </div>
+
     <h3>Tech/Meta level</h3>
 
     @foreach ($meta_filters as $meta_filter)
@@ -37,7 +43,7 @@
         </label>
     </div>
 
-    <!--
+<!--
     <h3>Ship</h3>
 
     @foreach ($ships as $ship)

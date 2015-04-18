@@ -301,6 +301,11 @@ h3 {
     margin: 20px;
 }
 
+.search {
+    width: 223px;
+    padding: 5px;
+}
+
 /* FOOTER */
 
 footer {

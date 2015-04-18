@@ -7,7 +7,8 @@ class MasterController extends BaseController {
 	| Default Controller
 	|--------------------------------------------------------------------------
 	|
-	| TODO: Write comments here.
+	| TODO: Main app controller. Displays tables of results and handles
+	|       incoming search criteria.
 	|
 	*/
 
@@ -26,69 +27,84 @@ class MasterController extends BaseController {
 
 		// Check whether any filters are active.
 		$active_filters = Input::get('filter');
+		$active_meta_filters = Input::get('meta');
+		$active_blueprint_filters = Input::get('blueprint');
 		$whereraw = array();
 		$filter_url = '';
+		$search_term = '';
 
-		// If no filters are set, apply the default ones.
-		if (!isset($active_filters))
+		// If a search term was supplied, just use that.
+		if (Input::get('q'))
 		{
-			$active_filters = array();
-			$default_filters = Filter::where('is_default', 1)->get();
-			foreach ($default_filters as $default_filter)
-			{
-				array_push($active_filters, $default_filter->categoryName);
-			}
+
+			$search_term = Input::get('q');
+			$whereraw[] = 'typeName LIKE "%' . $search_term . '%"';
+			$filter_url .= '&q=' . $search_term;
+
 		}
-
-		// Check whether a filter on tech/meta level has been applied.
-		$active_meta_filters = Input::get('meta');
-		if (count($active_meta_filters))
+		else
 		{
-			// Loop through all active filters and construct the aggregate query.
-			foreach ($active_meta_filters as $active_meta_filter)
+
+			// If no filters are set, apply the default ones.
+			if (!isset($active_filters))
 			{
-				$meta_filter_raw[] = 'metaGroupName = "' . $active_meta_filter . '"';
+				$active_filters = array();
+				$default_filters = Filter::where('is_default', 1)->get();
+				foreach ($default_filters as $default_filter)
+				{
+					array_push($active_filters, $default_filter->categoryName);
+				}
 			}
 
-			// Bundle up all the filters.
-			$whereraw[] = implode(' or ', $meta_filter_raw);
-
-			// Make a URL to use in links.
-			$filter_url .= '&meta[]=' . implode('&meta[]=', $active_meta_filters);
-		}
-
-		// Check whether there are any filters on the existence of blueprints.
-		$active_blueprint_filters = Input::get('blueprint');
-
-		if (count($active_blueprint_filters))
-		{
-			// Loop through all active filters and construct the aggregate query.
-			foreach ($active_blueprint_filters as $active_blueprint_filter)
+			// Check whether a filter on tech/meta level has been applied.
+			if (count($active_meta_filters))
 			{
-				$value = ($active_blueprint_filter == 'Yes') ? 1 : 0;
-				$blueprint_filter_raw[] = 'allowManufacture = ' . $value;
+				// Loop through all active filters and construct the aggregate query.
+				foreach ($active_meta_filters as $active_meta_filter)
+				{
+					$meta_filter_raw[] = 'metaGroupName = "' . $active_meta_filter . '"';
+				}
+
+				// Bundle up all the filters.
+				$whereraw[] = implode(' or ', $meta_filter_raw);
+
+				// Make a URL to use in links.
+				$filter_url .= '&meta[]=' . implode('&meta[]=', $active_meta_filters);
 			}
 
-			// Bundle up all the filters.
-			$whereraw[] = implode(' or ', $blueprint_filter_raw);
-
-			// Make a URL to use in links.
-			$filter_url .= '&blueprint[]=' . implode('&blueprint[]=', $active_blueprint_filters);
-		}
-
-		if (count($active_filters))
-		{
-			// Loop through all active filters and construct the aggregate query.
-			foreach ($active_filters as $active_filter)
+			// Check whether there are any filters on the existence of blueprints.
+			if (count($active_blueprint_filters))
 			{
-				$active_filter_raw[] = 'categoryName = "' . $active_filter . '"';
+				// Loop through all active filters and construct the aggregate query.
+				foreach ($active_blueprint_filters as $active_blueprint_filter)
+				{
+					$value = ($active_blueprint_filter == 'Yes') ? 1 : 0;
+					$blueprint_filter_raw[] = 'allowManufacture = ' . $value;
+				}
+
+				// Bundle up all the filters.
+				$whereraw[] = implode(' or ', $blueprint_filter_raw);
+
+				// Make a URL to use in links.
+				$filter_url .= '&blueprint[]=' . implode('&blueprint[]=', $active_blueprint_filters);
 			}
 
-			// Bundle up all the filters.
-			$whereraw[] = implode(' or ', $active_filter_raw);
+			if (count($active_filters))
+			{
+				// Loop through all active filters and construct the aggregate query.
+				foreach ($active_filters as $active_filter)
+				{
+					$active_filter_raw[] = 'categoryName = "' . $active_filter . '"';
+				}
 
-			// Make a URL to use in links.
-			$filter_url .= '&filter[]=' . implode('&filter[]=', $active_filters);
+				// Bundle up all the filters.
+				$whereraw[] = implode(' or ', $active_filter_raw);
+
+				// Make a URL to use in links.
+				$filter_url .= '&filter[]=' . implode('&filter[]=', $active_filters);
+
+			}
+
 		}
 
 		// Query the database for the chosen items.
@@ -107,6 +123,7 @@ class MasterController extends BaseController {
 				'active_filters'			=> $active_filters,
 				'active_meta_filters'		=> $active_meta_filters,
 				'active_blueprint_filters'	=> $active_blueprint_filters,
+				'search_term'				=> $search_term,
 			));
 
 	}

@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
 
     // Clicking on filter checkboxes submits the form to reload the page.
-    $('.filters input').click(function () {
+    $('.filters input[type=checkbox]').click(function () {
         $('.filters')[0].submit();
     });
 
