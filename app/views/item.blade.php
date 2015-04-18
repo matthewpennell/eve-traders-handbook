@@ -131,14 +131,14 @@
         <thead>
             <tr>
                 <th>Decryptor</th>
-                <th class="num">Profit</th>
+                <th class="num">Cost/unit</th>
             </tr>
         </thead>
         <tbody>
             @foreach($t2_options as $decryptor)
                 <tr>
                     <td>{{ $decryptor['typeName'] }}</td>
-                    <td class="num">{{ number_format($decryptor['profit']) }}</td>
+                    <td class="num">{{ number_format($decryptor['cost']) }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -168,7 +168,7 @@
 
     // Update the display of potential profit for this item in the main table.
     $(document).ready(function () {
-        var profitIndustry = {{ $profit->profitIndustry }}
+        var profitIndustry = {{ $profit->profitIndustry }},
             profitImport = {{ $profit->profitImport }};
         var profit = (profitIndustry > profitImport) ? profitIndustry : profitImport,
             profitType = (profitIndustry > profitImport) ? 'local' : 'import';

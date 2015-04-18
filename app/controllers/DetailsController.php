@@ -71,32 +71,29 @@ class DetailsController extends BaseController {
 			$tech_two = TechII::getInventionFigures($type);
 
 			// For each decryptor, show the potential profit.
-			$potential_profits = array();
-			$total_price = -1000000000;
+			$t2_options = array();
+			$total_price = 1000000000;
 
 			foreach ($tech_two as $decryptor)
 			{
-
 				$max_runs = 10;
 				if (isset($decryptor['max_run_modifier']))
 				{
 					$max_runs += $decryptor['max_run_modifier'];
 				}
 				$chance_of_success = $decryptor['chance_of_success'] / 100;
-				$invention_cost = $decryptor['invention_price'];
 				$manufacturing_cost_per_blueprint = $max_runs * $decryptor['t2_manufacture_price']; // TODO: use material efficiency modifier
-				$income_per_blueprint = $local_price->median * $max_runs;
-				$profit_per_blueprint = $income_per_blueprint - $manufacturing_cost_per_blueprint;
-				$overall_profit = ($profit_per_blueprint * $chance_of_success) - $invention_cost;
+				$total_cost = $decryptor['invention_price'] + ($manufacturing_cost_per_blueprint * $chance_of_success);
+				$cost_per_unit = $total_cost / $max_runs;
 
-				$potential_profits[] = array(
+				$t2_options[] = array(
 					"typeName"	=> $decryptor['typeName'],
-					"profit"	=> $overall_profit,
+					"cost"		=> $cost_per_unit,
 				);
 
-				if ($overall_profit > $total_price)
+				if ($cost_per_unit < $total_price)
 				{
-					$total_price = $overall_profit;
+					$total_price = $cost_per_unit;
 				}
 
 			}
@@ -185,9 +182,9 @@ class DetailsController extends BaseController {
 			$profit = new Profit;
 			$profit->typeID = $id;
 		}
-		$profit->manufactureCost = $total_price;
-		$profit->profitIndustry = $local_price->median - $total_price;
-		$profit->profitImport = $local_price->median - $jita[$id]->median;
+		$profit->manufactureCost = round($total_price);
+		$profit->profitIndustry = round($local_price->median - $total_price);
+		$profit->profitImport = round($local_price->median - $jita[$id]->median);
 
 		// Save the cached potential profit figure.
 		$type->profit()->save($profit);
@@ -201,7 +198,7 @@ class DetailsController extends BaseController {
 			->with('local_price', $local_price)
 			->with('prices', $prices)
 			->with('manufacturing', $manufacturing)
-			->with('t2_options', $potential_profits)
+			->with('t2_options', $t2_options)
 			->with('total_price', $total_price)
 			->with('profit', $profit)
 			->with('profitToUse', $profitToUse)

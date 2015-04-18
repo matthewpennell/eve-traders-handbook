@@ -41,7 +41,17 @@ class TechII {
 
         // Now find the other items needed to invent the T2 blueprint.
         // First we need to identify the T1 blueprint for this item.
-        $t1_blueprint = Type::where('typeName', str_replace('II', 'I Blueprint', $type->typeName))->firstOrFail();
+        $t1_blueprint = Type::where('typeName', str_replace('II', 'I Blueprint', $type->typeName))->first();
+
+        if (!isset($t1_blueprint))
+        {
+            // Some mods have a T2 blueprint - let's look for that instead.
+            $t1_blueprint = Type::where('typeName', str_replace('II', 'II Blueprint', $type->typeName))->first();
+            if (!isset($t1_blueprint))
+            {
+                die("<h3>Sorry - we couldn't find a Blueprint for this module.</h3>");
+            }
+        }
 
         // Now, retrieve a list of the items (datacores) required to invent from it.
         $materials = ActivityMaterial::where('typeID', $t1_blueprint->typeID)->where('activityID', 8)->get();
@@ -192,7 +202,7 @@ class TechII {
         {
 
             // Grab the base variables.
-            $base_chance_of_success = 34; // this only applies to modules, rigs and ammo, TODO fork this for ships (30%) and cruisers/industrials/Mackinaw (26%)
+            $base_chance_of_success = 34; // this only applies to modules, rigs and ammo. TODO: fork this for ships (30%) and cruisers/industrials/Mackinaw (26%)
 
             // Parse the modifiers from this decryptor.
             preg_match('/Probability Multiplier: \+?(\-?\d+)\%/', $decryptor->description, $probability_modifier);
@@ -200,7 +210,7 @@ class TechII {
             preg_match('/Material Efficiency Modifier: \+?(\-?\d+)/', $decryptor->description, $me_modifier);
             preg_match('/Time Efficiency Modifier: \+?(\-?\d+)/', $decryptor->description, $te_modifier);
 
-            // Calculate the overall change of invention for each decryptor.
+            // Calculate the overall chance of invention for each decryptor.
             $modified_chance_of_success = $base_chance_of_success * (1 + (($encryption_skill_level / 40) + ($science_skill_level / 30)));
             if (count($probability_modifier) > 1)
             {
@@ -208,8 +218,7 @@ class TechII {
             }
 
             // Find the cost of the decryptor and add it to the total cost.
-            // TODO: Change this to use stored home region ID and to cache the result.
-            $xml = API::eveCentral($decryptor->typeID, 10000014);
+            $xml = API::eveCentral($decryptor->typeID, 10000014); // TODO: this should be controlled in app settings
             $price_per_unit = $xml[$decryptor->typeID]->median;
             $jita_price = FALSE;
 
