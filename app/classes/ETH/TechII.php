@@ -242,6 +242,7 @@ class TechII {
                 "chance_of_success"     => $modified_chance_of_success,
                 "invention_price"       => $total_price + $price_per_unit,
                 "t2_manufacture_price"  => $t2_manufacture_price,
+                "me_modifier"           => 0,
             );
 
             if (count($max_run_modifier) > 1)

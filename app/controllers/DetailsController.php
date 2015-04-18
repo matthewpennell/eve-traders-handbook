@@ -76,15 +76,21 @@ class DetailsController extends BaseController {
 
 			foreach ($tech_two as $decryptor)
 			{
+				// Default max runs is 10, add any modifier.
 				$max_runs = 10;
 				if (isset($decryptor['max_run_modifier']))
 				{
 					$max_runs += $decryptor['max_run_modifier'];
 				}
+
+				// Based on the chance of success, how many T2 items on average will be produced per run?
 				$chance_of_success = $decryptor['chance_of_success'] / 100;
-				$manufacturing_cost_per_blueprint = $max_runs * $decryptor['t2_manufacture_price']; // TODO: use material efficiency modifier
-				$total_cost = $decryptor['invention_price'] + ($manufacturing_cost_per_blueprint * $chance_of_success);
-				$cost_per_unit = $total_cost / $max_runs;
+				$t2_items_per_blueprint = $max_runs * $chance_of_success;
+
+				// Calculate the cost of manufacturing that many T2 items.
+				$manufacturing_cost_per_blueprint = $t2_items_per_blueprint * ($decryptor['t2_manufacture_price'] * (100 - $decryptor['me_modifier']) / 100);
+				$total_cost = $decryptor['invention_price'] + $manufacturing_cost_per_blueprint;
+				$cost_per_unit = $total_cost / $t2_items_per_blueprint;
 
 				$t2_options[] = array(
 					"typeName"	=> $decryptor['typeName'],
