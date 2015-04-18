@@ -47,3 +47,9 @@ Now visit `wwww.yoursite.com/import/zkillboard` to run the first import of kills
 ### Cron
 
 To enable regular imports of new kills/losses, you should create a cronjob (or other means of scheduled task) that regularly loads `www.yoursite.com/import/zkillboard`. An hourly task should be more than sufficient for all but the most active PvP alliances.
+
+## Problems/Bugs?
+
+Report bugs on [this projects's GitHub Issues page](https://github.com/matthewpennell/eve-traders-handbook/issues), or via the in-game chat channel "EVE Traders Handbook".
+
+If you enjoy using this software, please consider making an in-game ISK donation to [Shei Bushaava](https://gate.eveonline.com/Profile/Shei%20Bushaava).
