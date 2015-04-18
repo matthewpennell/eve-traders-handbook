@@ -60,6 +60,16 @@ CREATE TABLE IF NOT EXISTS `filters` (
   PRIMARY KEY (`categoryID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `filters`
+--
+
+INSERT INTO `filters` (`categoryID`, `categoryName`, `iconID`, `is_default`, `created_at`, `updated_at`) VALUES
+(6, 'Ship', NULL, 1, '2014-11-27 16:29:21', '2015-04-09 12:38:50'),
+(7, 'Module', 67, 1, '2014-11-27 16:29:22', '2015-04-09 12:38:50'),
+(8, 'Charge', NULL, 0, '2014-11-27 16:29:21', '2014-11-27 16:29:21'),
+(18, 'Drone', 0, 1, '2014-11-27 16:29:22', '2015-04-09 12:38:50');
+
 -- --------------------------------------------------------
 
 --
