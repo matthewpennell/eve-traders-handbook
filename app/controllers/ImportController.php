@@ -14,38 +14,23 @@ class ImportController extends BaseController {
     */
 
     /**
-     * Import EVE character details via the EVE API.
-     */
-    public function getEve()
-    {
-
-        // Retrieve all of the stored settings from the database.
-        $api_key_id = Setting::where('key', 'api_key_id')->firstOrFail();
-        $api_key_verification_code = Setting::where('key', 'api_key_verification_code')->firstOrFail();
-
-        $url = 'https://api.eveonline.com'
-             . '/char/AssetList.xml.aspx'
-             . '?'
-             . 'keyID=' . $api_key_id->value
-             . '&'
-             . 'vCode=' . $api_key_verification_code->value;
-
-        $response = Request::get($url)->send();
-
-        foreach ($response->body->result->rowset->row as $row) {
-            echo "{$row['quantity']} &times; {$row['itemID']} is at {$row['locationID']}<br>";
-        }
-
-    }
-
-    /**
      * Import zKillboard kills for the selected systems and alliances.
      */
-    public function getZkillboard()
+    public function getZkillboard($systems = '')
     {
 
         // Retrieve the selected systems from the database.
-        $systems = Setting::where('key', 'systems')->firstOrFail();
+        if ($systems == '')
+        {
+            $systems_object = Setting::where('key', 'systems')->firstOrFail();
+            $systems = $systems_object->value;
+        }
+        $systems_array = explode(',', $systems);
+        if (count($systems_array) > 10)
+        {
+            $this->getZkillboard(implode(',',array_splice($systems_array, 10)));
+            $systems = implode(',',array_splice($systems_array, 0, 10));
+        }
 
         // Retrieve the selected alliances from the database.
         $alliances = Setting::where('key', 'alliances')->firstOrFail();
@@ -53,7 +38,7 @@ class ImportController extends BaseController {
         // Build the API URL.
         $url = 'https://zkillboard.com/api/xml/losses/no-attackers/'
              . 'allianceID/' . preg_replace('/\s+/', '', $alliances->value) . '/'
-             . 'solarSystemID/' . preg_replace('/\s+/', '', $systems->value) . '/';
+             . 'solarSystemID/' . preg_replace('/\s+/', '', $systems) . '/';
 
         // Send the request.
         $response = Request::get($url)
