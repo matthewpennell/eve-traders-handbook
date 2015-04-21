@@ -64,6 +64,7 @@ class DetailsController extends BaseController {
 		$local_price = $response[$id];
 
 		// Tech II items need to be treated differently.
+		$t2_options = array();
 		if ($type->metaType && $type->metaType->metaGroup && $type->metaType->metaGroup['metaGroupName'] == 'Tech II')
 		{
 
@@ -71,7 +72,6 @@ class DetailsController extends BaseController {
 			$tech_two = TechII::getInventionFigures($type);
 
 			// For each decryptor, show the potential profit.
-			$t2_options = array();
 			$total_price = 1000000000;
 
 			foreach ($tech_two as $decryptor)
