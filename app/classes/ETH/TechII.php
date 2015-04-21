@@ -75,7 +75,7 @@ class TechII {
         }
 
         // Make an API call to get the local price of materials.
-        $xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
+        $xml = API::eveCentral($types, 10000058); // TODO: this should be controlled in app settings
 
         // Loop through each returned price and update the data in the manufacturing array.
         foreach($xml as $api_result)
@@ -165,7 +165,7 @@ class TechII {
         }
 
         // Make an API call to get the local price of materials.
-        $xml = API::eveCentral($types, 10000014); // TODO: this should be controlled in app settings
+        $xml = API::eveCentral($types, 10000058); // TODO: this should be controlled in app settings
 
         // Loop through each returned price and update the data in the manufacturing array.
         foreach($xml as $api_result)
@@ -218,7 +218,7 @@ class TechII {
             }
 
             // Find the cost of the decryptor and add it to the total cost.
-            $xml = API::eveCentral($decryptor->typeID, 10000014); // TODO: this should be controlled in app settings
+            $xml = API::eveCentral($decryptor->typeID, 10000058); // TODO: this should be controlled in app settings
             $price_per_unit = $xml[$decryptor->typeID]->median;
             $jita_price = FALSE;
 
