@@ -182,6 +182,19 @@ CREATE TABLE IF NOT EXISTS `settings` (
   UNIQUE KEY `settings_key_unique` (`key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `key`, `label`, `value`, `created_at`, `updated_at`) VALUES
+(1, 'api_key_id', 'Key ID', '', '0000-00-00 00:00:00', '2014-12-11 12:48:43'),
+(2, 'api_key_verification_code', 'Verification Code', '', '0000-00-00 00:00:00', '2014-12-11 12:48:43'),
+(3, 'api_key_character_id', 'Character ID', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(4, 'alliances', 'Alliances (comma-separated)', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(5, 'systems', 'Systems (comma-separated)', '', '0000-00-00 00:00:00', '2015-04-09 07:40:12');
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
