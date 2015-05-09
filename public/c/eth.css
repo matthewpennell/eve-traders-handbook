@@ -43,13 +43,28 @@ h1 a {
 .header-nav {
     position: absolute;
     right: 0;
-    top: 39px;
+    top: 0;
 }
 
 .header-nav li {
-    float: left;
+    float: right;
     list-style: none;
     margin-left: 20px;
+}
+
+.nav-settings {
+    background: url(/i/settings.png) 50% 50% no-repeat;
+    overflow: hidden;
+    text-indent: 100%;
+    opacity: 0.25;
+    display: block;
+    height: 65px;
+    width: 48px;
+
+}
+
+.nav-settings:hover {
+    opacity: 0.5;
 }
 
 /* PAGE CONTENTS */

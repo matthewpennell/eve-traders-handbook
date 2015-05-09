@@ -27,7 +27,7 @@
                 <h1><a href="/">EVE Traders Handbook</a></h1>
                 <nav class="header-nav">
                     <ul role="navigation">
-                        <li><a href="/settings">Settings</a></li>
+                        <li><a href="/settings" class="nav-settings" title="Settings">Settings</a></li>
                         <!--
                         <li><a href="/logout">Log out</a></li>
                         -->
