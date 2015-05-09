@@ -28,6 +28,8 @@ class SettingsController extends BaseController {
         $api_key_id = Setting::where('key', 'api_key_id')->first();
         $api_key_verification_code = Setting::where('key', 'api_key_verification_code')->first();
         $api_key_character_id = Setting::where('key', 'api_key_character_id')->first();
+        $home_region_id = Setting::where('key', 'home_region_id')->first();
+        $home_region_name = Region::where('regionID', $home_region_id->value)->pluck('regionName');
 
         $characters = array();
         // If the API key is set, retrieve a list of characters.
@@ -56,6 +58,8 @@ class SettingsController extends BaseController {
             ->with('api_key_id', $api_key_id)
             ->with('api_key_verification_code', $api_key_verification_code)
             ->with('api_key_character_id', $api_key_character_id)
+            ->with('home_region_id', $home_region_id)
+            ->with('home_region_name', $home_region_name)
             ->with('characters', $characters)
             ->with('alliances', $alliances)
             ->with('alliance_ids', $alliance_ids)
@@ -92,6 +96,13 @@ class SettingsController extends BaseController {
             $api_key_character_id = Setting::where('key', 'api_key_character_id')->firstOrFail();
             $api_key_character_id->value = Input::get('api_key_character_id');
             $api_key_character_id->save();
+        }
+
+        if (Input::has('home_region_id'))
+        {
+            $home_region_id = Setting::where('key', 'home_region_id')->firstOrFail();
+            $home_region_id->value = Input::get('home_region_id');
+            $home_region_id->save();
         }
 
         if (Input::has('systems'))
@@ -149,21 +160,27 @@ class SettingsController extends BaseController {
      */
     public function getSystems()
     {
-        $json = '[';
+        $matches = array();
         $systems = System::where('solarSystemName', 'LIKE', '%' . Input::get('term') . '%')->get();
-        $count = count($systems);
-        $i = 1;
         foreach ($systems as $system)
         {
-            $json .= '{"region":"' . $system->region->regionName . '","label":"' . $system->solarSystemName . '","value":"' . $system->solarSystemID . '"}';
-            if ($i < $count)
-            {
-                $json .= ',';
-            }
-            $i++;
+            $matches[] = '{"region":"' . $system->region->regionName . '","label":"' . $system->solarSystemName . '","value":"' . $system->solarSystemID . '"}';
         }
-        $json .= ']';
-        echo $json;
+        echo '[' . implode(',', $matches) . ']';
+    }
+
+    /**
+     * AJAX response for autocomplete of regions.
+     */
+    public function getRegions()
+    {
+        $matches = array();
+        $regions = Region::where('regionName', 'LIKE', '%' . Input::get('term') . '%')->get();
+        foreach ($regions as $region)
+        {
+            $matches[] = '{"label":"' . $region->regionName . '","value":"' . $region->regionID . '"}';
+        }
+        echo '[' . implode(',', $matches) . ']';
     }
 
     /**

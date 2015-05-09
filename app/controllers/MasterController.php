@@ -7,8 +7,8 @@ class MasterController extends BaseController {
 	| Default Controller
 	|--------------------------------------------------------------------------
 	|
-	| TODO: Main app controller. Displays tables of results and handles
-	|       incoming search criteria.
+	| Main app controller. Displays tables of results and handles incoming
+	| search criteria.
 	|
 	*/
 

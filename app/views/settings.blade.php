@@ -34,6 +34,13 @@
             </div>
 
             <div class="form-field">
+                {{ Form::label('home-region-autocomplete', 'Home region:', array('class' => 'form-label')) }}
+                {{ Form::text('home-region-autocomplete', $home_region_name, array('class' => 'form-input')) }}
+            </div>
+
+            {{ Form::hidden('home_region_id', $home_region_id->value) }}
+
+            <div class="form-field">
                 {{ Form::label('alliance-autocomplete', 'Start typing to select alliances:', array('class' => 'form-label')) }}
                 {{ Form::text('alliance-autocomplete', '', array('class' => 'form-input')) }}
             </div>

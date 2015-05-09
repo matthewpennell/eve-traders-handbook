@@ -91,6 +91,27 @@ $(document).ready(function () {
         }
     });
 
+    // Autocomplete selection of region names.
+    $('#home-region-autocomplete').autocomplete({
+        minLength: 2,
+        source: '/settings/regions',
+        create: function () {
+            $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
+            };
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            return false;
+        },
+        select: function (event, ui) {
+            event.preventDefault();
+            $('input[name=home_region_id]').val(ui.item.value);
+            return false;
+        }
+    });
+
     // Make the API link work.
     $('.show-api').click(function () {
         $('.api-needed').remove();
