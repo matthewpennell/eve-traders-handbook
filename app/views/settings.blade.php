@@ -34,12 +34,26 @@
             </div>
 
             <div class="form-field">
-                {{ Form::label($alliances->key, $alliances->label, array('class' => 'form-label')) }}
-                {{ Form::text($alliances->key, $alliances->value, array('class' => 'form-input')) }}
+                {{ Form::label('alliance-autocomplete', 'Start typing to select alliances:', array('class' => 'form-label')) }}
+                {{ Form::text('alliance-autocomplete', '', array('class' => 'form-input')) }}
             </div>
 
+            <p>Currently selected alliances (click to remove):</p>
+
+            <ul class="selected-alliances">
+                @foreach ($alliances as $alliance)
+                    <li>
+                        <a href="#" class="remove-alliance" data-allianceID="{{ $alliance->id }}">
+                            {{ $alliance->allianceName }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+
+            {{ Form::hidden('alliances', $alliance_ids) }}
+
             <div class="form-field">
-                {{ Form::label('system-autocomplete', 'Start typing to select regions or systems:', array('class' => 'form-label')) }}
+                {{ Form::label('system-autocomplete', 'Start typing to select systems:', array('class' => 'form-label')) }}
                 {{ Form::text('system-autocomplete', '', array('class' => 'form-input')) }}
             </div>
 

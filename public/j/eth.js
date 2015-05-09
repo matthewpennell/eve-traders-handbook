@@ -34,6 +34,15 @@ $(document).ready(function () {
         return false;
     });
 
+    // Removing an alliance ID from the list.
+    $('body').delegate('.remove-alliance', 'click', function () {
+        var allianceID = $(this).attr('data-allianceID'),
+            current_ids = $('input[name=alliances]').val();
+        $('input[name=alliances]').val(current_ids.replace(allianceID, '').replace(',,', ',').replace(/^,|,$/, ''));
+        $(this).parent().fadeOut();
+        return false;
+    });
+
     // Autocomplete selection of system/region names.
     $('#system-autocomplete').autocomplete({
         minLength: 2,
@@ -53,6 +62,30 @@ $(document).ready(function () {
             // Add the selected item to the list below.
             $('.selected-systems').append('<li><a href="#" class="remove-system" data-solarsystemid="' + ui.item.value + '">' + ui.item.label + ' (' + ui.item.region + ')</a></li>');
             $('input[name=systems]').val($('input[name=systems]').val() + ',' + ui.item.value);
+            $(this).value = '';
+            return false;
+        }
+    });
+
+    // Autocomplete selection of alliance names.
+    $('#alliance-autocomplete').autocomplete({
+        minLength: 2,
+        source: '/settings/alliances',
+        create: function () {
+            $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
+            };
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            return false;
+        },
+        select: function (event, ui) {
+            event.preventDefault();
+            // Add the selected item to the list below.
+            $('.selected-alliances').append('<li><a href="#" class="remove-alliance" data-allianceid="' + ui.item.value + '">' + ui.item.label + '</a></li>');
+            $('input[name=alliances]').val($('input[name=alliances]').val() + ',' + ui.item.value);
             $(this).value = '';
             return false;
         }

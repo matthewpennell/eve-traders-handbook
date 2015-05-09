@@ -144,11 +144,18 @@ class API {
 
         if (isset($additional_parameters))
         {
-            foreach ($additional_parameters as $parameter)
+            if (is_array($additional_parameters))
             {
-                $param_value = Setting::where('key', $parameter['db_key'])->firstOrFail();
-                $url .= '&' . $parameter['url_key'] . '=' . $param_value->value;
+                foreach ($additional_parameters as $parameter)
+                {
+                    $param_value = Setting::where('key', $parameter['db_key'])->firstOrFail();
+                    $url .= '&' . $parameter['url_key'] . '=' . $param_value->value;
 
+                }
+            }
+            else
+            {
+                $url .= '&' . $additional_parameters;
             }
         }
 

@@ -28,7 +28,6 @@ class SettingsController extends BaseController {
         $api_key_id = Setting::where('key', 'api_key_id')->first();
         $api_key_verification_code = Setting::where('key', 'api_key_verification_code')->first();
         $api_key_character_id = Setting::where('key', 'api_key_character_id')->first();
-        $alliances = Setting::where('key', 'alliances')->first();
 
         $characters = array();
         // If the API key is set, retrieve a list of characters.
@@ -48,6 +47,10 @@ class SettingsController extends BaseController {
         $system_ids = Setting::where('key', 'systems')->pluck('value');
         $systems = System::whereIn('solarSystemID', explode(',', $system_ids))->get();
 
+        // Do the same for selected alliances.
+        $alliance_ids = Setting::where('key', 'alliances')->pluck('value');
+        $alliances = Alliance::whereIn('id', explode(',', $alliance_ids))->get();
+
         // Load the template containing the form to update settings.
         return View::make('settings')
             ->with('api_key_id', $api_key_id)
@@ -55,6 +58,7 @@ class SettingsController extends BaseController {
             ->with('api_key_character_id', $api_key_character_id)
             ->with('characters', $characters)
             ->with('alliances', $alliances)
+            ->with('alliance_ids', $alliance_ids)
             ->with('filters', $filters)
             ->with('systems', $systems)
             ->with('system_ids', $system_ids);
@@ -102,6 +106,21 @@ class SettingsController extends BaseController {
             $alliances = Setting::where('key', 'alliances')->firstOrFail();
             $alliances->value = Input::get('alliances');
             $alliances->save();
+            // We also need to populate the alliances table with these new alliances.
+            $response = API::eveOnline('eve/AllianceList', 'version=1');
+            foreach ($response->body->result->rowset->row as $row)
+            {
+                if (strpos(Input::get('alliances'), (string)$row['allianceID']) !== FALSE) {
+                    $alliance = Alliance::find($row['allianceID']);
+                    if ( ! isset($alliance->id))
+                    {
+                        $alliance = new Alliance;
+                        $alliance->id = $row['allianceID'];
+                        $alliance->allianceName = $row['name'];
+                        $alliance->save();
+                    }
+                }
+            }
         }
 
         // Process default filters.
@@ -122,7 +141,7 @@ class SettingsController extends BaseController {
     }
 
     /**
-     * AJAX response for autocomplete.
+     * AJAX response for autocomplete of systems.
      */
     public function getSystems()
     {
@@ -141,6 +160,23 @@ class SettingsController extends BaseController {
         }
         $json .= ']';
         echo $json;
+    }
+
+    /**
+     * AJAX response for autocomplete of alliances.
+     * TODO: This is horrifically slow, need to cache the alliance list.
+     */
+    public function getAlliances()
+    {
+        $matches = array();
+        $response = API::eveOnline('eve/AllianceList', 'version=1');
+        foreach ($response->body->result->rowset->row as $row)
+        {
+            if (stristr($row['name'], Input::get('term'))) {
+                $matches[] = '{"label":"' . $row['name'] . '","value":"' . $row['allianceID'] . '"}';
+            }
+        }
+        echo '[' . implode(',', $matches) . ']';
     }
 
 }
