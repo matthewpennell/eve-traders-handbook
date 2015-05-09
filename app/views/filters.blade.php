@@ -43,17 +43,4 @@
         </label>
     </div>
 
-<!--
-    <h3>Ship</h3>
-
-    @foreach ($ships as $ship)
-        <div class="filter">
-            <label>
-                {{ Form::checkbox('ship[]', $ship->shipName) }}
-                {{ $ship->shipName }}
-            </label>
-        </div>
-    @endforeach
--->
-
 </form>
