@@ -96,21 +96,25 @@ class SettingsController extends BaseController {
 
         if (Input::has('systems'))
         {
+            // Clean up the input in case the JS screwed up somewhere.
+            $input = preg_replace('/^,|,$/', '', Input::get('systems'));
             $systems = Setting::where('key', 'systems')->firstOrFail();
-            $systems->value = Input::get('systems');
+            $systems->value = $input;
             $systems->save();
         }
 
         if (Input::has('alliances'))
         {
+            // Clean up the input in case the JS screwed up somewhere.
+            $input = preg_replace('/^,|,$/', '', Input::get('alliances'));
             $alliances = Setting::where('key', 'alliances')->firstOrFail();
-            $alliances->value = Input::get('alliances');
+            $alliances->value = $input;
             $alliances->save();
             // We also need to populate the alliances table with these new alliances.
             $response = API::eveOnline('eve/AllianceList', 'version=1');
             foreach ($response->body->result->rowset->row as $row)
             {
-                if (strpos(Input::get('alliances'), (string)$row['allianceID']) !== FALSE) {
+                if (strpos($input, (string)$row['allianceID']) !== FALSE) {
                     $alliance = Alliance::find($row['allianceID']);
                     if ( ! isset($alliance->id))
                     {
