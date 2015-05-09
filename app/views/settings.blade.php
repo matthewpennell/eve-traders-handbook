@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-field">
                     {{ Form::label($api_key_character_id->key, $api_key_character_id->label, array('class' => 'form-label')) }}
-                    {{ Form::text($api_key_character_id->key, $api_key_character_id->value, array('class' => 'form-input')) }}
+                    {{ Form::select($api_key_character_id->key, $characters, $api_key_character_id->value, array('class' => 'form-input')) }}
                 </div>
             </div>
 

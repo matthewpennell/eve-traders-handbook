@@ -1,5 +1,7 @@
 <?php
 
+use ETH\API;
+
 class SettingsController extends BaseController {
 
     /*
@@ -27,6 +29,17 @@ class SettingsController extends BaseController {
         $api_key_verification_code = Setting::where('key', 'api_key_verification_code')->first();
         $api_key_character_id = Setting::where('key', 'api_key_character_id')->first();
         $alliances = Setting::where('key', 'alliances')->first();
+
+        $characters = array();
+        // If the API key is set, retrieve a list of characters.
+        if ($api_key_id->value != '' && $api_key_verification_code->value != '')
+        {
+            $response = API::eveOnline('account/Characters');
+            foreach ($response->body->result->rowset->row as $row)
+            {
+                $characters[(string)$row['characterID']] = $row['name'];
+            }
+        }
 
         // Retrieve the category filters.
         $filters = Filter::all();
@@ -57,6 +70,7 @@ class SettingsController extends BaseController {
             ->with('api_key_id', $api_key_id)
             ->with('api_key_verification_code', $api_key_verification_code)
             ->with('api_key_character_id', $api_key_character_id)
+            ->with('characters', $characters)
             ->with('alliances', $alliances)
             ->with('filters', $filters)
             ->with('systems', $systems)
@@ -86,6 +100,13 @@ class SettingsController extends BaseController {
             $api_key_verification_code = Setting::where('key', 'api_key_verification_code')->firstOrFail();
             $api_key_verification_code->value = Input::get('api_key_verification_code');
             $api_key_verification_code->save();
+        }
+
+        if (Input::has('api_key_character_id'))
+        {
+            $api_key_character_id = Setting::where('key', 'api_key_character_id')->firstOrFail();
+            $api_key_character_id->value = Input::get('api_key_character_id');
+            $api_key_character_id->save();
         }
 
         if (Input::has('systems'))
