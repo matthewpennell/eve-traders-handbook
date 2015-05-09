@@ -10,12 +10,33 @@
 
         {{ Form::open() }}
 
-            @foreach($settings as $setting)
-                <div class="form-field">
-                    {{ Form::label($setting->key, $setting->label, array('class' => 'form-label')) }}
-                    {{ Form::text($setting->key, $setting->value, array('class' => 'form-input')) }}
-                </div>
+            @foreach ($settings as $setting)
+                @if ($setting->key != 'systems')
+                    <div class="form-field">
+                        {{ Form::label($setting->key, $setting->label, array('class' => 'form-label')) }}
+                        {{ Form::text($setting->key, $setting->value, array('class' => 'form-input')) }}
+                    </div>
+                @endif
             @endforeach
+
+            <div class="form-field">
+                {{ Form::label('system-autocomplete', 'Start typing to select regions or systems:', array('class' => 'form-label')) }}
+                {{ Form::text('system-autocomplete', '', array('class' => 'form-input')) }}
+            </div>
+
+            <p>Currently selected systems (click to remove):</p>
+
+            <ul class="selected-systems">
+                @foreach ($systems as $system)
+                    <li>
+                        <a href="#" class="remove-system" data-solarSystemID="{{ $system->solarSystemID }}">
+                            {{ $system->solarSystemName }} ({{ $system->region->regionName }})
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+
+            {{ Form::hidden('systems', $system_ids) }}
 
             {{ Form::label('Filters', 'Default filters', array('class' => 'form-label')) }}
 
@@ -35,5 +56,15 @@
     </div>
 
 </div>
+
+<script>
+
+    var systemsAndRegions = [
+        @foreach ($all_systems as $system)
+            { label: "{{ $system->solarSystemName }}", region: "{{ $system->region->regionName }}", value: "{{ $system->solarSystemID }}" },
+        @endforeach
+    ];
+
+</script>
 
 @stop

@@ -43,7 +43,7 @@ class ImportController extends BaseController {
         // Send the request.
         $response = Request::get($url)
             ->addHeader('Accept-Encoding', 'gzip')
-            ->addHeader('User-Agent', 'Eve Traders Handbook, eth@matthewpennell.com')
+            ->addHeader('User-Agent', 'Eve Traders Handbook')
             ->send();
 
         if (isset($response->body) && strlen($response->body) > 0)

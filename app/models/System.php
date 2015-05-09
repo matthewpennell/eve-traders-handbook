@@ -10,4 +10,9 @@ class System extends Eloquent {
         return $this->hasMany('Kill');
     }
 
+    public function region()
+    {
+        return $this->belongsTo('Region', 'regionID');
+    }
+
 }

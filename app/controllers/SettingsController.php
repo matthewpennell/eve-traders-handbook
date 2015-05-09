@@ -28,10 +28,20 @@ class SettingsController extends BaseController {
         // Retrieve the category filters.
         $filters = Filter::all();
 
+        // Build a list of selected systems by looking up their IDs.
+        $system_ids = Setting::where('key', 'systems')->pluck('value');
+        $systems = System::whereIn('solarSystemID', explode(',', $system_ids))->get();
+
+        // Build an array of all systems and regions.
+        $all_systems = System::all();
+
         // Load the template containing the form to update settings.
         return View::make('settings')
             ->with('settings', $settings)
-            ->with('filters', $filters);
+            ->with('filters', $filters)
+            ->with('systems', $systems)
+            ->with('system_ids', $system_ids)
+            ->with('all_systems', $all_systems);
 
     }
 

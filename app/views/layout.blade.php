@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700">
         <link rel="stylesheet" href="/c/normalize.css">
         <link rel="stylesheet" href="/c/eth.css">
+        <link rel="stylesheet" href="/c/vendor/jquery-ui.min.css">
 
     </head>
 
@@ -47,6 +48,7 @@
         </footer>
 
         <script src="/j/vendor/jquery-2.1.1.min.js"></script>
+        <script src="/j/vendor/jquery-ui.min.js"></script>
         <script src="/j/eth.js"></script>
 
     </body>

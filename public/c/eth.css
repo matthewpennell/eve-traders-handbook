@@ -199,6 +199,7 @@ th {
 .form-label, .form-input {
     display: block;
     width: 660px;
+    clear: left;
 }
 
 .form-label {
@@ -340,4 +341,35 @@ footer {
 
 footer a {
     color: #fff;
+}
+
+/* AUTOCOMPLETE */
+
+.ui-autocomplete {
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.selected-systems {
+    list-style: none;
+    margin: 20px 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.remove-system {
+    float: left;
+    display: block;
+    width: 200px;
+    padding: 5px;
+    background: #ddd;
+    text-decoration: none;
+    color: #666;
+    margin: 0 10px 10px 0;
+}
+
+.remove-system:hover {
+    background: #bbb;
+    text-decoration: line-through;
 }
