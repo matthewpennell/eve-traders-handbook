@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 INSERT INTO `settings` (`id`, `key`, `label`, `value`, `created_at`, `updated_at`) VALUES
 (1, 'api_key_id', 'Key ID', '', '0000-00-00 00:00:00', '2014-12-11 12:48:43'),
 (2, 'api_key_verification_code', 'Verification Code', '', '0000-00-00 00:00:00', '2014-12-11 12:48:43'),
-(3, 'api_key_character_id', 'Character ID', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(3, 'api_key_character_id', 'Character', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (4, 'alliances', 'Alliances (comma-separated)', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (5, 'systems', 'Systems (comma-separated)', '', '0000-00-00 00:00:00', '2015-04-09 07:40:12');
 

@@ -28,6 +28,7 @@ As the source data for all EVE Online assets is rather large, they are not provi
 * invTypeMaterials
 * invTypes
 * mapSolarSystems
+* mapRegions
 
 Now import the `eth_database_setup.sql` file into your database to create the custom tables used by the application.
 
