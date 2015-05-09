@@ -35,13 +35,28 @@ class SettingsController extends BaseController {
         // Build an array of all systems and regions.
         $all_systems = System::all();
 
+        // Build the JS object of system names, so we don't have to do it in the template.
+        $js_object = '[';
+        foreach ($all_systems as $system)
+        {
+            $js_object .= '{label:"';
+            $js_object .= $system->solarSystemName;
+            $js_object .= '",region:"';
+            $js_object .= $system->region->regionName;
+            $js_object .= '",value:"';
+            $js_object .= $system->solarSystemID;
+            $js_object .= '"},';
+        }
+        $js_object .= ']';
+
         // Load the template containing the form to update settings.
         return View::make('settings')
             ->with('settings', $settings)
             ->with('filters', $filters)
             ->with('systems', $systems)
             ->with('system_ids', $system_ids)
-            ->with('all_systems', $all_systems);
+            ->with('all_systems', $all_systems)
+            ->with('js_object', $js_object);
 
     }
 

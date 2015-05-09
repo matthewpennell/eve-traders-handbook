@@ -59,11 +59,7 @@
 
 <script>
 
-    var systemsAndRegions = [
-        @foreach ($all_systems as $system)
-            { label: "{{ $system->solarSystemName }}", region: "{{ $system->region->regionName }}", value: "{{ $system->solarSystemID }}" },
-        @endforeach
-    ];
+    var systemsAndRegions = {{ $js_object }};
 
 </script>
 
