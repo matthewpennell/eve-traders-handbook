@@ -10,14 +10,31 @@
 
         {{ Form::open() }}
 
-            @foreach ($settings as $setting)
-                @if ($setting->key != 'systems')
-                    <div class="form-field">
-                        {{ Form::label($setting->key, $setting->label, array('class' => 'form-label')) }}
-                        {{ Form::text($setting->key, $setting->value, array('class' => 'form-input')) }}
-                    </div>
-                @endif
-            @endforeach
+            @if (!@api_key_id || !@api_key_verification_code)
+                <div class="api-needed">
+                    <h3>No API key detected</h3>
+                    <p>To use the Eve Traders Handbook, you need to supply an EVE API key.</p>
+                    <p><a href="https://community.eveonline.com/support/api-key/" target="_blank">Click here to visit the EVE API Key Management site.</a></p>
+                </div>
+            @else
+                <div class="form-field">
+                    {{ Form::label($api_key_id->key, $api_key_id->label, array('class' => 'form-label')) }}
+                    {{ Form::text($api_key_id->key, $api_key_id->value, array('class' => 'form-input')) }}
+                </div>
+                <div class="form-field">
+                    {{ Form::label($api_key_verification_code->key, $api_key_verification_code->label, array('class' => 'form-label')) }}
+                    {{ Form::text($api_key_verification_code->key, $api_key_verification_code->value, array('class' => 'form-input')) }}
+                </div>
+                <div class="form-field">
+                    {{ Form::label($api_key_character_id->key, $api_key_character_id->label, array('class' => 'form-label')) }}
+                    {{ Form::text($api_key_character_id->key, $api_key_character_id->value, array('class' => 'form-input')) }}
+                </div>
+            @endif
+
+            <div class="form-field">
+                {{ Form::label($alliances->key, $alliances->label, array('class' => 'form-label')) }}
+                {{ Form::text($alliances->key, $alliances->value, array('class' => 'form-input')) }}
+            </div>
 
             <div class="form-field">
                 {{ Form::label('system-autocomplete', 'Start typing to select regions or systems:', array('class' => 'form-label')) }}

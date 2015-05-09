@@ -23,7 +23,10 @@ class SettingsController extends BaseController {
     {
 
         // Retrieve all of the stored settings from the database.
-        $settings = Setting::all();
+        $api_key_id = Setting::where('key', 'api_key_id')->first();
+        $api_key_verification_code = Setting::where('key', 'api_key_verification_code')->first();
+        $api_key_character_id = Setting::where('key', 'api_key_character_id')->first();
+        $alliances = Setting::where('key', 'alliances')->first();
 
         // Retrieve the category filters.
         $filters = Filter::all();
@@ -51,7 +54,10 @@ class SettingsController extends BaseController {
 
         // Load the template containing the form to update settings.
         return View::make('settings')
-            ->with('settings', $settings)
+            ->with('api_key_id', $api_key_id)
+            ->with('api_key_verification_code', $api_key_verification_code)
+            ->with('api_key_character_id', $api_key_character_id)
+            ->with('alliances', $alliances)
             ->with('filters', $filters)
             ->with('systems', $systems)
             ->with('system_ids', $system_ids)
