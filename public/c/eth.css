@@ -43,7 +43,7 @@ h1 a {
 .header-nav {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 3px;
 }
 
 .header-nav li {
