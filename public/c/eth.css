@@ -192,6 +192,18 @@ th {
 
 /* FORMS */
 
+.api-needed {
+    background: #ccc;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin: 0 0 40px;
+}
+
+.api-needed + .api-details {
+    display: none;
+}
+
 .form-field {
     margin: 0 0 40px;
 }

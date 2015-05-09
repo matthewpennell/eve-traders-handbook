@@ -57,4 +57,9 @@ $(document).ready(function () {
         }
     });
 
+    // Make the API link work.
+    $('.show-api').click(function () {
+        $('.api-needed').remove();
+    });
+
 });

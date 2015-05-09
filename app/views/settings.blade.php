@@ -10,13 +10,15 @@
 
         {{ Form::open() }}
 
-            @if (!@api_key_id || !@api_key_verification_code)
+            @if ($api_key_id->value == '' || $api_key_verification_code->value == '')
                 <div class="api-needed">
-                    <h3>No API key detected</h3>
+                    <h4>No API key detected</h4>
                     <p>To use the Eve Traders Handbook, you need to supply an EVE API key.</p>
-                    <p><a href="https://community.eveonline.com/support/api-key/" target="_blank">Click here to visit the EVE API Key Management site.</a></p>
+                    <p><a href="https://community.eveonline.com/support/api-key/" target="_blank">Visit the EVE API Key Management site</a> and then <a href="#" class="show-api">enter your new API key details</a>.</p>
                 </div>
-            @else
+            @endif
+
+            <div class="api-details">
                 <div class="form-field">
                     {{ Form::label($api_key_id->key, $api_key_id->label, array('class' => 'form-label')) }}
                     {{ Form::text($api_key_id->key, $api_key_id->value, array('class' => 'form-input')) }}
@@ -29,7 +31,7 @@
                     {{ Form::label($api_key_character_id->key, $api_key_character_id->label, array('class' => 'form-label')) }}
                     {{ Form::text($api_key_character_id->key, $api_key_character_id->value, array('class' => 'form-input')) }}
                 </div>
-            @endif
+            </div>
 
             <div class="form-field">
                 {{ Form::label($alliances->key, $alliances->label, array('class' => 'form-label')) }}
