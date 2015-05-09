@@ -14,7 +14,7 @@
                 <div class="api-needed">
                     <h4>No API key detected</h4>
                     <p>To use the Eve Traders Handbook, you need to supply an EVE API key.</p>
-                    <p><a href="https://community.eveonline.com/support/api-key/" target="_blank">Visit the EVE API Key Management site</a> and then <a href="#" class="show-api">enter your new API key details</a>.</p>
+                    <p><a href="https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=25165832" target="_blank">Visit the EVE API Key Management site</a> and then <a href="#" class="show-api">enter your new API key details</a>.</p>
                 </div>
             @endif
 
