@@ -76,10 +76,4 @@
 
 </div>
 
-<script>
-
-    var systemsAndRegions = {{ $js_object }};
-
-</script>
-
 @stop

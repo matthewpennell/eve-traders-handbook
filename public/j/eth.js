@@ -36,7 +36,8 @@ $(document).ready(function () {
 
     // Autocomplete selection of system/region names.
     $('#system-autocomplete').autocomplete({
-        source: systemsAndRegions,
+        minLength: 2,
+        source: '/settings/systems',
         create: function () {
             $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
                 return $("<li>").append("<a>" + item.label + " (" + item.region + ")</a>").appendTo(ul);

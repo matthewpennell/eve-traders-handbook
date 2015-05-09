@@ -48,23 +48,6 @@ class SettingsController extends BaseController {
         $system_ids = Setting::where('key', 'systems')->pluck('value');
         $systems = System::whereIn('solarSystemID', explode(',', $system_ids))->get();
 
-        // Build an array of all systems and regions.
-        $all_systems = System::all();
-
-        // Build the JS object of system names, so we don't have to do it in the template.
-        $js_object = '[';
-        foreach ($all_systems as $system)
-        {
-            $js_object .= '{label:"';
-            $js_object .= $system->solarSystemName;
-            $js_object .= '",region:"';
-            $js_object .= $system->region->regionName;
-            $js_object .= '",value:"';
-            $js_object .= $system->solarSystemID;
-            $js_object .= '"},';
-        }
-        $js_object .= ']';
-
         // Load the template containing the form to update settings.
         return View::make('settings')
             ->with('api_key_id', $api_key_id)
@@ -74,9 +57,7 @@ class SettingsController extends BaseController {
             ->with('alliances', $alliances)
             ->with('filters', $filters)
             ->with('systems', $systems)
-            ->with('system_ids', $system_ids)
-            ->with('all_systems', $all_systems)
-            ->with('js_object', $js_object);
+            ->with('system_ids', $system_ids);
 
     }
 
@@ -138,6 +119,28 @@ class SettingsController extends BaseController {
 
         return Redirect::to('settings');
 
+    }
+
+    /**
+     * AJAX response for autocomplete.
+     */
+    public function getSystems()
+    {
+        $json = '[';
+        $systems = System::where('solarSystemName', 'LIKE', '%' . Input::get('term') . '%')->get();
+        $count = count($systems);
+        $i = 1;
+        foreach ($systems as $system)
+        {
+            $json .= '{"region":"' . $system->region->regionName . '","label":"' . $system->solarSystemName . '","value":"' . $system->solarSystemID . '"}';
+            if ($i < $count)
+            {
+                $json .= ',';
+            }
+            $i++;
+        }
+        $json .= ']';
+        echo $json;
     }
 
 }
