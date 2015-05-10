@@ -40,9 +40,8 @@ Visit `www.yoursite.com/settings` to enter some basic information about yourself
 * **Verification Code** - your EVE Online API verification code
 * **Character** - the EVE character you want to use for invention skill checks
 * **Home Region** - the region of New Eden you call home
-* **Systems** - a comma-separated list of the system IDs that you want to monitor for losses
-* **Alliances** - a comma-separated list of the alliance IDs that you want to monitor for losses
-* **Character ID** - the EVE character ID of the character you are using for T2 invention
+* **Systems** - the star systems that you want to monitor for losses
+* **Alliances** - the alliances that you want to monitor for losses
 * **Default filters** - select the types of items that you want the app to show by default (this list will grow as more lost items are tracked)
 
 Now visit `wwww.yoursite.com/import/zkillboard` to run the first import of kills/losses. Note that the zKillboard API is restricted to 200 kills per request.
