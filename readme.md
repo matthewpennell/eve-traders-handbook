@@ -38,6 +38,8 @@ Visit `www.yoursite.com/settings` to enter some basic information about yourself
 
 * **Key ID** - your EVE Online API key
 * **Verification Code** - your EVE Online API verification code
+* **Character** - the EVE character you want to use for invention skill checks
+* **Home Region** - the region of New Eden you call home
 * **Systems** - a comma-separated list of the system IDs that you want to monitor for losses
 * **Alliances** - a comma-separated list of the alliance IDs that you want to monitor for losses
 * **Character ID** - the EVE character ID of the character you are using for T2 invention
