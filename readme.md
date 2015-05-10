@@ -8,7 +8,7 @@ It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and t
 
 ### Requirements
 
-**ETH** runs on PHP5.3 and uses the [Laravel PHP framework](http://laravel.com/) and its associated systems (Blade templates, Composer for dependency management, Eloquent ORM). It requires a MySQL database.
+**ETH** runs on PHP5.4+ and uses the [Laravel PHP framework](http://laravel.com/) and its associated systems (Blade templates, Composer for dependency management, Eloquent ORM). It requires a MySQL database.
 
 ### Installation
 
