@@ -36,7 +36,7 @@ class SettingsController extends BaseController {
         if ($api_key_id->value != '' && $api_key_verification_code->value != '')
         {
             $response = API::eveOnline('account/Characters');
-            if ($response->body)
+            if ($response->body->result)
             {
                 foreach ($response->body->result->rowset->row as $row)
                 {
