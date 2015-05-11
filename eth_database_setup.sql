@@ -129,6 +129,20 @@ CREATE TABLE IF NOT EXISTS `materialEfficiency` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ships`
+--
+
+DROP TABLE IF EXISTS `ships`;
+CREATE TABLE IF NOT EXISTS `ships` (
+  `id` int(11) NOT NULL,
+  `shipName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `prices`
 --
 
