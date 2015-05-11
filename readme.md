@@ -34,6 +34,8 @@ Now import the `eth_database_setup.sql` file into your database to create the cu
 
 ### Setup
 
+(If you are running this application on localhost, you can run a Laravel server separately by moving to the directory in which you have the application installed, and running `php artisan serve`. Now visit `http://localhost:8000/` to load the site.)
+
 Visit `www.yoursite.com/settings` to enter some basic information about yourself and the area that you are interested in. You'll need to create an API key on [the EVE Online API Key Management site](https://community.eveonline.com/support/api-key/) first.
 
 * **Key ID** - your EVE Online API key
