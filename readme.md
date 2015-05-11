@@ -12,7 +12,7 @@ It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and t
 
 ### Installation
 
-Clone or download this repository to your local machine or live server. Create a MySQL database, and update the host, database, username and password values in `app/config/database.php`.
+Clone or download this repository to your local machine or live server. Create a MySQL database, and update the host, database, username and password values in `app/config/database.php`. Make sure that the public html directory path (VirtualHost on Apache) is pointing to the `public` folder, and **not** the root of the application.
 
 As the source data for all EVE Online assets is rather large, they are not provided with this repository. Download the individual .sql.bz2 tables listed below from [www.fuzzwork.co.uk/dump/latest](https://www.fuzzwork.co.uk/dump/latest/), unzip them, and import them into your database:
 
