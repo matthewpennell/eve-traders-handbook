@@ -13,11 +13,16 @@ class ImportController extends BaseController {
     |
     */
 
+    public $offset = 10;
+
     /**
      * Import zKillboard kills for the selected systems and alliances.
      */
     public function getZkillboard($systems = '')
     {
+
+        // Set an offset to use for the zKillboard API system limit.
+        $offset = $this->offset--;
 
         // Retrieve the selected systems from the database.
         if ($systems == '')
@@ -26,10 +31,10 @@ class ImportController extends BaseController {
             $systems = $systems_object->value;
         }
         $systems_array = explode(',', $systems);
-        if (count($systems_array) > 10)
+        if (count($systems_array) > $this->offset)
         {
-            $this->getZkillboard(implode(',',array_splice($systems_array, 10)));
-            $systems = implode(',',array_splice($systems_array, 0, 10));
+            $this->getZkillboard(implode(',',array_splice($systems_array, $offset)));
+            $systems = implode(',',array_splice($systems_array, 0, $offset));
         }
 
         // Retrieve the selected alliances from the database.
@@ -106,20 +111,21 @@ class ImportController extends BaseController {
                         $ship = new Ship;
                         $ship->id = $kill->shipTypeID;
                         $ship->shipName = $type->typeName;
-                        if (!stristr($ship->shipName, 'Capsule'))
-                        {
-                            $ship->save();
-                            // Insert the ship loss into the items database as well.
-                            $item = new Item;
-                            $item->killID = $row['killID'];
-                            $item->typeID = $kill->shipTypeID;
-                            $item->typeName = $type->typeName;
-                            $item->categoryName = $type->group->category['categoryName'];
-                            $item->metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
-                            $item->allowManufacture = (stristr($type->typeName, 'Capsule')) ? 0 : 1;
-                            $item->qty = 1;
-                            $item->save();
-                        }
+                        $ship->save();
+                    }
+
+                    // Insert the ship loss into the items database as well.
+                    if (stristr($ship->shipName, 'Capsule') === FALSE)
+                    {
+                        $item = new Item;
+                        $item->killID = $row['killID'];
+                        $item->typeID = $kill->shipTypeID;
+                        $item->typeName = $type->typeName;
+                        $item->categoryName = $type->group->category['categoryName'];
+                        $item->metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
+                        $item->allowManufacture = 1;
+                        $item->qty = 1;
+                        $item->save();
                     }
 
                     // Add the category to the list of filters available on the site.
@@ -212,13 +218,14 @@ class ImportController extends BaseController {
 
             }
 
-            echo "Inserted $insert_count new kills!";
+            echo "Inserted $insert_count new kills!<br>";
 
         }
         else
         {
             echo "No response received from zKillboard API.";
         }
+
     }
 
 }
