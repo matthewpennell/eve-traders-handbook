@@ -110,59 +110,71 @@ class DetailsController extends BaseController {
 		else
 		{
 
-			// Get a list of what is needed to manufacture the item.
-			$manufacturing = array();
-			$total_price = 0;
-			$type_materials = DB::table('invTypeMaterials')->where('typeID', $id)->get();
-			$types = array();
-			$jita_types = array();
-
-			// Loop through all the materials. For each one, add it to an array we will use to show manufacturing details.
-			foreach ($type_materials as $material)
+			// If the meta level of this item is not Meta 0, we don't need to pull the manufacture price.
+			$item = Item::where('typeID', $id)->first();
+			if ($item['metaGroupName'] == 'Meta 0')
 			{
-				// Build an array for the eve-central API call.
-				$types[] = $material->materialTypeID;
-				// Build an array for the eventual output.
-				$manufacturing[$material->materialTypeID] = (object) array(
-					"typeName"	=> Type::find($material->materialTypeID)->typeName,
-					"qty"		=> $material->quantity * (1 - ($material_efficiency->materialEfficiency / 100)),
-					"price"		=> 0,
-					"jita"		=> FALSE,
-				);
-			}
 
-			// Make an API call to get the local price of materials.
-			$api = API::eveCentral($types, $home_region_id = Setting::where('key', 'home_region_id')->pluck('value'));
+				// Get a list of what is needed to manufacture the item.
+				$manufacturing = array();
+				$total_price = 0;
+				$type_materials = DB::table('invTypeMaterials')->where('typeID', $id)->get();
+				$types = array();
+				$jita_types = array();
 
-			// Loop through each returned price and update the data in the manufacturing array.
-			foreach($api as $api_result)
-			{
-				if ($api_result->median != 0)
+				// Loop through all the materials. For each one, add it to an array we will use to show manufacturing details.
+				foreach ($type_materials as $material)
 				{
-					$manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
-					$total_price += $manufacturing[$api_result->id]->price;
+					// Build an array for the eve-central API call.
+					$types[] = $material->materialTypeID;
+					// Build an array for the eventual output.
+					$manufacturing[$material->materialTypeID] = (object) array(
+						"typeName"	=> Type::find($material->materialTypeID)->typeName,
+						"qty"		=> $material->quantity * (1 - ($material_efficiency->materialEfficiency / 100)),
+						"price"		=> 0,
+						"jita"		=> FALSE,
+					);
 				}
-				else
-				{
-					// Build an array of types to check prices at Jita.
-					$jita_types[] = $api_result->id;
-				}
-			}
 
-			// If we need to check prices at Jita, make another API call.
-			if (count($jita_types))
-			{
-				$api = API::eveCentral($jita_types, NULL, 30000142);
+				// Make an API call to get the local price of materials.
+				$api = API::eveCentral($types, $home_region_id = Setting::where('key', 'home_region_id')->pluck('value'));
+
 				// Loop through each returned price and update the data in the manufacturing array.
 				foreach($api as $api_result)
 				{
-					$manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
-					$manufacturing[$api_result->id]->jita = TRUE;
-					$total_price += $manufacturing[$api_result->id]->price;
+					if ($api_result->median != 0)
+					{
+						$manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+						$total_price += $manufacturing[$api_result->id]->price;
+					}
+					else
+					{
+						// Build an array of types to check prices at Jita.
+						$jita_types[] = $api_result->id;
+					}
 				}
-			}
 
-			$potential_profits = NULL;
+				// If we need to check prices at Jita, make another API call.
+				if (count($jita_types))
+				{
+					$api = API::eveCentral($jita_types, NULL, 30000142);
+					// Loop through each returned price and update the data in the manufacturing array.
+					foreach($api as $api_result)
+					{
+						$manufacturing[$api_result->id]->price = $manufacturing[$api_result->id]->qty * $api_result->median;
+						$manufacturing[$api_result->id]->jita = TRUE;
+						$total_price += $manufacturing[$api_result->id]->price;
+					}
+				}
+
+				$potential_profits = NULL;
+
+			}
+			else
+			{
+				$manufacturing = NULL;
+				$total_price = 999999999;
+			}
 
 		}
 
@@ -181,6 +193,8 @@ class DetailsController extends BaseController {
 			"median"			=> $amarr[$id]->median,
 		);
 
+		$importCostToUse = ((int)$jita[$id]->median < (int)$amarr[$id]->median) ? $jita[$id]->median : $amarr[$id]->median;
+
 		// Cache the industry and import potential profits for the item.
 		$profit = $type->profit;
 		if (!isset($profit))
@@ -190,13 +204,13 @@ class DetailsController extends BaseController {
 		}
 		$profit->manufactureCost = round($total_price);
 		$profit->profitIndustry = round($local_price->median - $total_price);
-		$profit->profitImport = round($local_price->median - $jita[$id]->median);
+		$profit->profitImport = round($local_price->median - $importCostToUse);
 
 		// Save the cached potential profit figure.
 		$type->profit()->save($profit);
 
 		$profitToUse = ($profit->profitIndustry > $profit->profitImport) ? $profit->profitIndustry : $profit->profitImport;
-		$costToUse = ($profit->profitIndustry > $profit->profitImport) ? $total_price : $jita[$id]->median;
+		$costToUse = ($profit->profitIndustry > $profit->profitImport) ? $total_price : $importCostToUse;
 
 		return View::make('item')
 			->with('type', $type)
