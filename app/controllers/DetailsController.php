@@ -56,7 +56,7 @@ class DetailsController extends BaseController {
 			$icon = str_replace('_', '_64_', $type->MarketGroup->Icon->iconFile);
 			$icon = preg_replace('/^0/', '', $icon);
 			$icon = preg_replace('/0(.)$/', '$1', $icon);
-			$icon = '/eve/items/' . $icon . '.png';
+			$icon = 'eve/items/' . $icon . '.png';
 		}
 
 		// Retrieve the current price ranges this item sells for.

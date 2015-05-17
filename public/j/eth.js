@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     // Clicking an item in the table loads the details via Ajax.
     $('.losses tbody a').click(function () {
-        $('.details').html('<img src="/i/loader.gif" class="loader">');
+        $('.details').html('<img src="i/loader.gif" class="loader">');
         $.get(this.href, function (data) {
             $('.details').html(data);
         });
@@ -17,7 +17,7 @@ $(document).ready(function () {
     // Updating the Material Efficiency dropdown changes the amounts/costs and saves the value.
     $('body').delegate('#material-efficiency', 'change', function () {
         var typeID = $('.details h3').attr('id');
-        $('.details').html('<img src="/i/loader.gif" class="loader">');
+        $('.details').html('<img src="i/loader.gif" class="loader">');
         $.get('details/' + typeID, {
             me: this.value
         }, function (data) {
@@ -46,7 +46,7 @@ $(document).ready(function () {
     // Autocomplete selection of system/region names.
     $('#system-autocomplete').autocomplete({
         minLength: 2,
-        source: '/settings/systems',
+        source: 'settings/systems',
         create: function () {
             $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
                 return $("<li>").append("<a>" + item.label + " (" + item.region + ")</a>").appendTo(ul);
@@ -70,7 +70,7 @@ $(document).ready(function () {
     // Autocomplete selection of alliance names.
     $('#alliance-autocomplete').autocomplete({
         minLength: 2,
-        source: '/settings/alliances',
+        source: 'settings/alliances',
         create: function () {
             $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
                 return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
@@ -94,7 +94,7 @@ $(document).ready(function () {
     // Autocomplete selection of region names.
     $('#home-region-autocomplete').autocomplete({
         minLength: 2,
-        source: '/settings/regions',
+        source: 'settings/regions',
         create: function () {
             $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
                 return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
