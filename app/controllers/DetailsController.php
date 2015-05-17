@@ -112,7 +112,7 @@ class DetailsController extends BaseController {
 
 			// If the meta level of this item is not Meta 0, we don't need to pull the manufacture price.
 			$item = Item::where('typeID', $id)->first();
-			if ($item['metaGroupName'] == 'Meta 0')
+			if ($item->allowManufacture == 1)
 			{
 
 				// Get a list of what is needed to manufacture the item.
