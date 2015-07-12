@@ -15,11 +15,12 @@
                         <th>Type</th>
                         <th>Category</th>
                         <th>Meta</th>
+                        <th class="num">Profit/day</th>
                     </th>
                 </thead>
                 <tfoot>
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             @if ($page > 2)
                                 <a href="?{{ $filter_url }}" class="ffwd">&#9666;&#9666;</a>
                             @endif
@@ -56,6 +57,11 @@
                             </td>
                             <td>{{ $item->categoryName }}</td>
                             <td>{{ $item->metaGroupName }}</td>
+                            <td class="num">
+                                @if ($item->profitIndustry || $item->profitImport)
+                                    <span class="{{ ($profit > 0) ? 'profit' : 'loss' }}">{{ number_format(round($profit * $item->qty / $days_running)) }}</span>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
