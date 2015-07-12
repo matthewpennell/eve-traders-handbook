@@ -130,6 +130,7 @@ th {
 
 .num {
     text-align: right;
+    white-space: nowrap;
 }
 
 .industry {
