@@ -42,7 +42,7 @@
                         <tr>
                             <td class="num">
                                 @if ($item->allowManufacture)
-                                    <img src="eve/items/BPO.png" class="industry" title="This item can be manufactured by players" alt="Blueprint">
+                                    <img src="eve/items/BPO.png" class="industry" title="This item can be manufactured by players" alt="Blueprint">&nbsp;
                                 @endif
                                 {{ number_format($item->qty) }}</td>
                             <td class="t{{ $item->typeID }}">
