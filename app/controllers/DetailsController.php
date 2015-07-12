@@ -44,6 +44,57 @@ class DetailsController extends BaseController {
 		// Save the updated material efficiency figure.
 		$type->materialEfficiency()->save($material_efficiency);
 
+		// Calculate volume if we need to use shipping data.
+		$shipping_cost = Setting::where('key', 'shipping_cost')->first();
+		if ($shipping_cost->value > 0)
+		{
+			// If volume is below 1000, we assume it's not a ship hull and use the base volume.
+			if ($type->volume < 1000)
+			{
+				$shipping_cost_to_include = $shipping_cost->value * $type->volume;
+			}
+			else
+			{
+				// For larger volumes, we need to use static values for ship types.
+				switch ($type->groupID) {
+					case 31:
+						$shipping_cost_to_include = $shipping_cost->value * 500;
+						break;
+					case 25:
+					case 237:
+					case 324:
+					case 830:
+					case 831:
+					case 834:
+					case 893:
+						$shipping_cost_to_include = $shipping_cost->value * 2500;
+						break;
+					case 463:
+					case 543:
+						$shipping_cost_to_include = $shipping_cost->value * 3750;
+						break;
+					case 420:
+					case 541:
+						$shipping_cost_to_include = $shipping_cost->value * 5000;
+						break;
+					case 26:
+					case 358:
+					case 832:
+					case 833:
+					case 894:
+						$shipping_cost_to_include = $shipping_cost->value * 10000;
+						break;
+					case 28:
+						$shipping_cost_to_include = $shipping_cost->value * 20000;
+						break;
+					case 27:
+					case 381:
+						$shipping_cost_to_include = $shipping_cost->value * 50000;
+						break;
+				}
+			}
+		}
+
 		// Load the 64x64 icon to display.
 		$icon = '';
 		$ship = Ship::where('id', $id)->get();
@@ -195,6 +246,11 @@ class DetailsController extends BaseController {
 
 		$importCostToUse = ((int)$jita[$id]->median < (int)$amarr[$id]->median) ? $jita[$id]->median : $amarr[$id]->median;
 
+		if ($shipping_cost_to_include)
+		{
+			$importCostToUse = $importCostToUse + $shipping_cost_to_include;
+		}
+
 		// Cache the industry and import potential profits for the item.
 		$profit = $type->profit;
 		if (!isset($profit))
@@ -217,6 +273,7 @@ class DetailsController extends BaseController {
 			->with('icon', $icon)
 			->with('local_price', $local_price)
 			->with('prices', $prices)
+			->with('shipping_cost', $shipping_cost_to_include)
 			->with('manufacturing', $manufacturing)
 			->with('t2_options', $t2_options)
 			->with('total_price', $total_price)

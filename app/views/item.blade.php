@@ -152,6 +152,12 @@
             <th class="num">Price</th>
         </tr>
     </thead>
+    @if ($shipping_cost)
+        <tfoot>
+            <td>Shipping cost</td>
+            <td class="num">{{ number_format($shipping_cost) }}</td>
+        </tfoot>
+    @endif
     <tbody>
         @foreach($prices as $price)
             <tr>
