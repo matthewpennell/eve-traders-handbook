@@ -15,12 +15,11 @@
                         <th>Type</th>
                         <th>Category</th>
                         <th>Meta</th>
-                        <th class="num">Π/day</th>
                     </th>
                 </thead>
                 <tfoot>
                     <tr>
-                        <td colspan="5">
+                        <td colspan="4">
                             @if ($page > 2)
                                 <a href="?{{ $filter_url }}" class="ffwd">&#9666;&#9666;</a>
                             @endif
@@ -42,7 +41,7 @@
                         <tr>
                             <td class="num">
                                 @if ($item->allowManufacture)
-                                    <img src="eve/items/BPO.png" class="industry" title="This item can be manufactured by players" alt="Blueprint">&nbsp;
+                                    <img src="eve/items/BPO.png" class="industry" title="This item can be manufactured by players" alt="Blueprint">
                                 @endif
                                 {{ number_format($item->qty) }}</td>
                             <td class="t{{ $item->typeID }}">
@@ -57,11 +56,6 @@
                             </td>
                             <td>{{ $item->categoryName }}</td>
                             <td>{{ $item->metaGroupName }}</td>
-                            <td class="num">
-                                @if ($item->profitIndustry || $item->profitImport)
-                                    <span class="{{ ($profit > 0) ? 'profit' : 'loss' }}">{{ number_format(round($profit * $item->qty / $days_running)) }}</span>
-                                @endif
-                            </td>
                         </tr>
                     @endforeach
                 </tbody>

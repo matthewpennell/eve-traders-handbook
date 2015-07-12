@@ -15,10 +15,6 @@ class MasterController extends BaseController {
 	public function home()
 	{
 
-		// Retrieve the number of days since tracking began.
-		$earliest_date = DB::select('SELECT killTime FROM kills ORDER BY killTime ASC LIMIT 1');
-		$days_running = (time() - strtotime($earliest_date[0]->killTime)) / 60 / 60 / 24;
-
 		// How many items to show per page.
 		$per_page = 30;
 
@@ -117,7 +113,6 @@ class MasterController extends BaseController {
 		// Load the template to display all the items.
 		return View::make('home')
 			->with('items', $items)
-			->with('days_running', $days_running)
 			->with('page', $page)
 			->with('filter_url', $filter_url)
 			->with('pages', Item::getRowCount($whereraw) / $per_page)

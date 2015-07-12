@@ -30,7 +30,6 @@ class SettingsController extends BaseController {
         $api_key_character_id = Setting::where('key', 'api_key_character_id')->first();
         $home_region_id = Setting::where('key', 'home_region_id')->first();
         $home_region_name = Region::where('regionID', $home_region_id->value)->pluck('regionName');
-        $shipping_cost = Setting::where('key', 'shipping_cost')->first();
 
         $characters = array();
         // If the API key is set, retrieve a list of characters.
@@ -62,7 +61,6 @@ class SettingsController extends BaseController {
             ->with('api_key_id', $api_key_id)
             ->with('api_key_verification_code', $api_key_verification_code)
             ->with('api_key_character_id', $api_key_character_id)
-            ->with('shipping_cost', $shipping_cost)
             ->with('home_region_id', $home_region_id)
             ->with('home_region_name', $home_region_name)
             ->with('characters', $characters)
@@ -141,13 +139,6 @@ class SettingsController extends BaseController {
                     }
                 }
             }
-        }
-
-        if (Input::has('shipping_cost'))
-        {
-            $shipping_cost = Setting::where('key', 'shipping_cost')->firstOrFail();
-            $shipping_cost->value = Input::get('shipping_cost');
-            $shipping_cost->save();
         }
 
         // Process default filters.
