@@ -46,6 +46,7 @@ class DetailsController extends BaseController {
 
 		// Calculate volume if we need to use shipping data.
 		$shipping_cost = Setting::where('key', 'shipping_cost')->first();
+		$shipping_cost_to_include = 0;
 		if ($shipping_cost->value > 0)
 		{
 			// If volume is below 1000, we assume it's not a ship hull and use the base volume.

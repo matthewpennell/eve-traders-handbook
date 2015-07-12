@@ -152,7 +152,7 @@
             <th class="num">Price</th>
         </tr>
     </thead>
-    @if ($shipping_cost)
+    @if ($shipping_cost > 0)
         <tfoot>
             <td>Shipping cost</td>
             <td class="num">{{ number_format($shipping_cost) }}</td>
