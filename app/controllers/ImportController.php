@@ -218,7 +218,7 @@ class ImportController extends BaseController {
 
             }
 
-            echo "Inserted $insert_count new kills!<br>";
+            echo "Inserted $insert_count new kills! ";
 
         }
         else
