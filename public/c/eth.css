@@ -119,6 +119,7 @@ tr {
 
 th, td {
     padding: 0 10px;
+    white-space: nowrap;
 }
 
 th {
@@ -130,7 +131,6 @@ th {
 
 .num {
     text-align: right;
-    white-space: nowrap;
 }
 
 .industry {

@@ -15,7 +15,7 @@
                         <th>Type</th>
                         <th>Category</th>
                         <th>Meta</th>
-                        <th class="num">Profit/day</th>
+                        <th class="num">Π/day</th>
                     </th>
                 </thead>
                 <tfoot>
