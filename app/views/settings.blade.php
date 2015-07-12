@@ -78,6 +78,11 @@
 
             {{ Form::hidden('systems', $system_ids) }}
 
+            <div class="form-field">
+                {{ Form::label($shipping_cost->key, $shipping_cost->label, array('class' => 'form-label')) }}
+                {{ Form::text($shipping_cost->key, $shipping_cost->value, array('class' => 'form-input')) }}
+            </div>
+
             {{ Form::label('Filters', 'Default filters', array('class' => 'form-label')) }}
 
             @foreach ($filters as $filter)
