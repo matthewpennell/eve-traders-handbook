@@ -17,7 +17,13 @@ class MasterController extends BaseController {
 
 		// Retrieve the number of days since tracking began.
 		$earliest_date = DB::select('SELECT killTime FROM kills ORDER BY killTime ASC LIMIT 1');
-		$days_running = (time() - strtotime($earliest_date[0]->killTime)) / 60 / 60 / 24;
+		if (isset($earliest_date[0]))
+		{
+			$days_running = (time() - strtotime($earliest_date[0]->killTime)) / 60 / 60 / 24;
+		}
+		else {
+			$days_running = 1;
+		}
 
 		// How many items to show per page.
 		$per_page = 30;
