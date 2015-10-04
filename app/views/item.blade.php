@@ -182,7 +182,9 @@
         var $target = $('td.t{{ $type->typeID }}');
         $target.find('span').remove();
         $('<span class="' + profitType + ' ' + profitOrLoss + '">{{ number_format($profitToUse) }}</span>').appendTo($target);
-        $('<span class="percentage ' + profitOrLoss + '">{{ number_format(round($profitToUse / $costToUse * 100)) }}%</span>').appendTo($target);
+        @if ($costToUse > 0)
+            $('<span class="percentage ' + profitOrLoss + '">{{ number_format(round($profitToUse / $costToUse * 100)) }}%</span>').appendTo($target);
+        @endif
     });
 
 </script>
