@@ -118,8 +118,7 @@ tr {
 }
 
 th, td {
-    padding: 5px;
-    vertical-align: top;
+    padding: 0 10px;
 }
 
 th {
@@ -129,8 +128,10 @@ th {
     text-align: left;
 }
 
-td {
+.manufacturing th, .manufacturing td {
+    padding: 5px 10px;
     line-height: 1.2;
+    vertical-align: top;
 }
 
 .num {
