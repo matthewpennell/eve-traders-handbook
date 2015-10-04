@@ -118,8 +118,8 @@ tr {
 }
 
 th, td {
-    padding: 0 10px;
-    white-space: nowrap;
+    padding: 5px;
+    vertical-align: top;
 }
 
 th {
@@ -127,6 +127,10 @@ th {
     color: #fff;
     font-weight: 600;
     text-align: left;
+}
+
+td {
+    line-height: 1.2;
 }
 
 .num {
