@@ -237,21 +237,27 @@ class TechII {
                 "jita"		=> $jita_price,
             );
 
-            $t2_data[$decryptor->typeName] = array(
-                "typeName"              => $decryptor->typeName,
-                "chance_of_success"     => $modified_chance_of_success,
-                "invention_price"       => $total_price + $price_per_unit,
-                "t2_manufacture_price"  => $t2_manufacture_price,
-                "me_modifier"           => 0,
-            );
+            // If either the invention or the manufacturing price is zero,
+            // there was a problem retrieving the data from eve-central.com
+            // and we skip that decryptor.
+            if ($total_price != 0 && $t2_manufacture_price != 0)
+            {
+                $t2_data[$decryptor->typeName] = array(
+                    "typeName"              => $decryptor->typeName,
+                    "chance_of_success"     => $modified_chance_of_success,
+                    "invention_price"       => $total_price + $price_per_unit,
+                    "t2_manufacture_price"  => $t2_manufacture_price,
+                    "me_modifier"           => 0,
+                );
 
-            if (count($max_run_modifier) > 1)
-            {
-                $t2_data[$decryptor->typeName]['max_run_modifier'] = $max_run_modifier[1];
-            }
-            if (count($me_modifier) > 1)
-            {
-                $t2_data[$decryptor->typeName]['me_modifier'] = $me_modifier[1];
+                if (count($max_run_modifier) > 1)
+                {
+                    $t2_data[$decryptor->typeName]['max_run_modifier'] = $max_run_modifier[1];
+                }
+                if (count($me_modifier) > 1)
+                {
+                    $t2_data[$decryptor->typeName]['me_modifier'] = $me_modifier[1];
+                }
             }
 
         }
