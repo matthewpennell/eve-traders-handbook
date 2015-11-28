@@ -13,7 +13,8 @@ class ImportController extends BaseController {
     |
     */
 
-    public $offset = 10;
+    // How many systems we want to retrieve at once (zKillboard API limit).
+    public $api_system_limit = 10;
 
     /**
      * Import zKillboard kills for the selected systems and alliances.
@@ -21,20 +22,20 @@ class ImportController extends BaseController {
     public function getZkillboard($systems = '')
     {
 
-        // Set an offset to use for the zKillboard API system limit.
-        $offset = $this->offset--;
-
-        // Retrieve the selected systems from the database.
+        // If this is the initial call to the function, retrieve the list of systems from the DB.
         if ($systems == '')
         {
             $systems_object = Setting::where('key', 'systems')->firstOrFail();
             $systems = $systems_object->value;
         }
+
+        // Convert the comma-seperated string into an array.
         $systems_array = explode(',', $systems);
-        if (count($systems_array) > $this->offset)
+
+        // If there are more systems in the list than we want to pull at once, chop off the first X and call this function again.
+        while (count($systems_array) > $this->api_system_limit)
         {
-            $this->getZkillboard(implode(',',array_splice($systems_array, $offset)));
-            $systems = implode(',',array_splice($systems_array, 0, $offset));
+            $this->getZkillboard(implode(',', array_splice($systems_array, 0, $this->api_system_limit)));
         }
 
         // Retrieve the selected alliances from the database.
