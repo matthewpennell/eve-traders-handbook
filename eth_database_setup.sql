@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `prices` (
   `avg` int(11) NOT NULL,
   `max` int(11) NOT NULL,
   `min` int(11) NOT NULL,
-  `median` float(8,2) NOT NULL,
+  `median` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   KEY `typeID` (`typeID`)

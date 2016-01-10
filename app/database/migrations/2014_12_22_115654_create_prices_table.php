@@ -15,7 +15,7 @@ class CreatePricesTable extends Migration {
 		Schema::create('prices', function(Blueprint $table)
 		{
 			$table->integer('typeID')->primary();
-			$table->float('median_price');
+			$table->integer('median_price');
 			$table->timestamps();
 		});
 	}

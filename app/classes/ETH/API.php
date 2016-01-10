@@ -95,6 +95,7 @@ class API {
             // Loop through the results, building a response and caching the data.
             foreach($xml->marketstat->type as $api_result)
             {
+
                 $id = (int) $api_result['id'];
                 // Cache the retrieved prices.
                 $price = Price::firstOrNew(array(
