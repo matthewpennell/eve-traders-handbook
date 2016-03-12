@@ -4,7 +4,18 @@ The **EVE Traders Handbook** is a multi-purpose web application for traders, imp
 
 It allows players to see details of the ships, modules, drones and ammunition that are being lost by their fellow capsuleers within the systems/regions they select. In this way, traders can identify those items likely to be in high demand, and manufacturers can compare the cost of importing versus mining and manufacturing items locally.
 
-It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and the [eve-central.com](http://eve-central.com/) API to track player losses and item costs. It also makes extensive use of the EVE [Static Data Export](https://developers.eveonline.com/resource/static-data-export) database dumps ([fuzzwork](https://www.fuzzwork.co.uk/dump/latest/)) and [Image Export Collection](https://developers.eveonline.com/resource/image-export-collection) to display basic information and icons.
+It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and the [public CREST](https://developers.eveonline.com/) API to track player losses and item costs. It also makes extensive use of the EVE [Static Data Export](https://developers.eveonline.com/resource/static-data-export) database dumps ([fuzzwork](https://www.fuzzwork.co.uk/dump/latest/)) and [Image Export Collection](https://developers.eveonline.com/resource/image-export-collection) to display basic information and icons.
+
+### Changelog
+
+* 12 March 2016 - converted all eve-central.com API calls to use CREST
+* 12 July 2015 - Add ability to include shipping costs
+* 9 May 2015 - Add Ajax-powered selection of systems and alliances
+* 18 April 2015 - Added search function
+* 14 February 2014 - Added Material Efficiency multiplier
+* 3 January 2015 - Added profit projections
+* 22 December 2014 - Added T2 invention support
+* 16 November 2014 - Initial release
 
 ### Requirements
 
