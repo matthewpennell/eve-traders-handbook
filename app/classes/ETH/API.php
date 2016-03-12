@@ -150,6 +150,7 @@ class API {
     {
 
         $days = 30;
+        $actual_days = 0;
 
         $total_volume = 0;
         $total_avg_price = 0;
@@ -159,23 +160,27 @@ class API {
 
         for ($i = 0; $i < $days; $i++)
         {
-            $last_day = array_pop($json->items);
-            $total_volume += $last_day->volume;
-            $total_avg_price += $last_day->avgPrice;
-            if ($overall_max_price < $last_day->highPrice)
+            if (count($json_items) > 0)
             {
-                $overall_max_price = $last_day->highPrice;
+                $last_day = array_pop($json->items);
+                $total_volume += $last_day->volume;
+                $total_avg_price += $last_day->avgPrice;
+                if ($overall_max_price < $last_day->highPrice)
+                {
+                    $overall_max_price = $last_day->highPrice;
+                }
+                if ($overall_min_price > $last_day->lowPrice)
+                {
+                    $overall_min_price = $last_day->lowPrice;
+                }
+                array_push($avg_prices_array, $last_day->avgPrice);
+                $actual_days++;
             }
-            if ($overall_min_price > $last_day->lowPrice)
-            {
-                $overall_min_price = $last_day->lowPrice;
-            }
-            array_push($avg_prices_array, $last_day->avgPrice);
         }
 
         // Calculate the median price.
         sort($avg_prices_array);
-        $median = $days / 2;
+        $median = $actual_days / 2;
         if ($median == round($median))
         {
             $median_price = $avg_prices_array[$median];
@@ -186,8 +191,8 @@ class API {
         }
 
         $price_data = (object) array(
-            'volume'    => round($total_volume / $days),
-            'avgPrice'  => round($total_avg_price / $days),
+            'volume'    => round($total_volume / $actual_days),
+            'avgPrice'  => round($total_avg_price / $actual_days),
             'highPrice' => $overall_max_price,
             'lowPrice'  => $overall_min_price,
             'median'    => $median_price,
