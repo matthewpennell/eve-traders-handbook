@@ -160,7 +160,7 @@ class API {
 
         for ($i = 0; $i < $days; $i++)
         {
-            if (count($json_items) > 0)
+            if (count($json->items) > 0)
             {
                 $last_day = array_pop($json->items);
                 $total_volume += $last_day->volume;
