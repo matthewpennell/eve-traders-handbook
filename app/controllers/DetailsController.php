@@ -112,7 +112,7 @@ class DetailsController extends BaseController {
 		}
 
 		// Retrieve the current price ranges this item sells for.
-		$response = API::eveCentral(array($id), Setting::where('key', 'home_region_id')->pluck('value'));
+		$response = API::CREST(array($id), Setting::where('key', 'home_region_id')->pluck('value'));
 		$local_price = $response[$id];
 
 		// Tech II items need to be treated differently.
@@ -189,7 +189,7 @@ class DetailsController extends BaseController {
 				}
 
 				// Make an API call to get the local price of materials.
-				$api = API::eveCentral($types, $home_region_id = Setting::where('key', 'home_region_id')->pluck('value'));
+				$api = API::CREST($types, $home_region_id = Setting::where('key', 'home_region_id')->pluck('value'));
 
 				// Loop through each returned price and update the data in the manufacturing array.
 				foreach($api as $api_result)
@@ -209,7 +209,7 @@ class DetailsController extends BaseController {
 				// If we need to check prices at Jita, make another API call.
 				if (count($jita_types))
 				{
-					$api = API::eveCentral($jita_types, NULL, 30000142);
+					$api = API::CREST($jita_types, NULL, 30000142);
 					// Loop through each returned price and update the data in the manufacturing array.
 					foreach($api as $api_result)
 					{
@@ -231,14 +231,14 @@ class DetailsController extends BaseController {
 		}
 
 		// Retrieve current prices of the module in notable trade hubs.
-		$jita = API::eveCentral($id, NULL, 30000142);
+		$jita = API::CREST($id, NULL, 30000142);
 
 		$prices[] = (object) array(
 			"solarSystemName"	=> "Jita",
 			"median"			=> $jita[$id]->median,
 		);
 
-		$amarr = API::eveCentral($id, NULL, 30002187);
+		$amarr = API::CREST($id, NULL, 30002187);
 
 		$prices[] = (object) array(
 			"solarSystemName"	=> "Amarr",

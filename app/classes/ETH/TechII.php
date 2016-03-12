@@ -75,7 +75,7 @@ class TechII {
         }
 
         // Make an API call to get the local price of materials.
-        $xml = API::eveCentral($types, Setting::where('key', 'home_region_id')->pluck('value'));
+        $xml = API::CREST($types, Setting::where('key', 'home_region_id')->pluck('value'));
 
         // Loop through each returned price and update the data in the manufacturing array.
         foreach($xml as $api_result)
@@ -95,7 +95,7 @@ class TechII {
         // If we need to check prices at Jita, make another API call.
         if (count($jita_types))
         {
-            $xml = API::eveCentral($jita_types, NULL, 30000142);
+            $xml = API::CREST($jita_types, NULL, 30000142);
             // Loop through each returned price and update the data in the manufacturing array.
             foreach($xml as $api_result)
             {
@@ -165,7 +165,7 @@ class TechII {
         }
 
         // Make an API call to get the local price of materials.
-        $xml = API::eveCentral($types, Setting::where('key', 'home_region_id')->pluck('value'));
+        $xml = API::CREST($types, Setting::where('key', 'home_region_id')->pluck('value'));
 
         // Loop through each returned price and update the data in the manufacturing array.
         foreach($xml as $api_result)
@@ -185,7 +185,7 @@ class TechII {
         // If we need to check prices at Jita, make another API call.
         if (count($jita_types))
         {
-            $xml = API::eveCentral($jita_types, NULL, 30000142);
+            $xml = API::CREST($jita_types, NULL, 30000142);
             // Loop through each returned price and update the data in the manufacturing array.
             foreach($xml as $api_result)
             {
@@ -218,14 +218,14 @@ class TechII {
             }
 
             // Find the cost of the decryptor and add it to the total cost.
-            $xml = API::eveCentral($decryptor->typeID, Setting::where('key', 'home_region_id')->pluck('value'));
+            $xml = API::CREST($decryptor->typeID, Setting::where('key', 'home_region_id')->pluck('value'));
             $price_per_unit = $xml[$decryptor->typeID]->median;
             $jita_price = FALSE;
 
             // If the price returned is zero for the selected region, do another check at Jita prices.
             if ($price_per_unit == 0)
             {
-                $jita = API::eveCentral($decryptor->typeID, 30000142);
+                $jita = API::CREST($decryptor->typeID, 30000142);
                 $price_per_unit = $jita[$decryptor->typeID]->median;
                 $jita_price = TRUE;
             }
