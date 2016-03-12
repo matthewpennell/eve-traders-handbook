@@ -132,7 +132,7 @@ class API {
 
         if (count($types) != 0)
         {
-            API::CREST($types, $regions, $system, $pricedata);
+            return API::CREST($types, $regions, $system, $pricedata);
         }
         else
         {
