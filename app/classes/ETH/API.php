@@ -26,8 +26,6 @@ class API {
     public static function CREST($types, $regions = '', $system = '', $pricedata = NULL)
     {
 
-
-
         // If $pricedata doesn't exist we need to create it.
         if (!isset($pricedata))
         {
@@ -45,18 +43,18 @@ class API {
         }
 
         // CREST doesn't use systems, so if a system was passed we need to convert it into the appropriate region check.
-        if ($system == 30000142) // Jita
+        if ($system == 30000142) // Jita is in The Forge
         {
             array_push($regions, 10000002);
         }
-        if ($system == 30002187) // Amarr
+        if ($system == 30002187) // Amarr is in Domain
         {
             array_push($regions, 10000043);
         }
 
         // Check if we have a cached price for each item (in combination with the selected regions and/or system) in the database already.
         // If a cached price is found, remove that ID from the array and update the pricedata array.
-        if (count($pricedata) == 0)
+        if (!isset($pricedata) || count($pricedata) == 0)
         {
             foreach ($types as $type)
             {
@@ -80,18 +78,12 @@ class API {
             }
         }
 
-        // If there is more than one item in the $types array, call this function again for the last one.
-        if (count($types) > 1)
-        {
-            API::CREST(array_pop($types), $regions, $system, $pricedata);
-        }
-
-        if (count($types) == 1)
+        // If there is more than one item in the $types array, process the last item.
+        if (count($types) > 0)
         {
 
             $type = array_shift($types);
 
-            // If we've reached this point, only a single type is being queried.
             // Set the base URL.
             $url = 'https://public-crest.eveonline.com/market/';
 
@@ -108,8 +100,8 @@ class API {
             // Convert the response into an XML object.
             $json = $response->body;
 
-            // Grab the last result, which will be the most recent market data.
-            $most_recent_day = $json->items[$json->totalCount - 1];
+            // Calculate the average volume and price over the last period.
+            $find_average = API::findAverage($json);
 
             $id = (int) $type;
 
@@ -119,26 +111,89 @@ class API {
                 'regions'   => (isset($regions)) ? implode(',', $regions) : '',
                 'system'    => ($system != '') ? $system : '',
             ));
-            $price->volume = $most_recent_day->volume;
-            $price->avg = $most_recent_day->avgPrice;
-            $price->max = $most_recent_day->highPrice;
-            $price->min = $most_recent_day->lowPrice;
-            $price->median = $most_recent_day->avgPrice;
+            $price->volume = $find_average->volume;
+            $price->avg = $find_average->avgPrice;
+            $price->max = $find_average->highPrice;
+            $price->min = $find_average->lowPrice;
+            $price->median = $find_average->median;
             $price->save();
 
             // Build the response object.
             $pricedata[$id] = (object) array(
                 "id"        => $id,
-                "volume"	=> $most_recent_day->volume,
-                "avg"		=> $most_recent_day->avgPrice,
-                "max"		=> $most_recent_day->highPrice,
-                "min"		=> $most_recent_day->lowPrice,
-                "median"	=> $most_recent_day->avgPrice,
+                "volume"	=> $find_average->volume,
+                "avg"		=> $find_average->avgPrice,
+                "max"		=> $find_average->highPrice,
+                "min"		=> $find_average->lowPrice,
+                "median"	=> $find_average->median,
             );
 
         }
 
-        return $pricedata;
+        if (count($types) != 0)
+        {
+            API::CREST($types, $regions, $system, $pricedata);
+        }
+        else
+        {
+            return $pricedata;
+        }
+
+    }
+
+    /**
+     * Given the JSON response from CREST, look at the last 30 days and
+     * return the average daily volume, average price, min, max and median
+     * prices.
+     */
+    private static function findAverage($json)
+    {
+
+        $days = 30;
+
+        $total_volume = 0;
+        $total_avg_price = 0;
+        $overall_max_price = 0;
+        $overall_min_price = 1000000000;
+        $avg_prices_array = array();
+
+        for ($i = 0; $i < $days; $i++)
+        {
+            $last_day = array_pop($json->items);
+            $total_volume += $last_day->volume;
+            $total_avg_price += $last_day->avgPrice;
+            if ($overall_max_price < $last_day->highPrice)
+            {
+                $overall_max_price = $last_day->highPrice;
+            }
+            if ($overall_min_price > $last_day->lowPrice)
+            {
+                $overall_min_price = $last_day->lowPrice;
+            }
+            array_push($avg_prices_array, $last_day->avgPrice);
+        }
+
+        // Calculate the median price.
+        sort($avg_prices_array);
+        $median = $days / 2;
+        if ($median == round($median))
+        {
+            $median_price = $avg_prices_array[$median];
+        }
+        else
+        {
+            $median_price = ($avg_prices_array[$median - 0.5] + $avg_prices_array[$median + 0.5]) / 2;
+        }
+
+        $price_data = (object) array(
+            'volume'    => round($total_volume / $days),
+            'avgPrice'  => round($total_avg_price / $days),
+            'highPrice' => $overall_max_price,
+            'lowPrice'  => $overall_min_price,
+            'median'    => $median_price,
+        );
+
+        return $price_data;
 
     }
 
