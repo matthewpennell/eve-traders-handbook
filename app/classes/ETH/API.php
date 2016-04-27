@@ -85,7 +85,7 @@ class API {
             $type = array_shift($types);
 
             // Set the base URL.
-            $url = 'https://public-crest.eveonline.com/market/';
+            $url = 'https://crest-tq.eveonline.com/market/';
 
             foreach ($regions as $region)
             {
