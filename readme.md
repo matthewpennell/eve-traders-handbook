@@ -8,6 +8,7 @@ It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and t
 
 ### Changelog
 
+* 27 April 2016 - Updated CREST API call due to withdrawal of public endpoint
 * 12 March 2016 - converted all eve-central.com API calls to use CREST
 * 12 July 2015 - Add ability to include shipping costs
 * 9 May 2015 - Add Ajax-powered selection of systems and alliances
