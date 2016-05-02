@@ -25,8 +25,20 @@ class ImportController extends BaseController {
         // If this is the initial call to the function, retrieve the list of systems from the DB.
         if ($systems == '')
         {
-            $systems_object = Setting::where('key', 'systems')->firstOrFail();
-            $systems = $systems_object->value;
+            // Pull the list of regions.
+            $regions_setting = Setting::where('key', 'regions')->firstOrFail();
+            // Loop through them and build the list of systems.
+            $systems_array = array();
+            $regions = explode(',', $regions_setting->value);
+            foreach ($regions as $region)
+            {
+                $child_systems = System::where('regionID', $region)->get();
+                foreach ($child_systems as $child_system)
+                {
+                    array_push($systems_array, $child_system->solarSystemID);
+                }
+            }
+            $systems = implode(',', $systems_array);
         }
 
         // Convert the comma-seperated string into an array.
