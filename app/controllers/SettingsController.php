@@ -49,9 +49,9 @@ class SettingsController extends BaseController {
         // Retrieve the category filters.
         $filters = Filter::all();
 
-        // Build a list of selected systems by looking up their IDs.
-        $system_ids = Setting::where('key', 'systems')->pluck('value');
-        $systems = System::whereIn('solarSystemID', explode(',', $system_ids))->get();
+        // Build a list of selected regions by looking up their IDs.
+        $region_ids = Setting::where('key', 'regions')->pluck('value');
+        $regions = Region::whereIn('regionID', explode(',', $region_ids))->get();
 
         // Do the same for selected alliances.
         $alliance_ids = Setting::where('key', 'alliances')->pluck('value');
@@ -69,8 +69,8 @@ class SettingsController extends BaseController {
             ->with('alliances', $alliances)
             ->with('alliance_ids', $alliance_ids)
             ->with('filters', $filters)
-            ->with('systems', $systems)
-            ->with('system_ids', $system_ids);
+            ->with('regions', $regions)
+            ->with('region_ids', $region_ids);
 
     }
 
@@ -110,13 +110,13 @@ class SettingsController extends BaseController {
             $home_region_id->save();
         }
 
-        if (Input::has('systems'))
+        if (Input::has('regions'))
         {
             // Clean up the input in case the JS screwed up somewhere.
-            $input = preg_replace('/^,|,$/', '', Input::get('systems'));
-            $systems = Setting::where('key', 'systems')->firstOrFail();
-            $systems->value = $input;
-            $systems->save();
+            $input = preg_replace('/^,|,$/', '', Input::get('regions'));
+            $regions = Setting::where('key', 'regions')->firstOrFail();
+            $regions->value = $input;
+            $regions->save();
         }
 
         if (Input::has('alliances'))
@@ -168,7 +168,7 @@ class SettingsController extends BaseController {
     }
 
     /**
-     * AJAX response for autocomplete of systems.
+     * AJAX response for autocomplete of systems. No longer used.
      */
     public function getSystems()
     {

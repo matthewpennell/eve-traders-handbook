@@ -60,23 +60,23 @@
             {{ Form::hidden('alliances', $alliance_ids) }}
 
             <div class="form-field">
-                {{ Form::label('system-autocomplete', 'Start typing to select systems:', array('class' => 'form-label')) }}
-                {{ Form::text('system-autocomplete', '', array('class' => 'form-input')) }}
+                {{ Form::label('region-autocomplete', 'Start typing to select regions:', array('class' => 'form-label')) }}
+                {{ Form::text('region-autocomplete', '', array('class' => 'form-input')) }}
             </div>
 
-            <p>Currently selected systems (click to remove):</p>
+            <p>Currently selected regions (click to remove):</p>
 
-            <ul class="selected-systems">
-                @foreach ($systems as $system)
+            <ul class="selected-regions">
+                @foreach ($regions as $region)
                     <li>
-                        <a href="#" class="remove-system" data-solarSystemID="{{ $system->solarSystemID }}">
-                            {{ $system->solarSystemName }} ({{ $system->region->regionName }})
+                        <a href="#" class="remove-region" data-regionID="{{ $region->regionID }}">
+                            {{ $region->regionName }}
                         </a>
                     </li>
                 @endforeach
             </ul>
 
-            {{ Form::hidden('systems', $system_ids) }}
+            {{ Form::hidden('regions', $region_ids) }}
 
             <div class="form-field">
                 {{ Form::label($shipping_cost->key, $shipping_cost->label, array('class' => 'form-label')) }}

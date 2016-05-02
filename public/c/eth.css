@@ -369,14 +369,14 @@ footer a {
     overflow-x: hidden;
 }
 
-.selected-systems, .selected-alliances {
+.selected-regions, .selected-alliances {
     list-style: none;
     margin: 20px 0;
     overflow: hidden;
     padding: 0;
 }
 
-.remove-system, .remove-alliance {
+.remove-region, .remove-alliance {
     float: left;
     display: block;
     width: 200px;
@@ -387,7 +387,7 @@ footer a {
     margin: 0 10px 10px 0;
 }
 
-.remove-system:hover, .remove-alliance:hover {
+.remove-region:hover, .remove-alliance:hover {
     background: #bbb;
     text-decoration: line-through;
 }

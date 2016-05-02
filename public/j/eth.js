@@ -25,11 +25,11 @@ $(document).ready(function () {
         });
     });
 
-    // Removing a solar system ID from the list.
-    $('body').delegate('.remove-system', 'click', function () {
-        var solarSystemID = $(this).attr('data-solarSystemID'),
-            current_ids = $('input[name=systems]').val();
-        $('input[name=systems]').val(current_ids.replace(solarSystemID, '').replace(',,', ',').replace(/^,|,$/, ''));
+    // Removing a region ID from the list.
+    $('body').delegate('.remove-region', 'click', function () {
+        var regionID = $(this).attr('data-regionID'),
+            current_ids = $('input[name=regions]').val();
+        $('input[name=regions]').val(current_ids.replace(regionID, '').replace(',,', ',').replace(/^,|,$/, ''));
         $(this).parent().fadeOut();
         return false;
     });
@@ -43,13 +43,13 @@ $(document).ready(function () {
         return false;
     });
 
-    // Autocomplete selection of system/region names.
-    $('#system-autocomplete').autocomplete({
+    // Autocomplete selection of region names.
+    $('#region-autocomplete').autocomplete({
         minLength: 2,
-        source: 'settings/systems',
+        source: 'settings/regions',
         create: function () {
             $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                return $("<li>").append("<a>" + item.label + " (" + item.region + ")</a>").appendTo(ul);
+                return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
             };
         },
         focus: function (event, ui) {
@@ -60,8 +60,8 @@ $(document).ready(function () {
         select: function (event, ui) {
             event.preventDefault();
             // Add the selected item to the list below.
-            $('.selected-systems').append('<li><a href="#" class="remove-system" data-solarsystemid="' + ui.item.value + '">' + ui.item.label + ' (' + ui.item.region + ')</a></li>');
-            $('input[name=systems]').val($('input[name=systems]').val() + ',' + ui.item.value);
+            $('.selected-regions').append('<li><a href="#" class="remove-region" data-regionid="' + ui.item.value + '">' + ui.item.label + '</a></li>');
+            $('input[name=regions]').val($('input[name=regions]').val() + ',' + ui.item.value);
             $(this).value = '';
             return false;
         }
