@@ -51,11 +51,16 @@ class ImportController extends BaseController {
         }
 
         // Retrieve the selected alliances from the database.
+        $alliance_ids = '';
         $alliances = Setting::where('key', 'alliances')->firstOrFail();
+        if ($alliances->value != '')
+        {
+            $alliance_ids = 'allianceID/' . preg_replace('/\s+/', '', $alliances->value) . '/';
+        }
 
         // Build the API URL.
         $url = 'https://zkillboard.com/api/xml/losses/no-attackers/'
-             . 'allianceID/' . preg_replace('/\s+/', '', $alliances->value) . '/'
+             . $alliance_ids
              . 'solarSystemID/' . preg_replace('/\s+/', '', $systems) . '/';
 
         // Send the request.
