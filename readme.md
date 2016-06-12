@@ -4,10 +4,11 @@ The **EVE Traders Handbook** is a multi-purpose web application for traders, imp
 
 It allows players to see details of the ships, modules, drones and ammunition that are being lost by their fellow capsuleers within the systems/regions they select. In this way, traders can identify those items likely to be in high demand, and manufacturers can compare the cost of importing versus mining and manufacturing items locally.
 
-It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and the [public CREST](https://developers.eveonline.com/) API to track player losses and item costs. It also makes extensive use of the EVE [Static Data Export](https://developers.eveonline.com/resource/static-data-export) database dumps ([fuzzwork](https://www.fuzzwork.co.uk/dump/latest/)) and [Image Export Collection](https://developers.eveonline.com/resource/image-export-collection) to display basic information and icons.
+It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and the [public CREST](https://developers.eveonline.com/) API to track player losses and item costs. It also makes extensive use of the EVE [Static Data Export](https://developers.eveonline.com/resource/static-data-export) database dumps ([fuzzwork](https://www.fuzzwork.co.uk/dump/latest/)) to display basic information and icons.
 
 ### Changelog
 
+* 12 June 1016 - Switch to use live site for all images, rather than the now defunct Image Export Collection
 * 2 May 2016 - Switch to allow for region-based monitoring rather than specifying individual systems
 * 27 April 2016 - Updated CREST API call due to withdrawal of public endpoint
 * 12 March 2016 - converted all eve-central.com API calls to use CREST

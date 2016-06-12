@@ -105,10 +105,7 @@ class DetailsController extends BaseController {
 		}
 		elseif ($type->Group->Icon)
 		{
-			$icon = str_replace('_', '_64_', $type->MarketGroup->Icon->iconFile);
-			$icon = preg_replace('/^0/', '', $icon);
-			$icon = preg_replace('/0(.)$/', '$1', $icon);
-			$icon = 'eve/items/' . $icon . '.png';
+			$icon = 'https://image.eveonline.com/Type/' . $id . '_64.png';
 		}
 
 		// Retrieve the current price ranges this item sells for.
