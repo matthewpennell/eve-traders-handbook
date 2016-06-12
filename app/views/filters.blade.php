@@ -1,3 +1,17 @@
+<div class="import-information">
+
+    <div class="import-timestamp">
+        <strong>Initial import</strong>
+        {{ $initial_import }}
+    </div>
+
+    <div class="import-timestamp">
+        <strong>Last import</strong>
+        {{ $last_import }}
+    </div>
+
+</div>
+
 <form method="get" action="" class="filters">
 
     <h3>Category</h3>

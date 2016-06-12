@@ -318,11 +318,29 @@ th {
 
 /* FILTERS */
 
+.import-information,
 .filters {
     float: right;
     background: #fff;
     width: 279px;
     border-left: 1px solid #ccc;
+}
+
+.import-information {
+    background: #ddd;
+    border-bottom: 1px solid #ccc;
+    padding: 20px 20px 10px;
+    width: 239px;
+    text-align: center;
+}
+
+.import-timestamp {
+    margin-bottom: 10px;
+}
+
+.import-timestamp strong {
+    display: block;
+    font-size: 11px;
 }
 
 h3 {

@@ -16,13 +16,21 @@ class MasterController extends BaseController {
 	{
 
 		// Retrieve the number of days since tracking began.
-		$earliest_date = DB::select('SELECT killTime FROM kills ORDER BY killTime ASC LIMIT 1');
+		$earliest_date = DB::select('SELECT created_at FROM kills ORDER BY created_at ASC LIMIT 1');
 		if (isset($earliest_date[0]))
 		{
-			$days_running = (time() - strtotime($earliest_date[0]->killTime)) / 60 / 60 / 24;
+			$days_running = (time() - strtotime($earliest_date[0]->created_at)) / 60 / 60 / 24;
+			$initial_import = date('M jS, Y', strtotime($earliest_date[0]->created_at));
 		}
 		else {
 			$days_running = 1;
+		}
+
+		// Retrieve the most recent timestamp for an import.
+		$latest_date = DB::select('SELECT created_at FROM kills ORDER BY created_at DESC LIMIT 1');
+		if (isset($latest_date[0]))
+		{
+			$last_import = date('M jS, Y', strtotime($latest_date[0]->created_at));
 		}
 
 		// How many items to show per page.
@@ -128,6 +136,8 @@ class MasterController extends BaseController {
 			->with('filter_url', $filter_url)
 			->with('pages', Item::getRowCount($whereraw) / $per_page)
 			->nest('sidebar', 'filters', array(
+				'initial_import'			=> $initial_import,
+				'last_import'				=> $last_import,
 				'filters'					=> Filter::all()->sortBy('categoryName'),
 				'meta_filters'				=> array('Meta 0', 'Meta 1', 'Meta 2', 'Meta 3', 'Meta 4', 'Meta 5', 'Tech II'),
 				'active_filters'			=> $active_filters,
