@@ -10,6 +10,8 @@
         {{ $last_import }}
     </div>
 
+    <a href="/import/clear" onclick="return confirm('This will delete ALL of your stored kills data! Are you sure you want to proceed?');">Delete all data</a>
+
 </div>
 
 <form method="get" action="" class="filters">

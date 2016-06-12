@@ -20,17 +20,22 @@ class MasterController extends BaseController {
 		if (isset($earliest_date[0]))
 		{
 			$days_running = (time() - strtotime($earliest_date[0]->created_at)) / 60 / 60 / 24;
-			$initial_import = date('M jS, Y', strtotime($earliest_date[0]->created_at));
+			$initial_import = date('M jS, Y \a\t ga', strtotime($earliest_date[0]->created_at));
 		}
 		else {
 			$days_running = 1;
+			$initial_import = 'No import yet run';
 		}
 
 		// Retrieve the most recent timestamp for an import.
 		$latest_date = DB::select('SELECT created_at FROM kills ORDER BY created_at DESC LIMIT 1');
 		if (isset($latest_date[0]))
 		{
-			$last_import = date('M jS, Y', strtotime($latest_date[0]->created_at));
+			$last_import = date('M jS, Y \a\t ga', strtotime($latest_date[0]->created_at));
+		}
+		else
+		{
+			$last_import = 'No import yet run';
 		}
 
 		// How many items to show per page.

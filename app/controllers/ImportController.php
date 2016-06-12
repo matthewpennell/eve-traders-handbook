@@ -246,4 +246,15 @@ class ImportController extends BaseController {
 
     }
 
+    /**
+     * Clear out all of the stored kills data.
+     */
+    public function getClear()
+    {
+        Kill::truncate();
+        Filter::truncate();
+        Item::truncate();
+        return Redirect::action('MasterController@home');
+    }
+
 }
