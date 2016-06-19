@@ -92,10 +92,10 @@ class API {
                 $url .= $region;
             }
 
-            $url .= '/types/' . $type . '/history/';
+            $url .= '/history/';
 
             // Make the API call.
-            $response = Request::get($url)->send();
+            $response = Request::get($url)->param('type', $type)->send();
 
             // Convert the response into an XML object.
             $json = $response->body;
