@@ -23,7 +23,7 @@ class API {
      * it replaces, it makes recurive calls to itself until it has retrieved all the
      * items requested.
      */
-    public static function CREST($types, $regions = '', $system = '', $pricedata = NULL)
+    public static function CREST($types, $region = '', $system = '', $pricedata = NULL)
     {
 
         // If $pricedata doesn't exist we need to create it.
@@ -37,19 +37,15 @@ class API {
         {
             $types = array($types);
         }
-        if (!is_array($regions))
-        {
-            $regions = array($regions);
-        }
 
         // CREST doesn't use systems, so if a system was passed we need to convert it into the appropriate region check.
         if ($system == 30000142) // Jita is in The Forge
         {
-            array_push($regions, 10000002);
+            $region = 10000002;
         }
         if ($system == 30002187) // Amarr is in Domain
         {
-            array_push($regions, 10000043);
+            $region = 10000043;
         }
 
         // Check if we have a cached price for each item (in combination with the selected regions and/or system) in the database already.
@@ -58,7 +54,7 @@ class API {
         {
             foreach ($types as $type)
             {
-                $price = Price::where('typeID', $type)->where('regions', implode(',', $regions))->where('system', $system)->whereRaw('updated_at > DATE_SUB(now(), INTERVAL 1 HOUR)')->first();
+                $price = Price::where('typeID', $type)->where('regions', $region)->where('system', $system)->whereRaw('updated_at > DATE_SUB(now(), INTERVAL 1 HOUR)')->first();
                 if (isset($price))
                 {
                     // Found a cached price - add this item to the response.
@@ -88,10 +84,7 @@ class API {
             $url = 'https://crest-tq.eveonline.com/market/';
 
             // Add the home region.
-            foreach ($regions as $region)
-            {
-                $url .= $region;
-            }
+            $url .= $region;
 
             // Add the type parameter.
             $url .= '/history/?type=https://crest-tq.eveonline.com/inventory/types/' . $type . '/';
@@ -99,42 +92,62 @@ class API {
             // Make the API call.
             $response = Request::get($url)->send();
 
-            // Convert the response into an XML object.
-            $json = $response->body;
+            // If the API call came back with no information (i.e. the item is never sold in the requested region)
+            // then bomb out.
+            if ($response->body->totalCount > 0)
+            {
 
-            // Calculate the average volume and price over the last period.
-            $find_average = API::findAverage($json);
+                // Convert the response into an XML object.
+                $json = $response->body;
 
-            $id = (int) $type;
+                // Calculate the average volume and price over the last period.
+                $find_average = API::findAverage($json);
 
-            // Cache the retrieved prices.
-            $price = Price::firstOrNew(array(
-                'typeID'    => $id,
-                'regions'   => (isset($regions)) ? implode(',', $regions) : '',
-                'system'    => ($system != '') ? $system : '',
-            ));
-            $price->volume = $find_average->volume;
-            $price->avg = $find_average->avgPrice;
-            $price->max = $find_average->highPrice;
-            $price->min = $find_average->lowPrice;
-            $price->median = $find_average->median;
-            $price->save();
+                $id = (int) $type;
 
-            // Build the response object.
-            $pricedata[$id] = (object) array(
-                "id"        => $id,
-                "volume"	=> $find_average->volume,
-                "avg"		=> $find_average->avgPrice,
-                "max"		=> $find_average->highPrice,
-                "min"		=> $find_average->lowPrice,
-                "median"	=> $find_average->median,
-            );
+                // Cache the retrieved prices.
+                $price = Price::firstOrNew(array(
+                    'typeID'    => $id,
+                    'regions'   => (isset($regions)) ? implode(',', $regions) : '',
+                    'system'    => ($system != '') ? $system : '',
+                ));
+                $price->volume = $find_average->volume;
+                $price->avg = $find_average->avgPrice;
+                $price->max = $find_average->highPrice;
+                $price->min = $find_average->lowPrice;
+                $price->median = $find_average->median;
+                $price->save();
+
+                // Build the response object.
+                $pricedata[$id] = (object) array(
+                    "id"        => $id,
+                    "volume"	=> $find_average->volume,
+                    "avg"		=> $find_average->avgPrice,
+                    "max"		=> $find_average->highPrice,
+                    "min"		=> $find_average->lowPrice,
+                    "median"	=> $find_average->median,
+                );
+
+            }
+            else
+            {
+                // Construct a zero response so it uses the Jita price instead.
+                $id = (int) $type;
+                $pricedata[$id] = (object) array(
+                    "id"        => $id,
+                    "volume"	=> 0,
+                    "avg"		=> 0,
+                    "max"		=> 0,
+                    "min"		=> 0,
+                    "median"	=> 0,
+                );
+            }
 
         }
 
         if (count($types) != 0)
         {
-            return API::CREST($types, $regions, $system, $pricedata);
+            return API::CREST($types, $region, $system, $pricedata);
         }
         else
         {
