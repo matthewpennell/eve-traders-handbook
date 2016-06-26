@@ -30,6 +30,8 @@ class SettingsController extends BaseController {
         $api_key_character_id = Setting::where('key', 'api_key_character_id')->first();
         $home_region_id = Setting::where('key', 'home_region_id')->first();
         $home_region_name = Region::where('regionID', $home_region_id->value)->pluck('regionName');
+        $home_station_id = Setting::where('key', 'home_station_id')->first();
+        $home_station_name = '';
         $shipping_cost = Setting::where('key', 'shipping_cost')->first();
 
         $characters = array();
@@ -44,6 +46,21 @@ class SettingsController extends BaseController {
                     $characters[(string)$row['characterID']] = $row['name'];
                 }
             }
+        }
+
+        // Retrieve a list of all the conquerable stations.
+        $response = API::eveOnline('eve/ConquerableStationList');
+        if ($response->body->result)
+        {
+            foreach ($response->body->result->rowset->row as $row)
+            {
+                $stations[(string)$row['stationID']] = $row['stationName'];
+            }
+        }
+        // If the home station is set, grab the correct name.
+        if ($home_station_id->value != '')
+        {
+            $home_station_name = $stations[$home_station_id->value];
         }
 
         // Retrieve the category filters.
@@ -65,6 +82,8 @@ class SettingsController extends BaseController {
             ->with('shipping_cost', $shipping_cost)
             ->with('home_region_id', $home_region_id)
             ->with('home_region_name', $home_region_name)
+            ->with('home_station_id', $home_station_id)
+            ->with('home_station_name', $home_station_name)
             ->with('characters', $characters)
             ->with('alliances', $alliances)
             ->with('alliance_ids', $alliance_ids)
@@ -108,6 +127,13 @@ class SettingsController extends BaseController {
             $home_region_id = Setting::where('key', 'home_region_id')->firstOrFail();
             $home_region_id->value = Input::get('home_region_id');
             $home_region_id->save();
+        }
+
+        if (Input::has('home_station_id'))
+        {
+            $home_station_id = Setting::where('key', 'home_station_id')->firstOrFail();
+            $home_station_id->value = Input::get('home_station_id');
+            $home_station_id->save();
         }
 
         if (Input::has('regions'))
@@ -207,6 +233,22 @@ class SettingsController extends BaseController {
         {
             if (stristr($row['name'], Input::get('term'))) {
                 $matches[] = '{"label":"' . $row['name'] . '","value":"' . $row['allianceID'] . '"}';
+            }
+        }
+        echo '[' . implode(',', $matches) . ']';
+    }
+
+    /**
+     * AJAX response for autocomplete of stations.
+     */
+    public function getStations()
+    {
+        $matches = array();
+        $response = API::eveOnline('eve/ConquerableStationList');
+        foreach ($response->body->result->rowset->row as $row)
+        {
+            if (stristr($row['stationName'], Input::get('term'))) {
+                $matches[] = '{"label":"' . $row['stationName'] . '","value":"' . $row['stationID'] . '"}';
             }
         }
         echo '[' . implode(',', $matches) . ']';
