@@ -87,15 +87,17 @@ class API {
             // Set the base URL.
             $url = 'https://crest-tq.eveonline.com/market/';
 
+            // Add the home region.
             foreach ($regions as $region)
             {
                 $url .= $region;
             }
 
-            $url .= '/history/';
+            // Add the type parameter.
+            $url .= '/history/?type=https://crest-tq.eveonline.com/inventory/types/' . $type . '/';
 
             // Make the API call.
-            $response = Request::get($url)->param('type', $type)->send();
+            $response = Request::get($url)->send();
 
             // Convert the response into an XML object.
             $json = $response->body;
