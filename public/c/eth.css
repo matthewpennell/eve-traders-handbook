@@ -137,6 +137,10 @@ th {
     text-align: left;
 }
 
+.losses td {
+    white-space: nowrap;
+}
+
 .manufacturing th, .manufacturing td {
     padding: 5px 10px;
     line-height: 1.2;
