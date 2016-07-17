@@ -38,7 +38,8 @@ $(document).ready(function () {
             });
         },
         tooltipClass: 'fit-tt',
-        track: true
+        track: true,
+        show: false
     });
 
     // Removing a region ID from the list.
