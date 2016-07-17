@@ -8,7 +8,8 @@ It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and t
 
 ### Changelog
 
-* 12 June 1016 - Switch to use live site for all images, rather than the now defunct Image Export Collection
+* 17 July 2016 - Add doctrine management/cross-referencing
+* 12 June 2016 - Switch to use live site for all images, rather than the now defunct Image Export Collection
 * 2 May 2016 - Switch to allow for region-based monitoring rather than specifying individual systems
 * 27 April 2016 - Updated CREST API call due to withdrawal of public endpoint
 * 12 March 2016 - converted all eve-central.com API calls to use CREST
