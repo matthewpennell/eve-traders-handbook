@@ -44,9 +44,13 @@
                                 @if ($item->allowManufacture)
                                     <img src="i/BPO.png" class="industry" title="This item can be manufactured by players" alt="Blueprint">&nbsp;
                                 @endif
-                                {{ number_format($item->qty) }}</td>
+                                {{ number_format($item->qty) }}
+                            </td>
                             <td class="t{{ $item->typeID }}">
                                 <a href="details/{{ $item->typeID }}">{{ $item->typeName }}</a>
+                                @if (stristr($fitted_items, ':' . $item->typeID . ':'))
+                                    <span class="fits" title="See fits using this module..." data-id="{{ $item->typeID }}">F</span>
+                                @endif
                                 @if ($item->profitIndustry || $item->profitImport)
                                     <?php $profit = ($item->profitIndustry > $item->profitImport) ? $item->profitIndustry : $item->profitImport; ?>
                                     <span class="{{ ($profit > 0) ? 'profit' : 'loss' }} {{ ($item->profitIndustry > $item->profitImport) ? 'local' : 'import' }}">{{ number_format(round($profit)) }}</span>

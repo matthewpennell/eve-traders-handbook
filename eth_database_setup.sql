@@ -212,6 +212,21 @@ INSERT INTO `settings` (`id`, `key`, `label`, `value`, `created_at`, `updated_at
 (7, 'regions', 'Regions (comma-separated)', '', '0000-00-00 00:00:00', '2015-04-09 07:40:12'),
 (8, 'shipping_cost', 'Shipping cost per m³', '0', '0000-00-00 00:00:00', '2015-04-09 07:40:12');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fits`
+--
+
+CREATE TABLE `fits` (
+`id` int(10) unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `eft_fitting` text COLLATE utf8_unicode_ci NOT NULL,
+  `ship_dna` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

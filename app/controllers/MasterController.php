@@ -38,6 +38,14 @@ class MasterController extends BaseController {
 			$last_import = 'No import yet run';
 		}
 
+		// Build a list of every item that is part of a saved fitting.
+		$fits = Fit::all();
+		$fitted_items = '';
+		foreach ($fits as $fit)
+		{
+			$fitted_items .= $fit->ship_dna;
+		}
+
 		// How many items to show per page.
 		$per_page = 30;
 
@@ -136,6 +144,7 @@ class MasterController extends BaseController {
 		// Load the template to display all the items.
 		return View::make('home')
 			->with('items', $items)
+			->with('fitted_items', $fitted_items)
 			->with('days_running', $days_running)
 			->with('page', $page)
 			->with('filter_url', $filter_url)

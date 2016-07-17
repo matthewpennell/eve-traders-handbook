@@ -15,6 +15,8 @@ Route::get('/', 'MasterController@home');
 
 Route::get('details/{id}', 'DetailsController@item')->where('id', '[0-9]+');
 
+Route::controller('fits', 'FitsController');
+
 Route::controller('settings', 'SettingsController');
 
 Route::controller('import', 'ImportController');

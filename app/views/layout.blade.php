@@ -28,7 +28,8 @@
                 <h1><a href="index.php">EVE Traders Handbook</a></h1>
                 <nav class="header-nav">
                     <ul role="navigation">
-                        <li><a href="settings" class="nav-settings" title="Settings">Settings</a></li>
+                        <li><a href="settings" class="nav-item nav-settings" title="Settings">Settings</a></li>
+                        <li><a href="fits" class="nav-item nav-fits" title="Fits">Saved Fits</a></li>
                     </ul>
                 </nav>
             </div>

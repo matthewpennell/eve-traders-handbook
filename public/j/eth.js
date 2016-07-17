@@ -25,6 +25,22 @@ $(document).ready(function () {
         });
     });
 
+    // Clicking the button to create a new saved fitting.
+    $('#add_new_fit').click(function () {
+        $('.new-fittings').append('<div class="fitting"><textarea name="fit_new_' + Math.floor((Math.random() * 1000000) + 1) + '" placeholder="Paste your EFT fitting here..."></textarea></div>');
+    });
+
+    // Hovering a fitting label returns a list of the fitting(s) that the item belongs to.
+    $('.fits').tooltip({
+        content: function (callback) {
+            $.get('/fits/item/' + $(this).data('id'), function (fittings) {
+                callback(fittings);
+            });
+        },
+        tooltipClass: 'fit-tt',
+        track: true
+    });
+
     // Removing a region ID from the list.
     $('body').delegate('.remove-region', 'click', function () {
         var regionID = $(this).attr('data-regionID'),
