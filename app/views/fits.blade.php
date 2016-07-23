@@ -8,6 +8,10 @@
 
         <h1>Ship Fittings</h1>
 
+        <p>
+            Enter ship fittings here (in EFT format) and save them to add flags to items that are part of your official fits/doctrines on the main losses list.
+        </p>
+
         {{ Form::open() }}
 
             <div class="form-actions">
