@@ -8,6 +8,7 @@ It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and t
 
 ### Changelog
 
+* 4 September 2016 - Separated rigs from other modules for easier filtering
 * 17 July 2016 - Add doctrine management/cross-referencing
 * 12 June 2016 - Switch to use live site for all images, rather than the now defunct Image Export Collection
 * 2 May 2016 - Switch to allow for region-based monitoring rather than specifying individual systems
