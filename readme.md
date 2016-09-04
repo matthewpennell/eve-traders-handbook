@@ -17,7 +17,7 @@ It makes use of the EVE API, the [zKillboard](http://zkillboard.com/) API, and t
 * 12 July 2015 - Add ability to include shipping costs
 * 9 May 2015 - Add Ajax-powered selection of systems and alliances
 * 18 April 2015 - Added search function
-* 14 February 2014 - Added Material Efficiency multiplier
+* 14 February 2015 - Added Material Efficiency multiplier
 * 3 January 2015 - Added profit projections
 * 22 December 2014 - Added T2 invention support
 * 16 November 2014 - Initial release
