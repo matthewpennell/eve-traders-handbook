@@ -198,7 +198,15 @@ class ImportController extends BaseController {
                                     $item->killID = (int) $row['killID'];
                                     $item->typeID = $typeID;
                                     $item->typeName = $type->typeName;
-                                    $item->categoryName = $type->group->category['categoryName'];
+                                    // If the item is a rig, we need to be replace the categoryName with "Rig".
+                                    if (substr($type->marketGroup['marketGroupName'], -5) == ' Rigs')
+                                    {
+                                        $item->categoryName = 'Rig';
+                                    }
+                                    else
+                                    {
+                                        $item->categoryName = $type->group->category['categoryName'];
+                                    }
                                     $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
                                     if ($metaGroupName == 'Tech I' || $metaGroupName == '')
                                     {
