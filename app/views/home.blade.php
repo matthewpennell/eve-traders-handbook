@@ -47,7 +47,7 @@
                                 {{ number_format($item->qty) }}
                             </td>
                             <td class="t{{ $item->typeID }}">
-                                <a href="details/{{ $item->typeID }}">{{ $item->typeName }}</a>
+                                <a href="details/{{ $item->typeID }}" class="item-name">{{ $item->typeName }}</a>
                                 @if (stristr($fitted_items, ':' . $item->typeID . ':'))
                                     <span class="fits" title="See fits using this module..." data-id="{{ $item->typeID }}">F</span>
                                 @endif

@@ -1,11 +1,42 @@
 $(document).ready(function () {
 
+    var clickTimeout;
+
+    // Double-clicking an item in the table copies its name to the clipboard.
+    $('.item-name').on('dblclick', function (e) {
+        clearTimeout(clickTimeout);
+        var textArea = document.createElement("textarea");
+        textArea.style.position = 'fixed';
+        textArea.style.top = 0;
+        textArea.style.left = 0;
+        textArea.style.width = '2em';
+        textArea.style.height = '2em';
+        textArea.style.padding = 0;
+        textArea.style.border = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.boxShadow = 'none';
+        textArea.style.background = 'transparent';
+        textArea.value = this.innerHTML;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            var successful = document.execCommand('copy');
+        } catch (err) {
+            alert('Sorry, copying to clipboard does not work in your browser.')
+        }
+        document.body.removeChild(textArea);
+    });
+
     // Clicking an item in the table loads the details via Ajax.
-    $('.losses tbody a').click(function () {
-        $('.details').html('<img src="i/loader.gif" class="loader">');
-        $.get(this.href, function (data) {
-            $('.details').html(data);
-        });
+    $('.losses tbody a').click(function (e) {
+        clearTimeout(clickTimeout);
+        var href = this.href;
+        clickTimeout = setTimeout(function () {
+            $('.details').html('<img src="i/loader.gif" class="loader">');
+            $.get(href, function (data) {
+                $('.details').html(data);
+            });
+        }, 200);
         return false;
     });
 
