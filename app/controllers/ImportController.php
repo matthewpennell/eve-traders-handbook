@@ -246,14 +246,31 @@ class ImportController extends BaseController {
                                             $item->save();
 
                                             // Add the category to the list of filters available on the site.
-                                            $filter = Filter::find($type->group->category['categoryID']);
+                                            if (substr($type->marketGroup['marketGroupName'], -5) == ' Rigs')
+                                            {
+                                                $categoryID = 999;
+                                            }
+                                            else {
+                                                $categoryID = $type->group->category['categoryID'];
+                                            }
+
+                                            $filter = Filter::find($categoryID);
 
                                             if ( ! isset($filter->categoryID))
                                             {
                                                 $filter = new Filter;
-                                                $filter->categoryID = $type->group->category['categoryID'];
-                                                $filter->categoryName = $type->group->category['categoryName'];
-                                                $filter->iconID = $type->group->category['iconID'];
+                                                if ($categoryID == 999)
+                                                {
+                                                    $filter->categoryID = $categoryID;
+                                                    $filter->categoryName = 'Rigs';
+                                                    $filter->iconID = $type->group->category['iconID'];
+                                                }
+                                                else
+                                                {
+                                                    $filter->categoryID = $type->group->category['categoryID'];
+                                                    $filter->categoryName = $type->group->category['categoryName'];
+                                                    $filter->iconID = $type->group->category['iconID'];
+                                                }
                                                 $filter->save();
                                             }
 
