@@ -38,6 +38,9 @@ class ImportController extends BaseController {
                     array_push($systems_array, $child_system->solarSystemID);
                 }
             }
+            // Order the system IDs sequentially (new zkillboard restriction).
+            sort($systems_array);
+            // Turn it back into a string.
             $systems = implode(',', $systems_array);
         }
 
