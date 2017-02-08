@@ -433,6 +433,22 @@ footer a {
     max-height: 250px;
     overflow-y: auto;
     overflow-x: hidden;
+    border: 1px solid #ccc;
+}
+
+.ui-menu-item {
+    padding: 10px 20px !important;
+    background: #fff;
+}
+
+.ui-menu .ui-state-focus, .ui-menu .ui-state-active {
+    margin: 0 !important;
+    background: #eee;
+    color: #000;
+}
+
+.ui-menu-item a {
+    color: #333;
 }
 
 .selected-regions, .selected-alliances {
