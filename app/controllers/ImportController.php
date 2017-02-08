@@ -211,47 +211,56 @@ class ImportController extends BaseController {
                                         // This is a never-before-seen lost item. Create a new row and look up all the related details.
                                         $item = new Item;
                                         $type = Type::find($typeID);
-                                        $item->killID = (int) $row['killID'];
-                                        $item->typeID = $typeID;
-                                        $item->typeName = $type->typeName;
-                                        // If the item is a rig, we need to be replace the categoryName with "Rig".
-                                        if (substr($type->marketGroup['marketGroupName'], -5) == ' Rigs')
+                                        // If the type wasn't found, probably the app owner hasn't updated their databases with the most recent data dump.
+                                        if (isset($type))
                                         {
-                                            $item->categoryName = 'Rig';
+                                            $item->killID = (int) $row['killID'];
+                                            $item->typeID = $typeID;
+                                            $item->typeName = $type->typeName;
+                                            // If the item is a rig, we need to be replace the categoryName with "Rig".
+                                            if (substr($type->marketGroup['marketGroupName'], -5) == ' Rigs')
+                                            {
+                                                $item->categoryName = 'Rig';
+                                            }
+                                            else
+                                            {
+                                                $item->categoryName = $type->group->category['categoryName'];
+                                            }
+                                            $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
+                                            if ($metaGroupName == 'Tech I' || $metaGroupName == '')
+                                            {
+                                                $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $typeID)->where('attributeID', 633)->first();
+                                                if (isset($metaLevel))
+                                                {
+                                                    $metaGroupName = 'Meta ';
+                                                    $metaGroupName .= (isset($metaLevel->valueInt)) ? $metaLevel->valueInt : $metaLevel->valueFloat;
+                                                }
+                                            }
+                                            $item->metaGroupName = $metaGroupName;
+                                            $blueprint = Type::where('typeName', $type->typeName . ' Blueprint')->count();
+                                            if ($blueprint > 0)
+                                            {
+                                                $item->allowManufacture = 1;
+                                            }
+                                            $item->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
+                                            $item->save();
+
+                                            // Add the category to the list of filters available on the site.
+                                            $filter = Filter::find($type->group->category['categoryID']);
+
+                                            if ( ! isset($filter->categoryID))
+                                            {
+                                                $filter = new Filter;
+                                                $filter->categoryID = $type->group->category['categoryID'];
+                                                $filter->categoryName = $type->group->category['categoryName'];
+                                                $filter->iconID = $type->group->category['iconID'];
+                                                $filter->save();
+                                            }
+
                                         }
                                         else
                                         {
-                                            $item->categoryName = $type->group->category['categoryName'];
-                                        }
-                                        $metaGroupName = (isset($type->metaType->metaGroup['metaGroupName'])) ? $type->metaType->metaGroup['metaGroupName'] : '';
-                                        if ($metaGroupName == 'Tech I' || $metaGroupName == '')
-                                        {
-                                            $metaLevel = DB::table('dgmTypeAttributes')->where('typeID', $typeID)->where('attributeID', 633)->first();
-                                            if (isset($metaLevel))
-                                            {
-                                                $metaGroupName = 'Meta ';
-                                                $metaGroupName .= (isset($metaLevel->valueInt)) ? $metaLevel->valueInt : $metaLevel->valueFloat;
-                                            }
-                                        }
-                                        $item->metaGroupName = $metaGroupName;
-                                        $blueprint = Type::where('typeName', $type->typeName . ' Blueprint')->count();
-                                        if ($blueprint > 0)
-                                        {
-                                            $item->allowManufacture = 1;
-                                        }
-                                        $item->qty = $loss['qtyDropped'] + $loss['qtyDestroyed'];
-                                        $item->save();
-
-                                        // Add the category to the list of filters available on the site.
-                                        $filter = Filter::find($type->group->category['categoryID']);
-
-                                        if ( ! isset($filter->categoryID))
-                                        {
-                                            $filter = new Filter;
-                                            $filter->categoryID = $type->group->category['categoryID'];
-                                            $filter->categoryName = $type->group->category['categoryName'];
-                                            $filter->iconID = $type->group->category['iconID'];
-                                            $filter->save();
+                                            echo 'Item #' . $typeID . ' was not found in the database. Perhaps you need to import the latest export dump? ';
                                         }
 
                                     }
