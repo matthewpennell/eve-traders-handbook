@@ -220,7 +220,7 @@ class ImportController extends BaseController {
                                             // If the item is a rig, we need to be replace the categoryName with "Rig".
                                             if (substr($type->marketGroup['marketGroupName'], -5) == ' Rigs')
                                             {
-                                                $item->categoryName = 'Rig';
+                                                $item->categoryName = 'Rigs';
                                             }
                                             else
                                             {
