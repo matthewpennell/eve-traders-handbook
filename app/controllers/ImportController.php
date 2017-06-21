@@ -55,10 +55,15 @@ class ImportController extends BaseController {
 
         // Retrieve the selected alliances from the database.
         $alliance_ids = '';
-        $alliances = Setting::where('key', 'alliances')->firstOrFail();
-        if ($alliances->value != '')
+        $alliances_setting = Setting::where('key', 'alliances')->firstOrFail();
+        if ($alliances_setting->value != '')
         {
-            $alliance_ids = 'allianceID/' . preg_replace('/\s+/', '', $alliances->value) . '/';
+            $alliances_array = explode(',', $alliances_setting->value);
+            // Order the system IDs sequentially (new zkillboard restriction).
+            sort($alliances_array);
+            // Turn it back into a string.
+            $alliances = implode(',', $alliances_array);
+            $alliance_ids = 'allianceID/' . $alliances . '/';
         }
 
         // Build the API URL.
