@@ -61,7 +61,7 @@ class ImportController extends BaseController {
             }
 
             // Build the API URL.
-            $url = 'https://zkillboard.com/api/xml/losses/no-attackers/allianceID/' . $alliances . '/solarSystemID/' . implode(',', $first_ten_systems);
+            $url = 'https://zkillboard.com/api/xml/losses/no-attackers/allianceID/' . $alliances . '/solarSystemID/' . implode(',', $first_ten_systems) . '/';
 
             // Store it in the global array.
             $this->zkillboard_urls[] = $url;
