@@ -282,7 +282,7 @@ class ImportController extends BaseController {
                                         }
                                         else
                                         {
-                                            echo 'Item #' . $typeID . ' was not found in the database. Perhaps you need to import the latest export dump? ';
+                                            echo 'Item #' . $typeID . " was not found in the database. Perhaps you need to import the latest export dump?\n";
                                         }
 
                                     }
@@ -294,18 +294,18 @@ class ImportController extends BaseController {
 
                     }
 
-                    echo "Inserted $insert_count new kills! ";
+                    echo "Inserted $insert_count new kills!\n";
 
                 }
                 else
                 {
-                    echo "No kills found in selected system(s). ";
+                    echo "No kills found in selected system(s).\n";
                 }
             }
         }
         else
         {
-            echo "No response received from zKillboard API. ";
+            echo "No response received from zKillboard API.\n";
         }
 
     }
