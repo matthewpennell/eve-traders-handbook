@@ -324,11 +324,18 @@ class ImportController extends BaseController {
 
                 }
 
+                // Find the solar system name.
+                $system = System::find($kill->solarSystemID);
+
+                // Report a summary of the loss in the cron output.
+                echo $kill->characterName . ' (' . $corporation->corporationName . ') lost their ' . $ship->shipName . ' in ' . $system->solarSystemName . "\n";
+
             }
 
         }
 
-        echo "Inserted $insert_count new kills!\n";
+        // Add a total count of losses.
+        echo "\nInserted a total of $insert_count new kills!\n";
 
     }
 
