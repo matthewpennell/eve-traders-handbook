@@ -1,6 +1,6 @@
 ## EVE Traders Handbook
 
-<div class="alert alert-warning">
+<div style="background-color: #ffc; padding: 10px; margin: 0 0 20px;">
 <strong>Important note:</strong> This application was originally built on Laravel 4.2 and made use of the zKillboard XML API. That API format has now been deprecated, and therefore the Eve Traders Handbook WILL NOT CURRENTLY FUNCTION. I will be rebuilding it from the ground up using more modern techniques and the ESI API in the near future. Sorry for any inconvenience.
 </div>
 
