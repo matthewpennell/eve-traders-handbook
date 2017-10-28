@@ -1,5 +1,9 @@
 ## EVE Traders Handbook
 
+<div class="alert alert-warning">
+<strong>Important note:</strong> This application was originally built on Laravel 4.2 and made use of the zKillboard XML API. That API format has now been deprecated, and therefore the Eve Traders Handbook WILL NOT CURRENTLY FUNCTION. I will be rebuilding it from the ground up using more modern techniques and the ESI API in the near future. Sorry for any inconvenience.
+</div>
+
 The **EVE Traders Handbook** is a multi-purpose web application for traders, importers, and manufacturers in the popular space MMORPG [EVE Online](http://www.eveonline.com/).
 
 It allows players to see details of the ships, modules, drones and ammunition that are being lost by their fellow capsuleers within the systems/regions they select. In this way, traders can identify those items likely to be in high demand, and manufacturers can compare the cost of importing versus mining and manufacturing items locally. It also allows for official fits ('doctrine fits') to be saved, to enable traders to see which items are most likely to be in high demand.
