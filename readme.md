@@ -1,8 +1,6 @@
 ## EVE Traders Handbook
 
-<div style="background-color: #ffc; padding: 10px; margin: 0 0 20px;">
-<strong>Important note:</strong> This application was originally built on Laravel 4.2 and made use of the zKillboard XML API. That API format has now been deprecated, and therefore the Eve Traders Handbook WILL NOT CURRENTLY FUNCTION. Since I'm no longer actively playing the game, the chances of this app being resurrected any time soon are zero. Sorry.
-</div>
+**Important note: This application was originally built on Laravel 4.2 and made use of the zKillboard XML API. That API format has now been deprecated, and therefore the Eve Traders Handbook WILL NOT CURRENTLY FUNCTION. Since I'm no longer actively playing the game, the chances of this app being resurrected any time soon are zero. Sorry.**
 
 The **EVE Traders Handbook** is a multi-purpose web application for traders, importers, and manufacturers in the popular space MMORPG [EVE Online](http://www.eveonline.com/).
 
